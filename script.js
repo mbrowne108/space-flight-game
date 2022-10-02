@@ -154,8 +154,10 @@ function drawStars() {
 function drawSun() {
     ctx.shadowColor = sun.shadow
     ctx.shadowBlur = sun.height
+    // ctx.globalAlpha = 0.4
     ctx.drawImage(sun.el, 0, 0, sun.el.width, sun.el.height, sun.x - sun.width / 2, sun.y - sun.height / 2, sun.width, sun.height)
     ctx.shadowBlur = 0
+    // ctx.globalAlpha = 1
 }
 
 function drawPlanet(planet) {
