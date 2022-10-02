@@ -2,7 +2,6 @@ const FPS = 60
 const orbitColor = 'rgb(100, 100, 100)'
 const mouse = {x: 0, y: 0}
 
-
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth
@@ -20,22 +19,14 @@ for (i = 0; i < 1000; i++) {
     stars.push(star)
 }
 
-function drawStars() {
-    stars.map((star) => {
-        ctx.fillStyle = `rgb(${(Math.random() * 10)+ 245}, ${(Math.random() * 10)+ 245}, ${(Math.random() * 10) + 200})`
-        ctx.beginPath()
-        ctx.fillRect(star.x, star.y, star.size, star.size)
-        ctx.stroke()
-    })
-}
-
 const sun = {
     el: document.getElementById("sun"),
     name: "Sun",
     height: 100,
     width: 100 * (4/3),
     x: window.innerWidth / 2,
-    y: window.innerHeight / 2
+    y: window.innerHeight / 2,
+    shadow: "rgb(255, 193, 6)"
 }
 
 const mercury = {
@@ -46,6 +37,7 @@ const mercury = {
     speed: 0.004787,
     theta: Math.random() * 2 * Math.PI,
     radius: 80,
+    shadow: "rgb(225, 177, 101)"
 }
 
 const venus = {
@@ -56,6 +48,7 @@ const venus = {
     width: 9.5 * (4/3),
     theta: Math.random() * 2 * Math.PI,
     radius: 110,
+    shadow: "rgb(203, 173, 115)"
 }
 
 const earth = {
@@ -66,6 +59,7 @@ const earth = {
     width: 10 * (4/3),
     theta: Math.random() * 2 * Math.PI,
     radius: 150,
+    shadow: "rgb(113, 115, 174)",
     hasMoon: true
 }
 
@@ -77,7 +71,7 @@ const mars = {
     width: 5.3 * (4/3),
     theta: Math.random() * 2 * Math.PI,
     radius: 180,
-
+    shadow: "rgb(203, 84, 14)"
 }
 
 const jupiter = {
@@ -87,7 +81,8 @@ const jupiter = {
     width: 72 * (4/3),
     speed: 0.001307,
     theta: Math.random() * 2 * Math.PI,
-    radius: 235
+    radius: 235,
+    shadow: "rgb(194, 142, 123)"
 }
 
 const saturn = {
@@ -98,6 +93,7 @@ const saturn = {
     speed: 0.000969,
     theta: Math.random() * 2 * Math.PI,
     radius: 280,
+    shadow: "rgb(251, 204, 132)"
 }
 
 const uranus = {
@@ -108,6 +104,7 @@ const uranus = {
     speed: -(0.000681),
     theta: Math.random() * 2 * Math.PI,
     radius: 330,
+    shadow: "rgb(207, 245, 247)"
 }
 
 const neptune = {
@@ -118,6 +115,7 @@ const neptune = {
     speed: 0.000543,
     theta: Math.random() * 2 * Math.PI,
     radius: 385,
+    shadow: "rgb(72, 129, 255)"
 }
 
 const pluto = {
@@ -128,6 +126,7 @@ const pluto = {
     speed: 0.000474,
     theta: Math.random() * 2 * Math.PI,
     radius: 450,
+    shadow: "rgb(231, 175, 128)"
 }
 
 const moon = {
@@ -137,10 +136,27 @@ const moon = {
     width: 2.7 * (4/3),
     speed: 0.002978 * 12,
     theta: Math.random() * 2 * Math.PI,
-    radius: 15
+    radius: 15,
+    shadow: "rgb(245, 236, 237)"
 }
 
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
+
+function drawStars() {
+    stars.map((star) => {
+        ctx.fillStyle = `rgb(${(Math.random() * 10)+ 245}, ${(Math.random() * 10)+ 245}, ${(Math.random() * 10) + 200})`
+        ctx.beginPath()
+        ctx.fillRect(star.x, star.y, star.size, star.size)
+        ctx.stroke()
+    })
+}
+
+function drawSun() {
+    ctx.shadowColor = sun.shadow
+    ctx.shadowBlur = sun.height
+    ctx.drawImage(sun.el, 0, 0, sun.el.width, sun.el.height, sun.x - sun.width / 2, sun.y - sun.height / 2, sun.width, sun.height)
+    ctx.shadowBlur = 0
+}
 
 function drawPlanet(planet) {
     // Draw orbit
@@ -153,7 +169,10 @@ function drawPlanet(planet) {
     planet.theta -= planet.speed
     planet.x = Math.cos(planet.theta) * planet.radius + sun.x - planet.width / 2
     planet.y = Math.sin(planet.theta) * planet.radius + sun.y - planet.height / 2
+    ctx.shadowColor = planet.shadow
+    ctx.shadowBlur = planet.height
     ctx.drawImage(planet.el, 0, 0, planet.el.width, planet.el.height, planet.x, planet.y, planet.width, planet.height)
+    ctx.shadowBlur = 0
 
     // Moon orbit and movement
     if (planet.hasMoon) {
@@ -191,7 +210,7 @@ function drawAimLine() {
 setInterval(() => {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     drawStars()
-    ctx.drawImage(sun.el, 0, 0, sun.el.width, sun.el.height, sun.x - sun.width / 2, sun.y - sun.height / 2, sun.width, sun.height)
+    drawSun()
 
     canvas.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX

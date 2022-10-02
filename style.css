@@ -9,79 +9,55 @@ html, body {
 }
 
 #sun {
-    height: 50px;
-    max-width: 100vw;
-    object-fit: cover;
     position: absolute;
 }
 
-
 #mercury {
-    height: 3.8px;
-    max-width: 100vw;
-    margin: -1.9px;
+   
     position: absolute;
 }
 
 #venus {
-    height: 9.5px;
-    max-width: 100vw;
-    margin: -4.75px;
+   
     position: absolute;
 }
 
 #earth {
-    height: 10px;
-    max-width: 100vw;
-    margin: -5px;
+    
     position: absolute;
 }
 
 #moon {
-    height: 2.7px;
-    max-width: 100vw;
-    margin: -1.85px;
+   
     position: absolute;
 }
 
 #mars {
-    height: 5.3px;
-    max-width: 100vw;
-    margin: -2.65px;
+    
     position: absolute;
 }
 
 #jupiter {
-    height: 72px;
-    max-width: 100vw;
-    margin: -36px;
+    
     position: absolute;
 }
 
 #saturn {
-    height: 80px;
-    max-width: 100vw;
-    margin: -32px;
+    
     position: absolute;
 }
 
 #uranus {
-    height: 40px;
-    max-width: 100vw;
-    margin: -20px;
+    
     position: absolute;
 }
 
 #neptune {
-    height: 38.8px;
-    max-width: 100vw;
-    margin: -19.4px;
+    
     position: absolute;
 }
 
 #pluto {
-    height: 2px;
-    max-width: 100vw;
-    margin: -1px;
+    
     position: absolute;
 }
