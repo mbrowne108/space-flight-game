@@ -3,26 +3,62 @@ const orbitColor = 'rgb(100, 100, 100)'
 const mouse = {x: 0, y: 0}
 let scale = 1
 
+const shipThrust = 2
+const friction = 0.7
+
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
+const space = new Image();
+space.src = "images/space.png";
+ctx.imageSmoothingEnabled = false;
 
 const stars = []
 
+document.addEventListener("keydown", keyDown);
+document.addEventListener("keyup", keyUp);
 canvas.addEventListener('wheel', (e) => {
     e.wheelDelta >= 0 ? scale += 0.01 : scale -= 0.01
 })
 
-
-// Position stars
-for (i = 0; i < 2000; i++) {
-    let star = {
-        x: Math.random() * canvas.width * 2,
-        y: Math.random() * canvas.height * 2,
-        size: Math.random() + 1
+function keyDown(e) {
+    switch(e.keyCode) {
+        case 87: // W
+            ship.thrusting = true;
+            break;
+        case 83: // S
+            ship.braking = true;
+            break;
     }
-    stars.push(star)
+}
+
+function keyUp(e) {
+    switch(e.keyCode) {
+        case 87: // W
+            ship.thrusting = false;
+            break;
+        case 83: // S
+            ship.braking = false;
+            break;
+    }
+}
+
+const ship = {
+    el: document.getElementById("ship"),
+    elThrust: document.getElementById("ship-thrusting"),
+    x: 2500,
+    y: 2500,
+    height: 30 * (4/3),
+    width: 30,
+    r: 15,
+    a: 90 / 180 * Math.PI,
+    thrusting: false,
+    braking: false,
+    thrust: {
+        x: 0,
+        y: 0
+    }
 }
 
 const sun = {
@@ -30,8 +66,8 @@ const sun = {
     name: "Sun",
     height: 100,
     width: 100 * (4/3),
-    x: canvas.width * 2,
-    y: canvas.height * 2,
+    x: 3000,
+    y: 3000,
     shadow: "rgb(255, 193, 6)"
 }
 
@@ -42,7 +78,7 @@ const mercury = {
     width: 3.8 * (4/3),
     speed: 0.004787,
     theta: Math.random() * 2 * Math.PI,
-    radius: 80,
+    radius: 35 * 2,
     shadow: "rgb(225, 177, 101)"
 }
 
@@ -53,7 +89,7 @@ const venus = {
     height: 9.5,
     width: 9.5 * (4/3),
     theta: Math.random() * 2 * Math.PI,
-    radius: 110,
+    radius: 67 * 2,
     shadow: "rgb(203, 173, 115)"
 }
 
@@ -64,7 +100,7 @@ const earth = {
     height: 10,
     width: 10 * (4/3),
     theta: Math.random() * 2 * Math.PI,
-    radius: 150,
+    radius: 93 * 2,
     shadow: "rgb(113, 115, 174)",
     hasMoon: true
 }
@@ -76,51 +112,51 @@ const mars = {
     height: 5.3,
     width: 5.3 * (4/3),
     theta: Math.random() * 2 * Math.PI,
-    radius: 180,
+    radius: 142 * 2,
     shadow: "rgb(203, 84, 14)"
 }
 
 const jupiter = {
     el: document.getElementById("jupiter"),
     name: 'Jupiter',
-    height: 72,
-    width: 72 * (4/3),
+    height: 112,
+    width: 112 * (4/3),
     speed: 0.001307,
     theta: Math.random() * 2 * Math.PI,
-    radius: 235,
+    radius: 484 * 2,
     shadow: "rgb(194, 142, 123)"
 }
 
 const saturn = {
     el: document.getElementById("saturn"),
     name: 'Saturn',
-    height: 60,
-    width: 60 * (4/3),
+    height: 94.5,
+    width: 94.5 * (4/3),
     speed: 0.000969,
     theta: Math.random() * 2 * Math.PI,
-    radius: 280,
+    radius: 889 * 2,
     shadow: "rgb(251, 204, 132)"
 }
 
 const uranus = {
     el: document.getElementById("uranus"),
     name: 'Uranus',
-    height: 50,
-    width: 50 * (4/3),
+    height: 40,
+    width: 40 * (4/3),
     speed: -(0.000681),
     theta: Math.random() * 2 * Math.PI,
-    radius: 330,
+    radius: 1790 * 2,
     shadow: "rgb(207, 245, 247)"
 }
 
 const neptune = {
     el: document.getElementById("neptune"),
     name: 'Neptune',
-    height: 48.8,
-    width: 48.8 * (4/3),
+    height: 38.8,
+    width: 38.8 * (4/3),
     speed: 0.000543,
     theta: Math.random() * 2 * Math.PI,
-    radius: 385,
+    radius: 2880 * 2,
     shadow: "rgb(72, 129, 255)"
 }
 
@@ -131,7 +167,7 @@ const pluto = {
     width: 2 * (4/3),
     speed: 0.000474,
     theta: Math.random() * 2 * Math.PI,
-    radius: 450,
+    radius: 3670 * 2,
     shadow: "rgb(231, 175, 128)"
 }
 
@@ -142,40 +178,31 @@ const moon = {
     width: 2.7 * (4/3),
     speed: 0.002978 * 12,
     theta: Math.random() * 2 * Math.PI,
-    radius: 15,
+    radius: 10 * 2,
     shadow: "rgb(245, 236, 237)"
 }
 
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
-function drawStars() {
-    ctx.translate(sun.x,sun.y);
-    ctx.scale(scale, scale);
-    ctx.translate(-sun.x,-sun.y);
-
-    stars.map((star) => {
-        ctx.fillStyle = `rgb(${(Math.random() * 10)+ 245}, ${(Math.random() * 10)+ 245}, ${(Math.random() * 10) + 200})`
-        ctx.beginPath()
-        ctx.fillRect(star.x, star.y, star.size, star.size)
-        ctx.stroke()
-    })
-}
+// Initial position of camera
+const camera = {x: ship.x - (canvas.width / 2), y: ship.y - (canvas.height / 2)}
+const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.y}
 
 function drawSun() {
-    ctx.translate(sun.x, sun.y);
-    ctx.scale(scale, scale);
-    ctx.translate(-sun.x, -sun.y);
+    // ctx.translate(ship.x, ship.y);
+    // ctx.scale(scale, scale);
+    // ctx.translate(-ship.x, -ship.y);
 
     ctx.shadowColor = sun.shadow
     ctx.shadowBlur = sun.height
-    ctx.drawImage(sun.el, 0, 0, sun.el.width, sun.el.height, sun.x - sun.width / 2, sun.y - sun.height / 2, sun.width, sun.height)
+    ctx.drawImage(sun.el, sun.x - (sun.width / 2) + cameraOffset.x, sun.y - (sun.height / 2) + cameraOffset.y, sun.width, sun.height)
     ctx.shadowBlur = 0
 }
 
 function drawPlanet(planet) {
-    ctx.translate(sun.x, sun.y);
-    ctx.scale(scale, scale);
-    ctx.translate(-sun.x, -sun.y);
+    // ctx.translate(ship.x, ship.y);
+    // ctx.scale(scale, scale);
+    // ctx.translate(-ship.x, -ship.y);
 
     // if (planet.highlighted) {
     //     ctx.strokeStyle = "red"
@@ -189,7 +216,7 @@ function drawPlanet(planet) {
     ctx.strokeStyle = orbitColor
     ctx.beginPath()
     ctx.lineWidth = 1
-    ctx.arc(sun.x, sun.y, planet.radius, 0, 2 * Math.PI)
+    ctx.arc(sun.x + cameraOffset.x, sun.y + cameraOffset.y, planet.radius, 0, 2 * Math.PI)
     ctx.stroke()
 
     // Planet movement
@@ -197,8 +224,8 @@ function drawPlanet(planet) {
     planet.x = Math.cos(planet.theta) * planet.radius + sun.x - planet.width / 2
     planet.y = Math.sin(planet.theta) * planet.radius + sun.y - planet.height / 2
     ctx.shadowColor = planet.shadow
-    ctx.shadowBlur = planet.height
-    ctx.drawImage(planet.el, 0, 0, planet.el.width, planet.el.height, planet.x, planet.y, planet.width, planet.height)
+    ctx.shadowBlur = planet.height * 3
+    ctx.drawImage(planet.el, planet.x + cameraOffset.x, planet.y + cameraOffset.y, planet.width, planet.height)
     ctx.shadowBlur = 0
 
 
@@ -206,22 +233,53 @@ function drawPlanet(planet) {
     if (planet.hasMoon) {
         ctx.strokeStyle = orbitColor
         ctx.beginPath()
-        ctx.arc(planet.x + planet.width / 2, planet.y + planet.height / 2, moon.radius, 0, 2 * Math.PI)
+        ctx.arc(planet.x + (planet.width / 2) + cameraOffset.x, planet.y + (planet.height / 2) + cameraOffset.y, moon.radius, 0, 2 * Math.PI)
         ctx.stroke()
 
         moon.theta -= moon.speed
         moon.x = Math.cos(moon.theta) * moon.radius + planet.x + moon.width
         moon.y = Math.sin(moon.theta) * moon.radius + planet.y + moon.height
-        ctx.drawImage(moon.el, 0, 0, moon.el.width, moon.el.height, moon.x, moon.y, moon.width, moon.height)
+        ctx.drawImage(moon.el, moon.x + cameraOffset.x, moon.y + cameraOffset.y, moon.width, moon.height)
     }
 
     // Hover over planet
-    if ((mouse.x > planet.x && mouse.x < planet.x + planet.width) && (mouse.y > planet.y && mouse.y < planet.y + planet.height)) {
-        ctx.clearRect(0, 0, 300, 20)
-        ctx.font = "14px Arial"
-        ctx.textAlign = 'start'
-        ctx.fillText(planet.name, planet.x, planet.y - 10)
+    if ((mouse.x > planet.x + cameraOffset.x && mouse.x < planet.x + planet.width + cameraOffset.x) && (mouse.y > planet.y + cameraOffset.y && mouse.y < planet.y + planet.height + cameraOffset.y)) {
+        ctx.fillStyle = "red";
+        ctx.font = "15px serif";
+        ctx.fillText(planet.name, planet.x + cameraOffset.x, planet.y + cameraOffset.y)
     }
+}
+
+function drawShip() {
+    // ctx.translate(ship.x, ship.y);
+    // ctx.scale(scale, scale);
+    // ctx.translate(-ship.x, -ship.y);
+
+    // Rotate
+    ctx.save();
+    ship.a = Math.atan2(-(mouse.y - (ship.y + cameraOffset.y)), -(mouse.x - (ship.x + cameraOffset.x))) + (Math.PI / 2) / FPS;
+    ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
+    ctx.rotate(ship.a - 90 * Math.PI / 180)
+    ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
+    ctx.drawImage(ship.thrusting ? ship.elThrust : ship.el, ship.x - (ship.width / 2) + cameraOffset.x, ship.y - (ship.height / 1.7) + cameraOffset.y, ship.width, ship.height)
+    ctx.restore()
+
+    if (ship.thrusting) {
+        ship.thrust.x -= shipThrust * Math.cos(ship.a) / FPS;
+        ship.thrust.y -= shipThrust * Math.sin(ship.a) / FPS;
+    } else {
+        ship.thrust.x -= friction * ship.thrust.x / FPS;
+        ship.thrust.y -= friction * ship.thrust.y / FPS;
+    }
+
+    if (ship.braking) {
+        ship.thrust.x -= 3 * friction * ship.thrust.x / FPS;
+        ship.thrust.y -= 3 * friction * ship.thrust.y / FPS;
+    }
+
+    // Move ship
+    ship.x += ship.thrust.x;
+    ship.y += ship.thrust.y;
 }
 
 
@@ -229,19 +287,32 @@ function drawPlanet(planet) {
 setInterval(() => {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
-    sun.x = window.innerWidth / 2
-    sun.y = window.innerHeight / 2
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+    camera.x = ship.x - (canvas.width / 2)
+    camera.y = ship.y - (canvas.height / 2)
+    cameraOffset.x = canvas.width / 2 - ship.x
+    cameraOffset.y = canvas.height / 2 - ship.y
 
-    drawStars()
-    drawSun()
+    // ctx.drawImage(space, camera.x - cameraOffset.x, camera.y - cameraOffset.y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
 
     canvas.addEventListener('mousemove', (e) => {
         mouse.x = e.clientX
         mouse.y = e.clientY
     })
 
+    drawSun();
     planets.forEach(drawPlanet)
+    drawShip();
+
+    ctx.fillStyle = "red";
+    ctx.font = "15px serif";
+    ctx.fillText(`Ship: ${Math.round(ship.x)}, ${Math.round(ship.y)}`, 5, 15);
+    ctx.fillText(`Camera: ${Math.round(camera.x)}, ${Math.round(camera.y)}`, 5, 30);
+    ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
+    ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(cameraOffset.y)}`, 5, 60);
+    ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
+    ctx.fillText(`Space: ${Math.round(space.width)}, ${Math.round(space.height)}`, 5, 90);
+    ctx.fillText(`Sun: ${Math.round(sun.x)}, ${Math.round(sun.y)}`, 5, 105);
 
 }, 1000 / FPS)
