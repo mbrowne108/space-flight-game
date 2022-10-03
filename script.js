@@ -1,6 +1,7 @@
 const FPS = 60
 const orbitColor = 'rgb(100, 100, 100)'
 const mouse = {x: 0, y: 0}
+let scale = 1
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -9,11 +10,16 @@ canvas.height = window.innerHeight
 
 const stars = []
 
+canvas.addEventListener('wheel', (e) => {
+    e.wheelDelta >= 0 ? scale += 0.01 : scale -= 0.01
+})
+
+
 // Position stars
-for (i = 0; i < 1000; i++) {
+for (i = 0; i < 2000; i++) {
     let star = {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
+        x: Math.random() * canvas.width * 2,
+        y: Math.random() * canvas.height * 2,
         size: Math.random() + 1
     }
     stars.push(star)
@@ -24,8 +30,8 @@ const sun = {
     name: "Sun",
     height: 100,
     width: 100 * (4/3),
-    x: window.innerWidth / 2,
-    y: window.innerHeight / 2,
+    x: canvas.width * 2,
+    y: canvas.height * 2,
     shadow: "rgb(255, 193, 6)"
 }
 
@@ -143,6 +149,10 @@ const moon = {
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
 function drawStars() {
+    ctx.translate(sun.x,sun.y);
+    ctx.scale(scale, scale);
+    ctx.translate(-sun.x,-sun.y);
+
     stars.map((star) => {
         ctx.fillStyle = `rgb(${(Math.random() * 10)+ 245}, ${(Math.random() * 10)+ 245}, ${(Math.random() * 10) + 200})`
         ctx.beginPath()
@@ -152,18 +162,33 @@ function drawStars() {
 }
 
 function drawSun() {
+    ctx.translate(sun.x, sun.y);
+    ctx.scale(scale, scale);
+    ctx.translate(-sun.x, -sun.y);
+
     ctx.shadowColor = sun.shadow
     ctx.shadowBlur = sun.height
-    // ctx.globalAlpha = 0.4
     ctx.drawImage(sun.el, 0, 0, sun.el.width, sun.el.height, sun.x - sun.width / 2, sun.y - sun.height / 2, sun.width, sun.height)
     ctx.shadowBlur = 0
-    // ctx.globalAlpha = 1
 }
 
 function drawPlanet(planet) {
+    ctx.translate(sun.x, sun.y);
+    ctx.scale(scale, scale);
+    ctx.translate(-sun.x, -sun.y);
+
+    // if (planet.highlighted) {
+    //     ctx.strokeStyle = "red"
+    //     ctx.strokeRect(planet.x, planet.y, planet.width, planet.height)
+    //     ctx.font = "16px Arial"
+    //     ctx.textAlign = 'start'
+    //     ctx.strokeText(planet.name, planet.x, planet.y - 10)
+    // }
+
     // Draw orbit
     ctx.strokeStyle = orbitColor
     ctx.beginPath()
+    ctx.lineWidth = 1
     ctx.arc(sun.x, sun.y, planet.radius, 0, 2 * Math.PI)
     ctx.stroke()
 
@@ -175,6 +200,7 @@ function drawPlanet(planet) {
     ctx.shadowBlur = planet.height
     ctx.drawImage(planet.el, 0, 0, planet.el.width, planet.el.height, planet.x, planet.y, planet.width, planet.height)
     ctx.shadowBlur = 0
+
 
     // Moon orbit and movement
     if (planet.hasMoon) {
@@ -192,25 +218,22 @@ function drawPlanet(planet) {
     // Hover over planet
     if ((mouse.x > planet.x && mouse.x < planet.x + planet.width) && (mouse.y > planet.y && mouse.y < planet.y + planet.height)) {
         ctx.clearRect(0, 0, 300, 20)
-        ctx.font = "16px Arial"
-        ctx.fillStyle = "white"
-        ctx.fillText(planet.name, planet.x, planet.y)
-    } 
-}
-
-function drawAimLine() {
-    ctx.strokeStyle = "blue"
-    if (mouse.x != 0 && mouse.y != 0) {
-        ctx.beginPath()
-        ctx.moveTo(earth.x + earth.width / 2, earth.y + earth.height / 2)
-        ctx.lineTo(mouse.x, mouse.y)
-        ctx.stroke()
+        ctx.font = "14px Arial"
+        ctx.textAlign = 'start'
+        ctx.fillText(planet.name, planet.x, planet.y - 10)
     }
 }
 
+
 // Game Loop
 setInterval(() => {
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    sun.x = window.innerWidth / 2
+    sun.y = window.innerHeight / 2
+
     ctx.clearRect(0, 0, canvas.width, canvas.height)
+
     drawStars()
     drawSun()
 
@@ -220,6 +243,5 @@ setInterval(() => {
     })
 
     planets.forEach(drawPlanet)
-    drawAimLine()
 
 }, 1000 / FPS)
