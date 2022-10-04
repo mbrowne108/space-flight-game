@@ -2,15 +2,24 @@ const FPS = 60
 const mouse = {x: 0, y: 0}
 let scale = 1
 const orbitColor = 'rgb(100,100,100)';
-const shipThrust = 2
+const shipThrust = 5
 const friction = 0.7
 const torpMax = 300;
 const torpSpeed = 500;
+const scanMax = 30;
+const scanSpeed = 700;
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
+
+asteroids = [];
+createAsteroids();
+
+function distBetweenPoints(x1, y1, x2, y2) {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+}
 
 window.addEventListener("keydown", keyDown);
 window.addEventListener("keyup", keyUp);
@@ -28,9 +37,7 @@ window.addEventListener('mouseup', (e) => {
 
 canvas.addEventListener('wheel', (e) => {
     if (e.wheelDelta >= 0 ) {
-        if (scale < 5) {
-            scale += 0.1 * scale
-        }
+        scale += 0.1 * scale
     } else {
         if (scale > 0.1) {
             scale -= 0.1 * scale
@@ -46,7 +53,19 @@ function keyDown(e) {
         case 83: // S
             ship.braking = true;
             break;
-        case 32: // Spacebar
+        case 70: // F (Scan)
+            ship.scanning = true
+            // setTimeout(() => {ship.scanning = false}, 5000)
+            if (ship.scans.length < scanMax) {
+                ship.scans.push({
+                    x: ship.x + ship.width,
+                    y: ship.y + ship.height,
+                    r: 50,
+                    sv: scanSpeed / FPS
+                })
+            }
+            break;
+        case 32: // Spacebar (Torpedo)
             if (ship.torpedoes.length < torpMax) {
                 ship.torpedoes.push({
                     x: ship.x + 4/3 * ship.height / 1.7 * Math.cos(ship.a),
@@ -70,161 +89,13 @@ function keyUp(e) {
     }
 }
 
-const ship = {
-    el: document.getElementById("ship"),
-    elThrust: document.getElementById("ship-thrusting"),
-    x: 2900,
-    y: 2900,
-    height: 30 * (4/3),
-    width: 30,
-    a: 90 / 180 * Math.PI,
-    torpedoes: [],
-    thrusting: false,
-    braking: false,
-    firing: false,
-    thrust: {
-        x: 0,
-        y: 0
-    }
-}
-
-const torpedo = {
-    el: document.getElementById("torpedo"),
-    height: ship.height / 2,
-    width: ship.width / 2,
-    shadow: 'rgb(248,58,37)'
-}
-
-const sun = {
-    el: document.getElementById("sun"),
-    name: "Sun",
-    height: 100,
-    width: 100 * (4/3),
-    x: 3000,
-    y: 3000,
-    shadow: "rgb(255, 193, 6)"
-}
-
-const mercury = {
-    el: document.getElementById("mercury"),
-    name: 'Mercury',
-    height: 3.8,
-    width: 3.8 * (4/3),
-    speed: 0.004787,
-    theta: Math.random() * 2 * Math.PI,
-    radius: 35 * 2,
-    shadow: "rgb(225, 177, 101)"
-}
-
-const venus = {
-    el: document.getElementById("venus"),
-    name: 'Venus',
-    speed: -(0.003502),
-    height: 9.5,
-    width: 9.5 * (4/3),
-    theta: Math.random() * 2 * Math.PI,
-    radius: 67 * 2,
-    shadow: "rgb(203, 173, 115)"
-}
-
-const earth = {
-    el: document.getElementById("earth"),
-    name: 'Earth',
-    speed: 0.002978,
-    height: 10,
-    width: 10 * (4/3),
-    theta: Math.random() * 2 * Math.PI,
-    radius: 93 * 2,
-    shadow: "rgb(113, 115, 174)",
-    hasMoon: true
-}
-
-const mars = {
-    el: document.getElementById("mars"),
-    name: 'Mars',
-    speed: 0.0024077,
-    height: 5.3,
-    width: 5.3 * (4/3),
-    theta: Math.random() * 2 * Math.PI,
-    radius: 142 * 2,
-    shadow: "rgb(203, 84, 14)"
-}
-
-const jupiter = {
-    el: document.getElementById("jupiter"),
-    name: 'Jupiter',
-    height: 112,
-    width: 112 * (4/3),
-    speed: 0.001307,
-    theta: Math.random() * 2 * Math.PI,
-    radius: 484 * 2,
-    shadow: "rgb(194, 142, 123)"
-}
-
-const saturn = {
-    el: document.getElementById("saturn"),
-    name: 'Saturn',
-    height: 94.5,
-    width: 94.5 * (4/3),
-    speed: 0.000969,
-    theta: Math.random() * 2 * Math.PI,
-    radius: 889 * 2,
-    shadow: "rgb(251, 204, 132)"
-}
-
-const uranus = {
-    el: document.getElementById("uranus"),
-    name: 'Uranus',
-    height: 40,
-    width: 40 * (4/3),
-    speed: -(0.000681),
-    theta: Math.random() * 2 * Math.PI,
-    radius: 1790 * 2,
-    shadow: "rgb(207, 245, 247)"
-}
-
-const neptune = {
-    el: document.getElementById("neptune"),
-    name: 'Neptune',
-    height: 38.8,
-    width: 38.8 * (4/3),
-    speed: 0.000543,
-    theta: Math.random() * 2 * Math.PI,
-    radius: 2880 * 2,
-    shadow: "rgb(72, 129, 255)"
-}
-
-const pluto = {
-    el: document.getElementById("pluto"),
-    name: 'Pluto',
-    height: 2,
-    width: 2 * (4/3),
-    speed: 0.000474,
-    theta: Math.random() * 2 * Math.PI,
-    radius: 3670 * 2,
-    shadow: "rgb(231, 175, 128)"
-}
-
-const moon = {
-    el: document.getElementById("moon"),
-    name: 'Moon',
-    height: 2.7,
-    width: 2.7 * (4/3),
-    speed: 0.002978 * 12,
-    theta: Math.random() * 2 * Math.PI,
-    radius: 10 * 2,
-    shadow: "rgb(245, 236, 237)"
-}
-
-const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
-
 // Initial position of camera
 const camera = {x: ship.x - (canvas.width / 2), y: ship.y - (canvas.height / 2)}
 const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.y}
 
 // Position stars
 const stars = []
-for (i = 0; i < 4000; i++) {
+for (let i = 0; i < 4000; i++) {
     let star = {
         x: Math.random() * 7680,
         y: Math.random() * 4320,
@@ -248,7 +119,7 @@ function drawSun() {
     ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
 
     ctx.shadowColor = sun.shadow
-    ctx.shadowBlur = sun.height * scale
+    ctx.shadowBlur = sun.height
     ctx.drawImage(sun.el, sun.x - (sun.width / 2) + cameraOffset.x, sun.y - (sun.height / 2) + cameraOffset.y, sun.width, sun.height)
     ctx.shadowBlur = 0
 }
@@ -280,7 +151,7 @@ function drawPlanet(planet) {
         moon.theta -= moon.speed
         moon.x = Math.cos(moon.theta) * moon.radius + planet.x + moon.width
         moon.y = Math.sin(moon.theta) * moon.radius + planet.y + moon.height
-        ctx.drawImage(moon.el, moon.x + cameraOffset.x, moon.y + cameraOffset.y, moon.width, moon.height)
+        ctx.drawImage(moon.el, moon.x + cameraOffset.x + moon.width / 3, moon.y + cameraOffset.y + moon.height / 3, moon.width, moon.height)
     }
 
     // Hover over planet
@@ -353,6 +224,25 @@ function drawTorpedoes() {
     }
 }
 
+function drawScans() {
+    for (let i = 0; i < ship.scans.length; i++) {
+        ctx.strokeStyle = "rgb(30, 90, 208)"; 
+        ctx.beginPath();
+        ctx.arc(ship.scans[i].x + cameraOffset.x - ship.width, ship.scans[i].y + cameraOffset.y - ship.height, ship.scans[i].r, Math.PI * 2, false);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(ship.scans[i].x + cameraOffset.x - ship.width, ship.scans[i].y + cameraOffset.y - ship.height, 2 * ship.scans[i].r, Math.PI * 2, false);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(ship.scans[i].x + cameraOffset.x - ship.width, ship.scans[i].y + cameraOffset.y - ship.height, 3 * ship.scans[i].r, Math.PI * 2, false);
+        ctx.stroke();
+    }
+
+    for (let i = 0; i < ship.scans.length; i++) {
+        ship.scans[i].r += ship.scans[i].sv;
+    }
+}
+
 const motionTrailLength = 50
 const positions = []
 function storeLastPosition(xPos, yPos) {
@@ -370,12 +260,74 @@ function drawMotionTrail() {
         let ratio = (i + 1) / positions.length
         ctx.beginPath();
         ctx.shadowColor = 'rgba(101,150,240)'
-        ctx.shadowBlur = 10 * scale
+        ctx.shadowBlur = 10
         ctx.arc(positions[i].x + cameraOffset.x, positions[i].y + cameraOffset.y, (ship.height / 10) * ratio, 0, 2 * Math.PI, true);
         ctx.fillStyle = `rgba(101,150,240,${ratio / 2})`;
         ctx.fill();
         ctx.shadowBlur = 0;
     }
+}
+
+function createAsteroids() {
+    let x, y;
+    for (let i = 0; i < asteroidBelt.num; i++) {
+        let theta = Math.random() * Math.PI * 2
+        do {
+            x = Math.cos(theta) * asteroidBelt.radius * 2;
+            y = Math.sin(theta) * asteroidBelt.radius * 2;
+        } while (distBetweenPoints(ship.x, ship.y, x, y) < asteroidBelt.size * 2 + ship.height / 2);
+        asteroids.push(newAsteroid(x, y, theta));
+    }
+}
+
+function newAsteroid(x, y, theta) {
+    let asteroid = {
+        x: x,
+        y: y,
+        size: Math.random() * asteroidBelt.size,
+        theta: theta,
+        a: Math.random() * 360 * Math.PI / 180,
+        radius: asteroidBelt.radius + Math.random() * 50,
+        speed: asteroidBelt.speed * Math.random(),
+        img: document.getElementById(`asteroid${Math.floor(Math.random() * 10) + 1}`),
+    }
+
+    return asteroid;
+}
+
+function drawAsteroids() {
+    let x, y;
+    for (let i = 0; i < asteroids.length; i++) {
+        x = asteroids[i].x + cameraOffset.x;
+        y = asteroids[i].y + cameraOffset.y;
+        
+        asteroids[i].a > 3 ? asteroids[i].a = asteroids[i].a + Math.random() * 0.01 : asteroids[i].a = asteroids[i].a + Math.random() * -0.01;
+
+        ctx.save();
+        ctx.translate(x + cameraOffset.x, y + cameraOffset.y);
+        ctx.rotate(asteroids[i].a)
+        ctx.translate(-(x + cameraOffset.x), -(y + cameraOffset.y));
+        ctx.drawImage(asteroids[i].img, x + cameraOffset.x, y + cameraOffset.y, asteroids[i].size, asteroids[i].size)
+        ctx.restore()
+
+        // Move asteroids
+        Math.random > 0.5 ? asteroids[i].theta -= asteroids[i].speed : asteroids[i].theta += asteroids[i].speed
+        asteroids[i].x = Math.cos(asteroids[i].theta) * asteroids[i].radius + sun.x - asteroidBelt.size / 2 - cameraOffset.x;
+        asteroids[i].y = Math.sin(asteroids[i].theta) * asteroids[i].radius + sun.y - asteroidBelt.size / 2 - cameraOffset.y;
+
+    }
+}
+
+function drawOverlay() {
+    ctx.fillStyle = "red";
+    ctx.font = "15px serif";
+    ctx.fillText(`Ship: ${Math.round(ship.x)}, ${Math.round(ship.y)}`, 5, 15);
+    ctx.fillText(`Camera: ${Math.round(camera.x)}, ${Math.round(camera.y)}`, 5, 30);
+    ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
+    ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, 5, 60);
+    ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
+    ctx.fillText(`Sun: ${sun.x}, ${sun.y}`, 5, 90);
+    ctx.fillText(`Scale: ${scale}`, 5, 105);
 }
 
 // Game Loop
@@ -389,26 +341,23 @@ function loop() {
     cameraOffset.x = canvas.width / 2 - ship.x
     cameraOffset.y = canvas.height / 2 - ship.y
 
-    drawStars();
-    drawSun();
-    planets.forEach(drawPlanet);
+    ship.scanning ? drawOverlay() : null;
     drawMotionTrail();
     drawShip();
     drawTorpedoes();
+    drawScans();
+    drawStars();
+    drawSun();
+    planets.forEach(drawPlanet);
+    drawAsteroids();
+    
 
     storeLastPosition(ship.x, ship.y)
 
-    // ctx.fillStyle = "red";
-    // ctx.font = "15px serif";
-    // ctx.fillText(`Ship: ${Math.round(ship.x)}, ${Math.round(ship.y)}`, 5, 15);
-    // ctx.fillText(`Camera: ${Math.round(camera.x)}, ${Math.round(camera.y)}`, 5, 30);
-    // ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
-    // ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, 5, 60);
-    // ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
-    // ctx.fillText(`Sun: ${sun.x}, ${sun.y}`, 5, 90);
-    // ctx.fillText(`Scale: ${scale}`, 5, 105);
-
-    requestAnimationFrame(loop);
+    setTimeout(() => {
+        requestAnimationFrame(loop);
+    }, 1000 / FPS)
+    
 }
 
 requestAnimationFrame(loop);
