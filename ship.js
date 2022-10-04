@@ -24,3 +24,23 @@ const torpedo = {
     width: ship.width / 2,
     shadow: 'rgb(248,58,37)'
 }
+
+const klingon = {
+    el: document.getElementById("klingon"),
+    // elThrust: document.getElementById("ship-thrusting"),
+    x: 3200,
+    y: 3200,
+    height: 30,
+    width: 30,
+    a: 90 / 180 * Math.PI,
+    // torpedoes: [],
+    // scans: [],
+    thrusting: false,
+    braking: false,
+    // firing: false,
+    // scanning: false,
+    thrust: {
+        x: 0,
+        y: 0
+    }
+}

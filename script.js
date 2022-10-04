@@ -200,6 +200,53 @@ function drawShip() {
     ship.y += ship.thrust.y;
 }
 
+function drawKlingon() {
+    if (ship.a > 0 && ship.a > klingon.a) {
+        klingon.a += 0.01
+    } else if (ship.a > 0 && ship.a < klingon.a) {
+        klingon.a -= 0.01
+    } else if (ship.a < 0 && ship.a > klingon.a) {
+        klingon.a += 0.01
+    } else if (ship.a < 0 && ship.a < klingon.a) {
+        klingon.a -= 0.01
+    }
+
+    ctx.save();
+    ctx.translate(klingon.x + cameraOffset.x, klingon.y + cameraOffset.y);
+    ctx.rotate(-klingon.a + 90 * Math.PI / 180)
+    ctx.translate(-(klingon.x + cameraOffset.x), -(klingon.y + cameraOffset.y));
+    ctx.drawImage(klingon.el, klingon.x - (klingon.width / 2) + cameraOffset.x, klingon.y - (klingon.height / 2) + cameraOffset.y, klingon.width, klingon.height)
+    ctx.restore()
+
+    setInterval(() => {
+        if (Math.floor(Math.random() * 10) < 5) {
+            klingon.thrusting = true
+            klingon.braking = false
+        } else if (Math.floor(Math.random() * 10) > 5 && Math.floor(Math.random() * 10) < 10){
+            klingon.thrusting = false
+            klingon.braking = false
+        } else if (Math.floor(Math.random() * 10) === 10) {
+            klingon.thrusting = false
+            klingon.braking = true
+        }
+    }, 3000)
+
+    if (klingon.thrusting) {
+        klingon.thrust.x += shipThrust * Math.cos(klingon.a) / FPS;
+        klingon.thrust.y -= shipThrust * Math.sin(klingon.a) / FPS;
+    } else {
+        klingon.thrust.x -= friction * klingon.thrust.x / FPS;
+        klingon.thrust.y -= friction * klingon.thrust.y / FPS;
+    }
+    if (klingon.braking) {
+        klingon.thrust.x -= 3 * friction * klingon.thrust.x / FPS;
+        klingon.thrust.y -= 3 * friction * klingon.thrust.y / FPS;
+    }
+    klingon.x += klingon.thrust.x;
+    klingon.y += klingon.thrust.y;
+
+}
+
 function drawTorpedoes() {
     for (var i = 0; i < ship.torpedoes.length; i++) {
         ctx.shadowColor = torpedo.shadow
@@ -209,8 +256,8 @@ function drawTorpedoes() {
     }
 
     for (var i = 0; i < ship.torpedoes.length; i++) {
-        ship.torpedoes[i].x += ship.torpedoes[i].xv;
-        ship.torpedoes[i].y += ship.torpedoes[i].yv;
+        ship.torpedoes[i].x += ship.torpedoes[i].xv + ship.thrust.x;
+        ship.torpedoes[i].y += ship.torpedoes[i].yv + ship.thrust.y;
 
         if (ship.torpedoes[i].x < 0) {
             ship.torpedoes[i].xv = 0;
@@ -327,7 +374,7 @@ function drawOverlay() {
     ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, 5, 60);
     ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
     ctx.fillText(`Sun: ${sun.x}, ${sun.y}`, 5, 90);
-    ctx.fillText(`Scale: ${scale}`, 5, 105);
+    ctx.fillText(`Ship Angle: ${ship.a}, Klingon Angle: ${klingon.a}`, 5, 105);
 }
 
 // Game Loop
@@ -350,8 +397,8 @@ function loop() {
     drawSun();
     planets.forEach(drawPlanet);
     drawAsteroids();
+    drawKlingon();
     
-
     storeLastPosition(ship.x, ship.y)
 
     setTimeout(() => {
