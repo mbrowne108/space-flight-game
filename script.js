@@ -2,9 +2,10 @@ const FPS = 60
 const mouse = {x: 0, y: 0}
 let scale = 1
 const orbitColor = 'rgb(100,100,100)';
-
 const shipThrust = 2
 const friction = 0.7
+const torpMax = 300;
+const torpSpeed = 500;
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -14,30 +15,36 @@ const space = new Image();
 space.src = "images/space.png";
 ctx.imageSmoothingEnabled = false;
 
-const stars = []
-
-// Position stars
-for (i = 0; i < 1000; i++) {
-    let star = {
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() + 1
-    }
-    stars.push(star)
-}
-
-document.addEventListener("keydown", keyDown);
-document.addEventListener("keyup", keyUp);
-canvas.addEventListener('mousemove', (e) => {
+window.addEventListener("keydown", keyDown);
+window.addEventListener("keyup", keyUp);
+document.addEventListener('mousemove', (e) => {
     mouse.x = e.clientX
     mouse.y = e.clientY
 })
+// document.addEventListener("click", (e) => {
+//     if (ship.torpedoes.length < torpMax) {
+//         ship.torpedoes.push({
+//             x: ship.x + 4/3 * ship.height / 1.7 * Math.cos(ship.a),
+//             y: ship.y - 4/3 * ship.height / 1.7 * Math.sin(ship.a),
+//             xv: torpSpeed * Math.cos(ship.a) / FPS,
+//             yv: -torpSpeed * Math.sin(ship.a) / FPS
+//         })
+//     }
+// });
+window.addEventListener("mousedown", (e) => {
+    ship.firing = true;
+});
+
+window.addEventListener('mouseup', (e) => {
+    ship.firing = false
+})
+
 
 canvas.addEventListener('wheel', (e) => {
     if (e.wheelDelta >= 0 ) {
         scale += 0.1 * scale
     } else {
-        if (scale > 0.10000000000000014) {
+        if (scale > 0.1) {
             scale -= 0.1 * scale
         }
     }
@@ -50,6 +57,16 @@ function keyDown(e) {
             break;
         case 83: // S
             ship.braking = true;
+            break;
+        case 32: // Spacebar
+            if (ship.torpedoes.length < torpMax) {
+                ship.torpedoes.push({
+                    x: ship.x + 4/3 * ship.height / 1.7 * Math.cos(ship.a),
+                    y: ship.y - 4/3 * ship.height / 1.7 * Math.sin(ship.a),
+                    xv: torpSpeed * Math.cos(ship.a) / FPS,
+                    yv: -torpSpeed * Math.sin(ship.a) / FPS
+                })
+            }
             break;
     }
 }
@@ -68,18 +85,25 @@ function keyUp(e) {
 const ship = {
     el: document.getElementById("ship"),
     elThrust: document.getElementById("ship-thrusting"),
-    x: 2500,
-    y: 2500,
+    x: 2900,
+    y: 2900,
     height: 30 * (4/3),
     width: 30,
-    r: 15,
     a: 90 / 180 * Math.PI,
+    torpedoes: [],
     thrusting: false,
     braking: false,
+    firing: false,
     thrust: {
         x: 0,
         y: 0
     }
+}
+
+const torpedo = {
+    el: document.getElementById("torpedo"),
+    height: ship.height / 2,
+    width: ship.width / 2
 }
 
 const sun = {
@@ -209,6 +233,17 @@ const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, 
 const camera = {x: ship.x - (canvas.width / 2), y: ship.y - (canvas.height / 2)}
 const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.y}
 
+// Position stars
+const stars = []
+for (i = 0; i < 4000; i++) {
+    let star = {
+        x: Math.random() * 7680,
+        y: Math.random() * 4320,
+        size: Math.random() + 1
+    }
+    stars.push(star)
+}
+
 function drawStars() {
     stars.map((star) => {
         ctx.fillStyle = `rgb(${(Math.random() * 10)+ 245}, ${(Math.random() * 10)+ 245}, ${(Math.random() * 10) + 200})`
@@ -268,17 +303,28 @@ function drawPlanet(planet) {
 }
 
 function drawShip() {
+    if (ship.firing) {
+        ctx.lineWidth = 1
+        ctx.shadowColor = 'rgb(200, 0, 0)'
+        ctx.shadowBlur = 10
+        ctx.strokeStyle = 'rgb(235, 119, 52)'
+        ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y)
+        ctx.lineTo(mouse.x, mouse.y)
+        ctx.stroke()
+        ctx.shadowBlur = 0
+    }
+
     // Rotate
     ctx.save();
-    ship.a = Math.atan2(-(mouse.y - (ship.y + cameraOffset.y)), -(mouse.x - (ship.x + cameraOffset.x))) + (Math.PI / 2) / FPS;
+    ship.a = Math.atan2(-(mouse.y - (ship.y + cameraOffset.y)), (mouse.x - (ship.x + cameraOffset.x))) + (Math.PI / 2) / FPS;
     ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
-    ctx.rotate(ship.a - 90 * Math.PI / 180)
+    ctx.rotate(-ship.a + 90 * Math.PI / 180)
     ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
     ctx.drawImage(ship.thrusting ? ship.elThrust : ship.el, ship.x - (ship.width / 2) + cameraOffset.x, ship.y - (ship.height / 1.7) + cameraOffset.y, ship.width, ship.height)
     ctx.restore()
 
     if (ship.thrusting) {
-        ship.thrust.x -= shipThrust * Math.cos(ship.a) / FPS;
+        ship.thrust.x += shipThrust * Math.cos(ship.a) / FPS;
         ship.thrust.y -= shipThrust * Math.sin(ship.a) / FPS;
     } else {
         ship.thrust.x -= friction * ship.thrust.x / FPS;
@@ -295,6 +341,29 @@ function drawShip() {
     ship.y += ship.thrust.y;
 }
 
+function drawTorpedoes() {
+    for (var i = 0; i < ship.torpedoes.length; i++) {
+        ctx.shadowColor = torpedo.shadow
+        ctx.shadowBlur = torpedo.height * scale
+        ctx.drawImage(torpedo.el, ship.torpedoes[i].x + cameraOffset.x - (torpedo.width / 2), ship.torpedoes[i].y + cameraOffset.y - (torpedo.height / 2), ship.width / 2, ship.height / 2)
+        ctx.shadowBlur = 0
+    }
+
+    for (var i = 0; i < ship.torpedoes.length; i++) {
+        ship.torpedoes[i].x += ship.torpedoes[i].xv;
+        ship.torpedoes[i].y += ship.torpedoes[i].yv;
+
+        if (ship.torpedoes[i].x < 0) {
+            ship.torpedoes[i].xv = 0;
+            ship.torpedoes[i].yv = 0;
+        } 
+        if (ship.torpedoes[i].y < 0) {
+            ship.torpedoes[i].xv = 0;
+            ship.torpedoes[i].yv = 0;
+        } 
+
+    }
+}
 
 // Game Loop
 setInterval(() => {
@@ -309,10 +378,11 @@ setInterval(() => {
 
     // Background?
     // ctx.drawImage(space, camera.x - cameraOffset.x, camera.y - cameraOffset.y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
-    drawStars()
+    drawStars();
     drawSun();
-    planets.forEach(drawPlanet)
+    planets.forEach(drawPlanet);
     drawShip();
+    drawTorpedoes();
 
     // ctx.fillStyle = "red";
     // ctx.font = "15px serif";
