@@ -1,7 +1,7 @@
 const FPS = 60
-const orbitColor = 'rgb(100, 100, 100)'
 const mouse = {x: 0, y: 0}
 let scale = 1
+const orbitColor = 'rgb(100,100,100)';
 
 const shipThrust = 2
 const friction = 0.7
@@ -16,10 +16,31 @@ ctx.imageSmoothingEnabled = false;
 
 const stars = []
 
+// Position stars
+for (i = 0; i < 1000; i++) {
+    let star = {
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() + 1
+    }
+    stars.push(star)
+}
+
 document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
+canvas.addEventListener('mousemove', (e) => {
+    mouse.x = e.clientX
+    mouse.y = e.clientY
+})
+
 canvas.addEventListener('wheel', (e) => {
-    e.wheelDelta >= 0 ? scale += 0.01 : scale -= 0.01
+    if (e.wheelDelta >= 0 ) {
+        scale += 0.1 * scale
+    } else {
+        if (scale > 0.10000000000000014) {
+            scale -= 0.1 * scale
+        }
+    }
 })
 
 function keyDown(e) {
@@ -188,30 +209,27 @@ const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, 
 const camera = {x: ship.x - (canvas.width / 2), y: ship.y - (canvas.height / 2)}
 const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.y}
 
+function drawStars() {
+    stars.map((star) => {
+        ctx.fillStyle = `rgb(${(Math.random() * 10)+ 245}, ${(Math.random() * 10)+ 245}, ${(Math.random() * 10) + 200})`
+        ctx.beginPath()
+        ctx.fillRect(star.x, star.y, star.size, star.size)
+        ctx.stroke()
+    })
+}
+
 function drawSun() {
-    // ctx.translate(ship.x, ship.y);
-    // ctx.scale(scale, scale);
-    // ctx.translate(-ship.x, -ship.y);
+    ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
+    ctx.scale(scale, scale);
+    ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
 
     ctx.shadowColor = sun.shadow
-    ctx.shadowBlur = sun.height
+    ctx.shadowBlur = sun.height * scale
     ctx.drawImage(sun.el, sun.x - (sun.width / 2) + cameraOffset.x, sun.y - (sun.height / 2) + cameraOffset.y, sun.width, sun.height)
     ctx.shadowBlur = 0
 }
 
 function drawPlanet(planet) {
-    // ctx.translate(ship.x, ship.y);
-    // ctx.scale(scale, scale);
-    // ctx.translate(-ship.x, -ship.y);
-
-    // if (planet.highlighted) {
-    //     ctx.strokeStyle = "red"
-    //     ctx.strokeRect(planet.x, planet.y, planet.width, planet.height)
-    //     ctx.font = "16px Arial"
-    //     ctx.textAlign = 'start'
-    //     ctx.strokeText(planet.name, planet.x, planet.y - 10)
-    // }
-
     // Draw orbit
     ctx.strokeStyle = orbitColor
     ctx.beginPath()
@@ -227,7 +245,6 @@ function drawPlanet(planet) {
     ctx.shadowBlur = planet.height * 3
     ctx.drawImage(planet.el, planet.x + cameraOffset.x, planet.y + cameraOffset.y, planet.width, planet.height)
     ctx.shadowBlur = 0
-
 
     // Moon orbit and movement
     if (planet.hasMoon) {
@@ -251,10 +268,6 @@ function drawPlanet(planet) {
 }
 
 function drawShip() {
-    // ctx.translate(ship.x, ship.y);
-    // ctx.scale(scale, scale);
-    // ctx.translate(-ship.x, -ship.y);
-
     // Rotate
     ctx.save();
     ship.a = Math.atan2(-(mouse.y - (ship.y + cameraOffset.y)), -(mouse.x - (ship.x + cameraOffset.x))) + (Math.PI / 2) / FPS;
@@ -294,25 +307,21 @@ setInterval(() => {
     cameraOffset.x = canvas.width / 2 - ship.x
     cameraOffset.y = canvas.height / 2 - ship.y
 
+    // Background?
     // ctx.drawImage(space, camera.x - cameraOffset.x, camera.y - cameraOffset.y, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
-
-    canvas.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX
-        mouse.y = e.clientY
-    })
-
+    drawStars()
     drawSun();
     planets.forEach(drawPlanet)
     drawShip();
 
-    ctx.fillStyle = "red";
-    ctx.font = "15px serif";
-    ctx.fillText(`Ship: ${Math.round(ship.x)}, ${Math.round(ship.y)}`, 5, 15);
-    ctx.fillText(`Camera: ${Math.round(camera.x)}, ${Math.round(camera.y)}`, 5, 30);
-    ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
-    ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(cameraOffset.y)}`, 5, 60);
-    ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
-    ctx.fillText(`Space: ${Math.round(space.width)}, ${Math.round(space.height)}`, 5, 90);
-    ctx.fillText(`Sun: ${Math.round(sun.x)}, ${Math.round(sun.y)}`, 5, 105);
+    // ctx.fillStyle = "red";
+    // ctx.font = "15px serif";
+    // ctx.fillText(`Ship: ${Math.round(ship.x)}, ${Math.round(ship.y)}`, 5, 15);
+    // ctx.fillText(`Camera: ${Math.round(camera.x)}, ${Math.round(camera.y)}`, 5, 30);
+    // ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
+    // ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, 5, 60);
+    // ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
+    // ctx.fillText(`Space: ${Math.round(space.width)}, ${Math.round(space.height)}`, 5, 90);
+    // ctx.fillText(`Scale: ${scale}`, 5, 105);
 
 }, 1000 / FPS)
