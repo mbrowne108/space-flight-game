@@ -2,8 +2,8 @@ const FPS = 60
 const mouse = {x: 0, y: 0}
 let scale = 1
 const orbitColor = 'rgb(100,100,100)';
-const shipThrust = 5
-const friction = 0.7
+const shipThrust = 10
+const friction = 0.3
 const torpMax = 300;
 const torpSpeed = 500;
 const scanMax = 30;
@@ -200,18 +200,11 @@ function drawShip() {
     ship.y += ship.thrust.y;
 }
 
-function drawKlingon() {
-    if (ship.a > 0 && ship.a > klingon.a) {
-        klingon.a += 0.01
-    } else if (ship.a > 0 && ship.a < klingon.a) {
-        klingon.a -= 0.01
-    } else if (ship.a < 0 && ship.a > klingon.a) {
-        klingon.a += 0.01
-    } else if (ship.a < 0 && ship.a < klingon.a) {
-        klingon.a -= 0.01
-    }
 
+// FIX THISSSSSSSSSSSS (ATAN2? CHANGE ANGLE TO FOLLOW THE SHIP)
+function drawKlingon() {
     ctx.save();
+    klingon.a = Math.atan2(-(ship.y + cameraOffset.y - (klingon.y + cameraOffset.y)), (ship.x + cameraOffset.x - (klingon.x + cameraOffset.x))) + (Math.PI / 2) / FPS
     ctx.translate(klingon.x + cameraOffset.x, klingon.y + cameraOffset.y);
     ctx.rotate(-klingon.a + 90 * Math.PI / 180)
     ctx.translate(-(klingon.x + cameraOffset.x), -(klingon.y + cameraOffset.y));
@@ -374,7 +367,7 @@ function drawOverlay() {
     ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, 5, 60);
     ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
     ctx.fillText(`Sun: ${sun.x}, ${sun.y}`, 5, 90);
-    ctx.fillText(`Ship Angle: ${ship.a}, Klingon Angle: ${klingon.a}`, 5, 105);
+    ctx.fillText(`Target Angle: ${Math.atan2(-(ship.y - (klingon.y + cameraOffset.y)), (ship.x - (klingon.x + cameraOffset.x))) + (Math.PI / 2) / FPS}, Klingon Angle: ${klingon.a}`, 5, 105);
 }
 
 // Game Loop

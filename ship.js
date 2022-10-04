@@ -32,7 +32,7 @@ const klingon = {
     y: 3200,
     height: 30,
     width: 30,
-    a: 90 / 180 * Math.PI,
+    a: 180 * Math.PI,
     // torpedoes: [],
     // scans: [],
     thrusting: false,
