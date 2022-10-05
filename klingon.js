@@ -21,21 +21,38 @@ const klingon = {
 
 function lockedOnView() {
     ctx.strokeStyle = "rgb(255, 0, 0)";
-    ctx.lineWidth = 1 / scale
-    ctx.beginPath();
-    ctx.moveTo(klingon.x + cameraOffset.x - 10, klingon.y + cameraOffset.y - 30);
-    ctx.lineTo(klingon.x + cameraOffset.x - 30, klingon.y + cameraOffset.y - 30);
-    ctx.lineTo(klingon.x + cameraOffset.x - 30, klingon.y + cameraOffset.y - 10);
-    ctx.moveTo(klingon.x + cameraOffset.x - 30, klingon.y + cameraOffset.y + 10);
-    ctx.lineTo(klingon.x + cameraOffset.x - 30, klingon.y + cameraOffset.y + 30);
-    ctx.lineTo(klingon.x + cameraOffset.x - 10, klingon.y + cameraOffset.y + 30);
-    ctx.moveTo(klingon.x + cameraOffset.x + 10, klingon.y + cameraOffset.y + 30);
-    ctx.lineTo(klingon.x + cameraOffset.x + 30, klingon.y + cameraOffset.y + 30);
-    ctx.lineTo(klingon.x + cameraOffset.x + 30, klingon.y + cameraOffset.y + 10);
-    ctx.moveTo(klingon.x + cameraOffset.x + 30, klingon.y + cameraOffset.y - 10);
-    ctx.lineTo(klingon.x + cameraOffset.x + 30, klingon.y + cameraOffset.y - 30);
-    ctx.lineTo(klingon.x + cameraOffset.x + 10, klingon.y + cameraOffset.y - 30);
-    ctx.stroke()
+    ctx.lineWidth = 10 / scale
+    if (klingon.x + klingon.width / 2 + cameraOffset.x < 0 || 
+        klingon.x + klingon.width / 2 + cameraOffset.x > canvas.width ||
+        klingon.y + klingon.width / 2 + cameraOffset.y < 0 ||
+        klingon.y + klingon.width / 2 + cameraOffset.y > canvas.height
+    ) {
+        ctx.strokeStyle = "rgb(255, 0, 0)";
+        ctx.lineWidth = 5 / scale
+        ctx.setLineDash([30, 500])
+        ctx.lineDashOffset = 100 / scale
+        ctx.beginPath();
+        ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
+        ctx.lineTo(klingon.x + cameraOffset.x, klingon.y + cameraOffset.y);
+        ctx.stroke()
+    } else {
+        ctx.strokeStyle = "rgb(255, 0, 0)";
+        ctx.lineWidth = 1 / scale
+        ctx.beginPath();
+        ctx.moveTo(klingon.x + cameraOffset.x - 10, klingon.y + cameraOffset.y - 30);
+        ctx.lineTo(klingon.x + cameraOffset.x - 30, klingon.y + cameraOffset.y - 30);
+        ctx.lineTo(klingon.x + cameraOffset.x - 30, klingon.y + cameraOffset.y - 10);
+        ctx.moveTo(klingon.x + cameraOffset.x - 30, klingon.y + cameraOffset.y + 10);
+        ctx.lineTo(klingon.x + cameraOffset.x - 30, klingon.y + cameraOffset.y + 30);
+        ctx.lineTo(klingon.x + cameraOffset.x - 10, klingon.y + cameraOffset.y + 30);
+        ctx.moveTo(klingon.x + cameraOffset.x + 10, klingon.y + cameraOffset.y + 30);
+        ctx.lineTo(klingon.x + cameraOffset.x + 30, klingon.y + cameraOffset.y + 30);
+        ctx.lineTo(klingon.x + cameraOffset.x + 30, klingon.y + cameraOffset.y + 10);
+        ctx.moveTo(klingon.x + cameraOffset.x + 30, klingon.y + cameraOffset.y - 10);
+        ctx.lineTo(klingon.x + cameraOffset.x + 30, klingon.y + cameraOffset.y - 30);
+        ctx.lineTo(klingon.x + cameraOffset.x + 10, klingon.y + cameraOffset.y - 30);
+        ctx.stroke()
+    }
 }
 
 function klingonShields() {

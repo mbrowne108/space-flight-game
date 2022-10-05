@@ -42,8 +42,32 @@ function drawPhasers() {
     } else if (ship.x < klingon.x && ship.y > klingon.y) {
         ctx.lineTo(klingon.x - klingon.width / 2 + cameraOffset.x + Math.random() * 2, klingon.y + klingon.height / 2 + cameraOffset.y + Math.random() * 2);
     }
-    ctx.shadowBlur = 0
+    
     ctx.stroke();
+    ctx.shadowBlur = 0
+}
+
+function drawTorpedoes() {
+    for (var i = 0; i < ship.torpedoes.length; i++) {
+        ctx.shadowColor = torpedo.shadow
+        ctx.shadowBlur = torpedo.height * 3
+        ctx.drawImage(torpedo.el, ship.torpedoes[i].x + cameraOffset.x - (torpedo.width / 2), ship.torpedoes[i].y + cameraOffset.y - (torpedo.height / 2), ship.width / 2, ship.height / 2)
+        ctx.shadowBlur = 0
+    }
+
+    for (var i = 0; i < ship.torpedoes.length; i++) {
+        ship.torpedoes[i].x += ship.torpedoes[i].xv + ship.thrust.x;
+        ship.torpedoes[i].y += ship.torpedoes[i].yv + ship.thrust.y;
+
+        if (ship.torpedoes[i].x < 0) {
+            ship.torpedoes[i].xv = 0;
+            ship.torpedoes[i].yv = 0;
+        } 
+        if (ship.torpedoes[i].y < 0) {
+            ship.torpedoes[i].xv = 0;
+            ship.torpedoes[i].yv = 0;
+        } 
+    }
 }
 
 function drawScans() {

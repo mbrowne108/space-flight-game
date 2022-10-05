@@ -162,6 +162,8 @@ function drawPlanet(planet) {
     }
 }
 
+
+
 function drawShip() {
     if (ship.firing) {
         if (klingon.locked && distBetweenPoints(ship.x, ship.y, klingon.x, klingon.y) <= 500) {
@@ -235,8 +237,8 @@ function drawKlingon() {
         klingon.thrust.x -= 3 * friction * klingon.thrust.x / FPS;
         klingon.thrust.y -= 3 * friction * klingon.thrust.y / FPS;
     }
-    klingon.x += klingon.thrust.x;
-    klingon.y += klingon.thrust.y;
+    // klingon.x += klingon.thrust.x;
+    // klingon.y += klingon.thrust.y;
     
     // Locked on
     if (klingon.locked && ship.scanning) {
@@ -247,53 +249,6 @@ function drawKlingon() {
         klingon.shields > 0 ? klingonShields() : klingon.shields === 0
     }
 }
-
-function drawTorpedoes() {
-    for (var i = 0; i < ship.torpedoes.length; i++) {
-        ctx.shadowColor = torpedo.shadow
-        ctx.shadowBlur = torpedo.height * 3
-        ctx.drawImage(torpedo.el, ship.torpedoes[i].x + cameraOffset.x - (torpedo.width / 2), ship.torpedoes[i].y + cameraOffset.y - (torpedo.height / 2), ship.width / 2, ship.height / 2)
-        ctx.shadowBlur = 0
-    }
-
-    for (var i = 0; i < ship.torpedoes.length; i++) {
-        ship.torpedoes[i].x += ship.torpedoes[i].xv + ship.thrust.x;
-        ship.torpedoes[i].y += ship.torpedoes[i].yv + ship.thrust.y;
-
-        if (ship.torpedoes[i].x < 0) {
-            ship.torpedoes[i].xv = 0;
-            ship.torpedoes[i].yv = 0;
-        } 
-        if (ship.torpedoes[i].y < 0) {
-            ship.torpedoes[i].xv = 0;
-            ship.torpedoes[i].yv = 0;
-        } 
-    }
-}
-
-function drawAsteroids() {
-    let x, y;
-    for (let i = 0; i < asteroids.length; i++) {
-        x = asteroids[i].x + cameraOffset.x;
-        y = asteroids[i].y + cameraOffset.y;
-        
-        asteroids[i].a > 3 ? asteroids[i].a = asteroids[i].a + Math.random() * 0.01 : asteroids[i].a = asteroids[i].a + Math.random() * -0.01;
-
-        ctx.save();
-        ctx.translate(x + cameraOffset.x, y + cameraOffset.y);
-        ctx.rotate(asteroids[i].a)
-        ctx.translate(-(x + cameraOffset.x), -(y + cameraOffset.y));
-        ctx.drawImage(asteroids[i].img, x + cameraOffset.x, y + cameraOffset.y, asteroids[i].size, asteroids[i].size)
-        ctx.restore()
-
-        // Move asteroids
-        Math.random > 0.5 ? asteroids[i].theta -= asteroids[i].speed : asteroids[i].theta += asteroids[i].speed
-        asteroids[i].x = Math.cos(asteroids[i].theta) * asteroids[i].radius + sun.x - asteroidBelt.size / 2 - cameraOffset.x;
-        asteroids[i].y = Math.sin(asteroids[i].theta) * asteroids[i].radius + sun.y - asteroidBelt.size / 2 - cameraOffset.y;
-    }
-}
-
-
 
 function drawMotionTrail() {
     for (let i = 0; i < positions.length; i++) {
@@ -316,8 +271,8 @@ function drawOverlay() {
     ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
     ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, 5, 60);
     ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
-    ctx.fillText(`Ship x: ${Math.floor(ship.x)}, y: ${Math.floor(ship.y)} Klingon x: ${klingon.x}, y: ${klingon.y}`, 5, 90);
-    ctx.fillText(`Klingon Shields: ${klingon.shields}`, 5, 105);
+    ctx.fillText(`Ship x: ${Math.floor(ship.x)}, y: ${Math.floor(ship.y)} Klingon x: ${Math.floor(klingon.x + cameraOffset.x)}, y: ${Math.floor(klingon.y + cameraOffset.y)} Camera x: ${Math.floor(camera.x)}, y: ${Math.floor(camera.y)}`, 5, 90);
+    ctx.fillText(`Scale: ${scale}`, 5, 105);
 }
 
 // Game Loop
