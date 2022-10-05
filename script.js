@@ -3,7 +3,7 @@ const mouse = {x: 0, y: 0}
 let scale = 1
 const orbitColor = 'rgb(100,100,100)';
 const shipThrust = 10
-const friction = 0.3
+const friction = 0.7
 const torpMax = 300;
 const torpSpeed = 500;
 const scanMax = 30;
@@ -54,9 +54,9 @@ function keyDown(e) {
             ship.braking = true;
             break;
         case 70: // F (Scan)
-            ship.scanning = true
-            // setTimeout(() => {ship.scanning = false}, 5000)
-            if (ship.scans.length < scanMax) {
+            ship.scanning = !ship.scanning
+            klingon.locked = !klingon.locked
+            if (ship.scans.length < scanMax && ship.scanning) {
                 ship.scans.push({
                     x: ship.x + ship.width,
                     y: ship.y + ship.height,
@@ -164,14 +164,15 @@ function drawPlanet(planet) {
 
 function drawShip() {
     if (ship.firing) {
-        ctx.lineWidth = 1
-        ctx.shadowColor = 'rgb(200, 0, 0)'
-        ctx.shadowBlur = 10
-        ctx.strokeStyle = 'rgb(235, 119, 52)'
-        ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y)
-        ctx.lineTo(mouse.x, mouse.y)
-        ctx.stroke()
-        ctx.shadowBlur = 0
+        if (klingon.locked && distBetweenPoints(ship.x, ship.y, klingon.x, klingon.y) <= 500) {
+            drawPhasers()
+            klingon.shields > 0 ? klingon.shields -= 1 : null;
+        } else if (klingon.locked && distBetweenPoints(ship.x, ship.y, klingon.x, klingon.y) > 500) {
+            console.log('out of range')
+        } else {
+            console.log('not locked on')
+        }
+        ctx.stroke();
     }
 
     // Rotate
@@ -200,8 +201,6 @@ function drawShip() {
     ship.y += ship.thrust.y;
 }
 
-
-// FIX THISSSSSSSSSSSS (ATAN2? CHANGE ANGLE TO FOLLOW THE SHIP)
 function drawKlingon() {
     ctx.save();
     klingon.a = Math.atan2(-(ship.y + cameraOffset.y - (klingon.y + cameraOffset.y)), (ship.x + cameraOffset.x - (klingon.x + cameraOffset.x))) + (Math.PI / 2) / FPS
@@ -224,6 +223,7 @@ function drawKlingon() {
         }
     }, 3000)
 
+    // Move Klingon
     if (klingon.thrusting) {
         klingon.thrust.x += shipThrust * Math.cos(klingon.a) / FPS;
         klingon.thrust.y -= shipThrust * Math.sin(klingon.a) / FPS;
@@ -237,7 +237,15 @@ function drawKlingon() {
     }
     klingon.x += klingon.thrust.x;
     klingon.y += klingon.thrust.y;
+    
+    // Locked on
+    if (klingon.locked && ship.scanning) {
+        lockedOnView()
+    }
 
+    if (ship.firing && klingon.locked && distBetweenPoints(ship.x, ship.y, klingon.x, klingon.y) <= 500) {
+        klingon.shields > 0 ? klingonShields() : klingon.shields === 0
+    }
 }
 
 function drawTorpedoes() {
@@ -260,79 +268,7 @@ function drawTorpedoes() {
             ship.torpedoes[i].xv = 0;
             ship.torpedoes[i].yv = 0;
         } 
-
     }
-}
-
-function drawScans() {
-    for (let i = 0; i < ship.scans.length; i++) {
-        ctx.strokeStyle = "rgb(30, 90, 208)"; 
-        ctx.beginPath();
-        ctx.arc(ship.scans[i].x + cameraOffset.x - ship.width, ship.scans[i].y + cameraOffset.y - ship.height, ship.scans[i].r, Math.PI * 2, false);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(ship.scans[i].x + cameraOffset.x - ship.width, ship.scans[i].y + cameraOffset.y - ship.height, 2 * ship.scans[i].r, Math.PI * 2, false);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(ship.scans[i].x + cameraOffset.x - ship.width, ship.scans[i].y + cameraOffset.y - ship.height, 3 * ship.scans[i].r, Math.PI * 2, false);
-        ctx.stroke();
-    }
-
-    for (let i = 0; i < ship.scans.length; i++) {
-        ship.scans[i].r += ship.scans[i].sv;
-    }
-}
-
-const motionTrailLength = 50
-const positions = []
-function storeLastPosition(xPos, yPos) {
-    positions.push({
-        x: xPos,
-        y: yPos
-    })
-    if (positions.length > motionTrailLength) {
-        positions.shift()
-    }
-}
-
-function drawMotionTrail() {
-    for (let i = 0; i < positions.length; i++) {
-        let ratio = (i + 1) / positions.length
-        ctx.beginPath();
-        ctx.shadowColor = 'rgba(101,150,240)'
-        ctx.shadowBlur = 10
-        ctx.arc(positions[i].x + cameraOffset.x, positions[i].y + cameraOffset.y, (ship.height / 10) * ratio, 0, 2 * Math.PI, true);
-        ctx.fillStyle = `rgba(101,150,240,${ratio / 2})`;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-    }
-}
-
-function createAsteroids() {
-    let x, y;
-    for (let i = 0; i < asteroidBelt.num; i++) {
-        let theta = Math.random() * Math.PI * 2
-        do {
-            x = Math.cos(theta) * asteroidBelt.radius * 2;
-            y = Math.sin(theta) * asteroidBelt.radius * 2;
-        } while (distBetweenPoints(ship.x, ship.y, x, y) < asteroidBelt.size * 2 + ship.height / 2);
-        asteroids.push(newAsteroid(x, y, theta));
-    }
-}
-
-function newAsteroid(x, y, theta) {
-    let asteroid = {
-        x: x,
-        y: y,
-        size: Math.random() * asteroidBelt.size,
-        theta: theta,
-        a: Math.random() * 360 * Math.PI / 180,
-        radius: asteroidBelt.radius + Math.random() * 50,
-        speed: asteroidBelt.speed * Math.random(),
-        img: document.getElementById(`asteroid${Math.floor(Math.random() * 10) + 1}`),
-    }
-
-    return asteroid;
 }
 
 function drawAsteroids() {
@@ -354,7 +290,21 @@ function drawAsteroids() {
         Math.random > 0.5 ? asteroids[i].theta -= asteroids[i].speed : asteroids[i].theta += asteroids[i].speed
         asteroids[i].x = Math.cos(asteroids[i].theta) * asteroids[i].radius + sun.x - asteroidBelt.size / 2 - cameraOffset.x;
         asteroids[i].y = Math.sin(asteroids[i].theta) * asteroids[i].radius + sun.y - asteroidBelt.size / 2 - cameraOffset.y;
+    }
+}
 
+
+
+function drawMotionTrail() {
+    for (let i = 0; i < positions.length; i++) {
+        let ratio = (i + 1) / positions.length
+        ctx.beginPath();
+        ctx.shadowColor = 'rgba(101,150,240)'
+        ctx.shadowBlur = 10
+        ctx.arc(positions[i].x + cameraOffset.x, positions[i].y + cameraOffset.y, (ship.height / 10) * ratio, 0, 2 * Math.PI, true);
+        ctx.fillStyle = `rgba(101,150,240,${ratio / 2})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
     }
 }
 
@@ -366,8 +316,8 @@ function drawOverlay() {
     ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
     ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, 5, 60);
     ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
-    ctx.fillText(`Sun: ${sun.x}, ${sun.y}`, 5, 90);
-    ctx.fillText(`Target Angle: ${Math.atan2(-(ship.y - (klingon.y + cameraOffset.y)), (ship.x - (klingon.x + cameraOffset.x))) + (Math.PI / 2) / FPS}, Klingon Angle: ${klingon.a}`, 5, 105);
+    ctx.fillText(`Ship x: ${Math.floor(ship.x)}, y: ${Math.floor(ship.y)} Klingon x: ${klingon.x}, y: ${klingon.y}`, 5, 90);
+    ctx.fillText(`Klingon Shields: ${klingon.shields}`, 5, 105);
 }
 
 // Game Loop
@@ -382,14 +332,14 @@ function loop() {
     cameraOffset.y = canvas.height / 2 - ship.y
 
     ship.scanning ? drawOverlay() : null;
-    drawMotionTrail();
-    drawShip();
-    drawTorpedoes();
-    drawScans();
     drawStars();
     drawSun();
     planets.forEach(drawPlanet);
     drawAsteroids();
+    drawMotionTrail();
+    drawShip();
+    drawTorpedoes();
+    drawScans();
     drawKlingon();
     
     storeLastPosition(ship.x, ship.y)
@@ -397,7 +347,6 @@ function loop() {
     setTimeout(() => {
         requestAnimationFrame(loop);
     }, 1000 / FPS)
-    
 }
 
 requestAnimationFrame(loop);
