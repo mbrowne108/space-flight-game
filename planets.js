@@ -18,7 +18,8 @@ const mercury = {
     speed: 0.004787,
     theta: Math.random() * 2 * Math.PI,
     radius: 35 * 6,
-    locked: false
+    locked: false,
+    moons: []
 }
 
 const venus = {
@@ -29,7 +30,8 @@ const venus = {
     width: 9.5 * (4/3) * 2,
     theta: Math.random() * 2 * Math.PI,
     radius: 67 * 6,
-    locked: false
+    locked: false,
+    moons: []
 }
 
 const earth = {
@@ -40,8 +42,17 @@ const earth = {
     width: 10 * (4/3) * 2,
     theta: Math.random() * 2 * Math.PI,
     radius: 93 * 6,
-    hasMoon: true,
-    locked: false
+    locked: false,
+    moons: [{
+        el: document.getElementById("moon"),
+        name: 'Moon',
+        height: 2.7 * 2,
+        width: 2.7 * (4/3) * 2,
+        speed: 0.0002978 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 5 * 6,
+        locked: false
+    }]
 }
 
 const mars = {
@@ -52,7 +63,8 @@ const mars = {
     width: 5.3 * (4/3) * 2,
     theta: Math.random() * 2 * Math.PI,
     radius: 142 * 6,
-    locked: false
+    locked: false,
+    moons: []
 }
 
 const jupiter = {
@@ -63,7 +75,8 @@ const jupiter = {
     speed: 0.001307,
     theta: Math.random() * 2 * Math.PI,
     radius: 484 * 6,
-    locked: false
+    locked: false,
+    moons: []
 }
 
 const saturn = {
@@ -74,7 +87,8 @@ const saturn = {
     speed: 0.000969,
     theta: Math.random() * 2 * Math.PI,
     radius: 889 * 6,
-    locked: false
+    locked: false,
+    moons: []
 }
 
 const uranus = {
@@ -85,7 +99,8 @@ const uranus = {
     speed: -(0.000681),
     theta: Math.random() * 2 * Math.PI,
     radius: 1790 * 6,
-    locked: false
+    locked: false,
+    moons: []
 }
 
 const neptune = {
@@ -96,7 +111,8 @@ const neptune = {
     speed: 0.000543,
     theta: Math.random() * 2 * Math.PI,
     radius: 2880 * 6,
-    locked: false
+    locked: false,
+    moons: []
 }
 
 const pluto = {
@@ -104,27 +120,17 @@ const pluto = {
     name: 'Pluto',
     height: 2 * 2,
     width: 2 * (4/3) * 2,
-    speed: 0.000474,
+    speed: 0.0000474,
     theta: Math.random() * 2 * Math.PI,
     radius: 3670 * 6,
-    locked: false
-}
-
-const moon = {
-    el: document.getElementById("moon"),
-    name: 'Moon',
-    height: 2.7 * 2,
-    width: 2.7 * (4/3) * 2,
-    speed: 0.002978 * 12,
-    theta: Math.random() * 2 * Math.PI,
-    radius: 5 * 6,
-    locked: false
+    locked: false,
+    moons: []
 }
 
 const asteroidBelt = {
     num: 300,
     size: 20,
-    speed: 0.0004077,
+    speed: 0.00004077,
     radius: 300 * 6
 }
 
@@ -197,8 +203,9 @@ function drawPlanet(planet) {
     ctx.drawImage(planet.el, planet.x + cameraOffset.x, planet.y + cameraOffset.y, planet.width, planet.height)
 
     // Moon orbit and movement
-    if (planet.hasMoon) {
+    planet.moons.map((moon) => {
         ctx.strokeStyle = orbitColor
+        ctx.lineWidth = 1 / scale
         ctx.beginPath()
         ctx.arc(planet.x + (planet.width / 2) + cameraOffset.x, planet.y + (planet.height / 2) + cameraOffset.y, moon.radius, 0, 2 * Math.PI)
         ctx.stroke()
@@ -207,7 +214,7 @@ function drawPlanet(planet) {
         moon.x = Math.cos(moon.theta) * moon.radius + planet.x + moon.width
         moon.y = Math.sin(moon.theta) * moon.radius + planet.y + moon.height
         ctx.drawImage(moon.el, moon.x + cameraOffset.x + moon.width / 3, moon.y + cameraOffset.y + moon.height / 3, moon.width, moon.height)
-    }
+    })
 
     // Hover over planet
     if ((mouse.x > planet.x + cameraOffset.x && mouse.x < planet.x + planet.width + cameraOffset.x) && 

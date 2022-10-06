@@ -28,6 +28,11 @@ const ship = {
     thrust: {
         x: 0,
         y: 0
+    },
+    orbit: {
+        speed: 0.00474,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 1 * 6
     }
 }
 
@@ -230,15 +235,15 @@ function shipShields() {
 }
 
 function orbitPlanet(planet) {
-    if (distBetweenPoints(ship.x, ship.y, Math.cos(planet.theta) * planet.radius + sun.x, Math.sin(planet.theta) * planet.radius + sun.y) < planet.width) {
-        shipTrailPositions = []
-        klingonTrailPositions = []  
-        ship.x = Math.cos(planet.theta) * planet.radius + sun.x - planet.width / 2
-        ship.y = Math.sin(planet.theta) * planet.radius + sun.y - planet.height / 2
+    if (distBetweenPoints(ship.x, ship.y, planet.x + planet.width / 2, planet.y + planet.height / 2) < planet.width + 100) {
+        ship.orbit.theta -= ship.orbit.speed
+        
+        ship.x = Math.cos(ship.orbit.theta) * (ship.orbit.radius + planet.width / 2) + planet.x + planet.width / 2
+        ship.y = Math.sin(ship.orbit.theta) * (ship.orbit.radius + planet.height / 2) + planet.y + (planet.height * 4/3) / 2
     } else {
+        ship.orbiting = !ship.orbiting
         console.log('too far away')
     }
-    
 }
 
 function drawShip() {
@@ -246,13 +251,11 @@ function drawShip() {
     drawTorpedoes();
     drawScans();
 
-    
     if (ship.orbiting) {
         planets.map((planet) => {
             planet.locked ? orbitPlanet(planet) : null
         })
     }
-    
     if (ship.firing) {
         if (klingons[lockId].locked && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) <= 500) {
             if (ship.phaserCharge > 0) {

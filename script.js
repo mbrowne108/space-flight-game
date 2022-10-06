@@ -116,7 +116,13 @@ function keyDown(e) {
             overlay.show = !overlay.show
             break;
         case 82: // R (Match speed of target)
+            
             ship.scanning ? ship.orbiting = !ship.orbiting : null
+            break;
+        case 48: // 1 (Clear Planet Locks)
+            if (ship.scanning) {
+                planets.forEach((planet) => planet.locked = false)
+            }    
             break;
         case 49: // 1 (Lock Mercury)
             if (ship.scanning) {
@@ -124,6 +130,7 @@ function keyDown(e) {
                     i !== 0 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
                 }
             }
+            break;
         case 50: // 2 (Lock Venus)
             if (ship.scanning) {
                 for (let i = 0; i < planets.length; i++) {
@@ -238,9 +245,9 @@ function loop() {
     cameraOffset.y = canvas.height / 2 - ship.y
 
     overlay.show ? drawOverlay() : null;
+    drawStars();
     drawShip();
     drawKlingons();
-    drawStars();
     drawSun();
     
     planets.forEach(drawPlanet);
