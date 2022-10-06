@@ -10,7 +10,12 @@
     </head>
     <body>
         <div>
-            <canvas id="canvas"></canvas>
+            <div id="container">
+                <canvas id="canvas"></canvas>
+                <div id="overlay" style="display: none;">
+                    <h1>Overlay</h1>
+                </div>
+            </div>
             <div>
                 <img src="images/planets/sun.png" id="sun"/>
                 <img src="images/planets/mercury.png" id="mercury"/>
@@ -24,12 +29,13 @@
                 <img src="images/planets/neptune.png" id="neptune"/>
                 <img src="images/planets/pluto.png" id="pluto"/>
                 <div>
-                    <img src="images/ship.png" id="ship"/>
-                    <img src="images/ship-thrusting.png" id="ship-thrusting"/>
-                    <img src="images/torpedo.png" id="torpedo"/>
+                    <img src="images/ships/enterprise/ship.png" id="ship"/>
+                    <img src="images/ships/enterprise/ship-thrusting.png" id="ship-thrusting"/>
+                    <img src="images/ships/torpedo.png" id="torpedo"/>
                 </div>
                 <div>
-                    <img src="images/klingon.png" id="klingon"/>
+                    <img src="images/ships/klingon/klingon.png" id="klingon"/>
+                    <img src="images/ships/klingon/klingon-thrusting.png" id="klingon-thrusting"/>
                 </div>
                 <div>
                     <img src="images/asteroids/asteroid1.png" id="asteroid1">
@@ -44,6 +50,7 @@
                     <img src="images/asteroids/asteroid10.png" id="asteroid10">
                 </div>
             </div>
+            <script src="overlay.js"></script>
             <script src="asteroid-belt.js"></script>
             <script src="klingon.js"></script>
             <script src="ship.js"></script>

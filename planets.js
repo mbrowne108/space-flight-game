@@ -5,7 +5,6 @@ const sun = {
     width: 100 * (4/3),
     x: 3000,
     y: 3000,
-    shadow: "rgb(255, 193, 6)"
 }
 
 const mercury = {
