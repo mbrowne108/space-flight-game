@@ -1,3 +1,5 @@
+asteroids = [];
+
 function createAsteroids() {
     let x, y;
     for (let i = 0; i < asteroidBelt.num; i++) {

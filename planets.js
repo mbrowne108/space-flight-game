@@ -1,3 +1,5 @@
+const orbitColor = 'rgb(100,100,100)';
+
 const sun = {
     el: document.getElementById("sun"),
     name: "Sun",
@@ -126,3 +128,54 @@ const asteroidBelt = {
 }
 
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
+
+function drawSun() {
+    ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
+    ctx.scale(scale, scale);
+    ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
+
+    ctx.shadowColor = "rgb(255, 193, 6)"
+    ctx.shadowBlur = sun.height
+    ctx.drawImage(sun.el, sun.x - (sun.width / 2) + cameraOffset.x, sun.y - (sun.height / 2) + cameraOffset.y, sun.width, sun.height)
+    ctx.shadowBlur = 0
+}
+
+function drawPlanet(planet) {
+    // Draw orbit
+
+    ctx.beginPath()
+    ctx.strokeStyle = orbitColor
+    ctx.lineWidth = 1 / scale
+    ctx.arc(sun.x + cameraOffset.x, sun.y + cameraOffset.y, planet.radius, 0, 2 * Math.PI)
+    ctx.stroke()
+
+    // Planet movement
+    planet.theta -= planet.speed
+    planet.x = Math.cos(planet.theta) * planet.radius + sun.x - planet.width / 2
+    planet.y = Math.sin(planet.theta) * planet.radius + sun.y - planet.height / 2
+    ctx.shadowColor = planet.shadow
+    ctx.shadowBlur = planet.height * 3
+    ctx.drawImage(planet.el, planet.x + cameraOffset.x, planet.y + cameraOffset.y, planet.width, planet.height)
+    ctx.shadowBlur = 0
+
+    // Moon orbit and movement
+    if (planet.hasMoon) {
+        ctx.strokeStyle = orbitColor
+        ctx.beginPath()
+        ctx.arc(planet.x + (planet.width / 2) + cameraOffset.x, planet.y + (planet.height / 2) + cameraOffset.y, moon.radius, 0, 2 * Math.PI)
+        ctx.stroke()
+
+        moon.theta -= moon.speed
+        moon.x = Math.cos(moon.theta) * moon.radius + planet.x + moon.width
+        moon.y = Math.sin(moon.theta) * moon.radius + planet.y + moon.height
+        ctx.drawImage(moon.el, moon.x + cameraOffset.x + moon.width / 3, moon.y + cameraOffset.y + moon.height / 3, moon.width, moon.height)
+    }
+
+    // Hover over planet
+    if ((mouse.x > planet.x + cameraOffset.x && mouse.x < planet.x + planet.width + cameraOffset.x) && 
+        (mouse.y > planet.y + cameraOffset.y && mouse.y < planet.y + planet.height + cameraOffset.y)) {
+            ctx.fillStyle = "white";
+            ctx.font = "16px serif";
+            ctx.fillText(planet.name, planet.x + cameraOffset.x, planet.y + cameraOffset.y - 5)
+        }
+}

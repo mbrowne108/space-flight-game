@@ -1,3 +1,9 @@
+const maxPhaserCharge = 100
+const shipThrust = 10
+const friction = 0.7
+const torpSpeed = 500;
+const scanSpeed = 700;
+
 const ship = {
     el: document.getElementById("ship"),
     elThrust: document.getElementById("ship-thrusting"),
@@ -6,6 +12,7 @@ const ship = {
     height: 50 * (4/3),
     width: 50,
     a: 90 / 180 * Math.PI,
+    phaserCharge: maxPhaserCharge,
     torpCount: 250,
     torpedoes: [],
     scans: [],
@@ -36,16 +43,16 @@ function drawPhasers() {
     ctx.strokeStyle = 'rgb(235, 119, 52)'
     ctx.beginPath();
     ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y)
-    if (klingon.shields === 0) {
-        ctx.lineTo(klingon.x + cameraOffset.x + Math.random() * 2, klingon.y + cameraOffset.y + Math.random() * 2);
-    } else if (ship.x > klingon.x && ship.y > klingon.y) {
-        ctx.lineTo(klingon.x + klingon.width / 2 + cameraOffset.x + Math.random() * 2, klingon.y + klingon.height / 2 + cameraOffset.y + Math.random() * 2);
-    } else if (ship.x > klingon.x && ship.y < klingon.y) {
-        ctx.lineTo(klingon.x + klingon.width / 2 + cameraOffset.x + Math.random() * 2, klingon.y - klingon.height / 2 + cameraOffset.y + Math.random() * 2);
-    } else if (ship.x < klingon.x && ship.y < klingon.y) {
-        ctx.lineTo(klingon.x - klingon.width / 2 + cameraOffset.x + Math.random() * 2, klingon.y - klingon.height / 2 + cameraOffset.y + Math.random() * 2);
-    } else if (ship.x < klingon.x && ship.y > klingon.y) {
-        ctx.lineTo(klingon.x - klingon.width / 2 + cameraOffset.x + Math.random() * 2, klingon.y + klingon.height / 2 + cameraOffset.y + Math.random() * 2);
+    if (klingons[lockId].shields === 0) {
+        ctx.lineTo(klingons[lockId].x + cameraOffset.x + Math.random() * 2, klingons[lockId].y + cameraOffset.y + Math.random() * 2);
+    } else if (ship.x > klingons[lockId].x && ship.y > klingons[lockId].y) {
+        ctx.lineTo(klingons[lockId].x + klingons[lockId].width / 2 + cameraOffset.x + Math.random() * 2, klingons[lockId].y + klingons[lockId].height / 2 + cameraOffset.y + Math.random() * 2);
+    } else if (ship.x > klingons[lockId].x && ship.y < klingons[lockId].y) {
+        ctx.lineTo(klingons[lockId].x + klingons[lockId].width / 2 + cameraOffset.x + Math.random() * 2, klingons[lockId].y - klingons[lockId].height / 2 + cameraOffset.y + Math.random() * 2);
+    } else if (ship.x < klingons[lockId].x && ship.y < klingons[lockId].y) {
+        ctx.lineTo(klingons[lockId].x - klingons[lockId].width / 2 + cameraOffset.x + Math.random() * 2, klingons[lockId].y - klingons[lockId].height / 2 + cameraOffset.y + Math.random() * 2);
+    } else if (ship.x < klingons[lockId].x && ship.y > klingons[lockId].y) {
+        ctx.lineTo(klingons[lockId].x - klingons[lockId].width / 2 + cameraOffset.x + Math.random() * 2, klingons[lockId].y + klingons[lockId].height / 2 + cameraOffset.y + Math.random() * 2);
     }
     ctx.stroke();
     ctx.shadowBlur = 0
@@ -157,4 +164,53 @@ function shipShields() {
     ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 2, ship.height / 1.5, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
     ctx.stroke();
     ctx.shadowBlur = 0
+}
+
+function drawShip() {
+    drawShipTrail();
+
+    if (ship.firing) {
+        if (klingons[lockId].locked && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) <= 500) {
+            if (ship.phaserCharge > 0) {
+                ship.phaserCharge -= 1
+                drawPhasers();
+                klingons[lockId].shields > 0 ? klingons[lockId].shields -= 1 : null;
+            } else {
+                ship.firing = false
+            }
+        } else if (klingons[lockId].locked && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) > 500) {
+            console.log('out of range')
+        } else {
+            console.log('not locked on')
+        }
+    } else {
+        if (ship.phaserCharge < maxPhaserCharge) {ship.phaserCharge += 0.25}
+    }
+
+    // Rotate
+    ctx.save();
+    ship.a = Math.atan2(-(mouse.y - (ship.y + cameraOffset.y)), (mouse.x - (ship.x + cameraOffset.x))) + (Math.PI / 2) / FPS;
+    ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
+    ctx.rotate(-ship.a + 90 * Math.PI / 180)
+    ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
+    ctx.drawImage(ship.thrusting ? ship.elThrust : ship.el, ship.x - (ship.width / 2) + cameraOffset.x, ship.y - (ship.height / 1.7) + cameraOffset.y, ship.width, ship.height)
+    ctx.restore();
+
+    // Move ship
+    if (ship.thrusting) {
+        ship.thrust.x += shipThrust * Math.cos(ship.a) / FPS;
+        ship.thrust.y -= shipThrust * Math.sin(ship.a) / FPS;
+    } else {
+        ship.thrust.x -= friction * ship.thrust.x / FPS;
+        ship.thrust.y -= friction * ship.thrust.y / FPS;
+    }
+
+    if (ship.braking) {
+        ship.thrust.x -= 3 * friction * ship.thrust.x / FPS;
+        ship.thrust.y -= 3 * friction * ship.thrust.y / FPS;
+    }
+    ship.x += ship.thrust.x
+    ship.y += ship.thrust.y
+
+    ship.shieldsUp ? shipShields() : null
 }
