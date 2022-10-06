@@ -38,24 +38,26 @@ function newKlingon(x, y) {
 
 function lockedOnView(klingon) {
     ctx.strokeStyle = "rgb(255, 0, 0)";
-    ctx.lineWidth = 10 / scale
+    ctx.lineWidth = 10
     if (klingon.x + klingon.width / 2 + cameraOffset.x < 0 || 
         klingon.x + klingon.width / 2 + cameraOffset.x > canvas.width ||
         klingon.y + klingon.width / 2 + cameraOffset.y < 0 ||
         klingon.y + klingon.width / 2 + cameraOffset.y > canvas.height
     ) {
-        ctx.strokeStyle = "rgba(54, 54, 255, 0.1)";
-        ctx.lineWidth = 5 / scale
+        ctx.save()
+        ctx.strokeStyle = "rgba(54, 54, 255, 0.5)";
+        ctx.lineWidth = 5
         ctx.setLineDash([50, 50])
-        ctx.lineDashOffset = 50 / scale
+        ctx.lineDashOffset = 50
         ctx.beginPath();
         ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
-        // ctx.lineCap = 'round';
+        ctx.lineCap = 'round';
         ctx.lineTo(klingon.x + cameraOffset.x, klingon.y + cameraOffset.y);
         ctx.stroke()
+        ctx.restore()
     } else {
         ctx.strokeStyle = "rgb(255, 0, 0)";
-        ctx.lineWidth = 1 / scale
+        ctx.lineWidth = 1
         ctx.beginPath();
         ctx.moveTo(klingon.x + cameraOffset.x - 10 - klingon.thrust.x, klingon.y + cameraOffset.y - 30 - klingon.thrust.y);
         ctx.lineTo(klingon.x + cameraOffset.x - 30 - klingon.thrust.x, klingon.y + cameraOffset.y - 30 - klingon.thrust.y);

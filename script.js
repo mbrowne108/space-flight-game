@@ -173,15 +173,13 @@ function loop() {
     cameraOffset.y = canvas.height / 2 - ship.y
 
     overlay.show ? drawOverlay() : null;
+    drawShip();
+    drawKlingons();
     drawStars();
     drawSun();
     
     planets.forEach(drawPlanet);
     drawAsteroids();
-    drawShip();
-    drawTorpedoes();
-    drawScans();
-    drawKlingons();
 
     storeLastShipPosition(ship.x, ship.y)
 

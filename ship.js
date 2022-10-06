@@ -71,12 +71,40 @@ function drawTorpedoes() {
         ship.torpedoes[i].x += ship.torpedoes[i].xv + ship.thrust.x;
         ship.torpedoes[i].y += ship.torpedoes[i].yv + ship.thrust.y;
     }
+
+    // Torpedo hits
+    let kx, ky, kr, tx, ty
+    for(let i = klingons.length - 1; i >=0; i--) {
+        kx = klingons[i].x + cameraOffset.x
+        ky = klingons[i].y + cameraOffset.y
+        kr = klingons[i].height / 1.1
+        
+        for (let j = ship.torpedoes.length - 1; j >= 0; j--) {
+            tx = ship.torpedoes[j].x + cameraOffset.x
+            ty = ship.torpedoes[j].y + cameraOffset.y
+
+            if (distBetweenPoints(kx, ky, tx, ty) < kr) {
+                ship.torpedoes.splice(j, 1)
+                if (klingons[i].shields > 0) {
+                    klingonShields(klingons[i])
+                    klingons[i].shields -= 260
+                } else if (klingons[i].shields <= 0 && klingons[i].hull > 0) {
+                    kr = klingons[i].height / 1.1
+                    klingons[i].hull -= 260
+                } else if (klingons[i].hull <= 0) {
+                    kr = klingons[i].height / 1.1
+                    klingons.splice(i, 1)
+                }
+            }
+        }
+    }
 }
+
 
 function drawScans() {
     for (let i = 0; i < ship.scans.length; i++) {
         ctx.strokeStyle = `rgb(54, 54, 255, ${1 - (ship.scans[i].r * 0.001)})`; 
-        ctx.lineWidth = 1 / scale
+        ctx.lineWidth = 1
         ctx.beginPath();
         ctx.arc(ship.scans[i].x + cameraOffset.x - ship.width, ship.scans[i].y + cameraOffset.y - ship.height, ship.scans[i].r, Math.PI * 2, false);
         ctx.stroke();
@@ -202,13 +230,23 @@ function shipShields() {
 
 function drawShip() {
     drawShipTrail();
+    drawTorpedoes();
+    drawScans();
 
     if (ship.firing) {
         if (klingons[lockId].locked && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) <= 500) {
             if (ship.phaserCharge > 0) {
                 ship.phaserCharge -= 1
                 drawPhasers();
-                klingons[lockId].shields > 0 ? klingons[lockId].shields -= 1 : null;
+                if (klingons[lockId].shields > 0) {
+                    klingons[lockId].shields -= 1
+                } else if (klingons[lockId].shields <= 0 && klingons[lockId].hull > 0) {
+                    klingons[lockId].hull -= 1
+                } else if (klingons[lockId].hull <= 0) {
+                    klingons.splice(lockId, 1)
+                    klingons[lockId].locked = !klingons[lockId].locked
+                }
+                
             } else {
                 ship.firing = false
             }

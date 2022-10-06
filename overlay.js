@@ -23,6 +23,6 @@ function drawOverlay() {
     ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
     ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, 5, 60);
     ctx.fillText(`Canvas: ${Math.round(canvas.width)}, ${Math.round(canvas.width)}`, 5, 75);
-    ctx.fillText(`Phasers: ${ship.phaserCharge}`, 5, 90);
+    ctx.fillText(`Klingon Health - Shields:${klingons[0].shields} Hull: ${klingons[0].hull}`, 5, 90);
     ctx.fillText(`Thrust ${ship.thrust.x}, ${ship.thrust.y}`, 5, 105);
 }
