@@ -18,7 +18,7 @@ const mercury = {
     speed: 0.004787,
     theta: Math.random() * 2 * Math.PI,
     radius: 35 * 6,
-    shadow: "rgb(225, 177, 101)"
+    locked: false
 }
 
 const venus = {
@@ -29,7 +29,7 @@ const venus = {
     width: 9.5 * (4/3) * 2,
     theta: Math.random() * 2 * Math.PI,
     radius: 67 * 6,
-    shadow: "rgb(203, 173, 115)"
+    locked: false
 }
 
 const earth = {
@@ -40,8 +40,8 @@ const earth = {
     width: 10 * (4/3) * 2,
     theta: Math.random() * 2 * Math.PI,
     radius: 93 * 6,
-    shadow: "rgb(113, 115, 174)",
-    hasMoon: true
+    hasMoon: true,
+    locked: false
 }
 
 const mars = {
@@ -52,7 +52,7 @@ const mars = {
     width: 5.3 * (4/3) * 2,
     theta: Math.random() * 2 * Math.PI,
     radius: 142 * 6,
-    shadow: "rgb(203, 84, 14)"
+    locked: false
 }
 
 const jupiter = {
@@ -63,7 +63,7 @@ const jupiter = {
     speed: 0.001307,
     theta: Math.random() * 2 * Math.PI,
     radius: 484 * 6,
-    shadow: "rgb(194, 142, 123)"
+    locked: false
 }
 
 const saturn = {
@@ -74,7 +74,7 @@ const saturn = {
     speed: 0.000969,
     theta: Math.random() * 2 * Math.PI,
     radius: 889 * 6,
-    shadow: "rgb(251, 204, 132)"
+    locked: false
 }
 
 const uranus = {
@@ -85,7 +85,7 @@ const uranus = {
     speed: -(0.000681),
     theta: Math.random() * 2 * Math.PI,
     radius: 1790 * 6,
-    shadow: "rgb(207, 245, 247)"
+    locked: false
 }
 
 const neptune = {
@@ -96,7 +96,7 @@ const neptune = {
     speed: 0.000543,
     theta: Math.random() * 2 * Math.PI,
     radius: 2880 * 6,
-    shadow: "rgb(72, 129, 255)"
+    locked: false
 }
 
 const pluto = {
@@ -107,7 +107,7 @@ const pluto = {
     speed: 0.000474,
     theta: Math.random() * 2 * Math.PI,
     radius: 3670 * 6,
-    shadow: "rgb(231, 175, 128)"
+    locked: false
 }
 
 const moon = {
@@ -118,7 +118,7 @@ const moon = {
     speed: 0.002978 * 12,
     theta: Math.random() * 2 * Math.PI,
     radius: 5 * 6,
-    shadow: "rgb(245, 236, 237)"
+    locked: false
 }
 
 const asteroidBelt = {
@@ -130,6 +130,45 @@ const asteroidBelt = {
 
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
+function lockedOnPlanetView(planet) {
+    ctx.strokeStyle = "rgb(255, 0, 0)";
+    ctx.lineWidth = 10
+    if (planet.x + planet.width / 2 + cameraOffset.x < 0 || 
+        planet.x + planet.width / 2 + cameraOffset.x > canvas.width ||
+        planet.y + planet.width / 2 + cameraOffset.y < 0 ||
+        planet.y + planet.width / 2 + cameraOffset.y > canvas.height
+    ) {
+        ctx.save()
+        ctx.strokeStyle = "rgba(0, 155, 255, 0.5)";
+        ctx.lineWidth = 5
+        ctx.setLineDash([50, 50])
+        ctx.lineDashOffset = 50
+        ctx.beginPath();
+        ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
+        ctx.lineCap = 'round';
+        ctx.lineTo(planet.x + cameraOffset.x + planet.width / 2, planet.y + cameraOffset.y + planet.height / 2);
+        ctx.stroke()
+        ctx.restore()
+    } else {
+        ctx.strokeStyle = "rgb(0, 155, 255)";
+        ctx.lineWidth = 1 / scale
+        ctx.beginPath();
+        ctx.moveTo(planet.x + planet.width / 2 + cameraOffset.x - 10 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 30 * planet.height / 30);
+        ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x - 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 30 * planet.height / 30);
+        ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x - 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 10 * planet.height / 30);
+        ctx.moveTo(planet.x + planet.width / 2 + cameraOffset.x - 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y + 10 * planet.height / 30);
+        ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x - 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y + 30 * planet.height / 30);
+        ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x - 10 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y + 30 * planet.height / 30);
+        ctx.moveTo(planet.x + planet.width / 2 + cameraOffset.x + 10 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y + 30 * planet.height / 30);
+        ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x + 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y + 30 * planet.height / 30);
+        ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x + 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y + 10 * planet.height / 30);
+        ctx.moveTo(planet.x + planet.width / 2 + cameraOffset.x + 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 10 * planet.height / 30);
+        ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x + 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 30 * planet.height / 30);
+        ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x + 10 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 30 * planet.height / 30);
+        ctx.stroke()
+    }
+}
+
 function drawSun() {
     ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
     ctx.scale(scale, scale);
@@ -140,12 +179,16 @@ function drawSun() {
 
 function drawPlanet(planet) {
     // Draw orbit
-
     ctx.beginPath()
     ctx.strokeStyle = orbitColor
     ctx.lineWidth = 1 / scale
     ctx.arc(sun.x + cameraOffset.x, sun.y + cameraOffset.y, planet.radius, 0, 2 * Math.PI)
     ctx.stroke()
+
+    // Locked on
+    if (planet.locked && ship.scanning) {
+        lockedOnPlanetView(planet)
+    }
 
     // Planet movement
     planet.theta -= planet.speed

@@ -36,7 +36,7 @@ function newKlingon(x, y) {
     return klingon;
 }
 
-function lockedOnView(klingon) {
+function lockedOnKlingonView(klingon) {
     ctx.strokeStyle = "rgb(255, 0, 0)";
     ctx.lineWidth = 10
     if (klingon.x + klingon.width / 2 + cameraOffset.x < 0 || 
@@ -45,7 +45,7 @@ function lockedOnView(klingon) {
         klingon.y + klingon.width / 2 + cameraOffset.y > canvas.height
     ) {
         ctx.save()
-        ctx.strokeStyle = "rgba(54, 54, 255, 0.5)";
+        ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
         ctx.lineWidth = 5
         ctx.setLineDash([50, 50])
         ctx.lineDashOffset = 50
@@ -107,7 +107,7 @@ function klingonShields(klingon) {
 }
 
 const klingonMotionTrailLength = 50
-const klingonTrailPositions = []
+let klingonTrailPositions = []
 function storeLastKlingonPosition(klingon) {
     klingon.trailPosition.push({
         x: klingon.x,
@@ -142,7 +142,6 @@ function drawKlingonTrail(klingon) {
 
 function drawKlingons() {
     for (let i = 0; i < klingons.length; i++) {
-        
         drawKlingonTrail(klingons[i])
         
         if (klingons[i].shields < 500) {
@@ -204,7 +203,7 @@ function drawKlingons() {
         
         // Locked on
         if (klingons[i].locked && ship.scanning) {
-            lockedOnView(klingons[i])
+            lockedOnKlingonView(klingons[i])
         }
 
         if (ship.firing && klingons[i].locked && distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) <= 500) {

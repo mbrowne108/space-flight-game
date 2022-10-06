@@ -7,8 +7,8 @@ const scanSpeed = 400;
 const ship = {
     el: document.getElementById("ship"),
     elThrust: document.getElementById("ship-thrusting"),
-    x: 2900,
-    y: 2900,
+    x: 2300,
+    y: 2300,
     height: 50 * (4/3),
     width: 50,
     a: 90 / 180 * Math.PI,
@@ -20,6 +20,7 @@ const ship = {
     thrusting: false,
     braking: false,
     firing: false,
+    orbiting: false,
     shieldsUp: false,
     shields: 2040,
     hull: 510,
@@ -122,7 +123,7 @@ function drawScans() {
 }
 
 const shipTrailLength = 50
-const shipTrailPositions = []
+let shipTrailPositions = []
 function storeLastShipPosition(xPos, yPos) {
     shipTrailPositions.push({
         x: xPos,
@@ -228,11 +229,30 @@ function shipShields() {
     ctx.shadowBlur = 0
 }
 
+function orbitPlanet(planet) {
+    if (distBetweenPoints(ship.x, ship.y, Math.cos(planet.theta) * planet.radius + sun.x, Math.sin(planet.theta) * planet.radius + sun.y) < planet.width) {
+        shipTrailPositions = []
+        klingonTrailPositions = []  
+        ship.x = Math.cos(planet.theta) * planet.radius + sun.x - planet.width / 2
+        ship.y = Math.sin(planet.theta) * planet.radius + sun.y - planet.height / 2
+    } else {
+        console.log('too far away')
+    }
+    
+}
+
 function drawShip() {
     drawShipTrail();
     drawTorpedoes();
     drawScans();
 
+    
+    if (ship.orbiting) {
+        planets.map((planet) => {
+            planet.locked ? orbitPlanet(planet) : null
+        })
+    }
+    
     if (ship.firing) {
         if (klingons[lockId].locked && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) <= 500) {
             if (ship.phaserCharge > 0) {

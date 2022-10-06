@@ -115,6 +115,71 @@ function keyDown(e) {
             e.preventDefault()
             overlay.show = !overlay.show
             break;
+        case 82: // R (Match speed of target)
+            ship.scanning ? ship.orbiting = !ship.orbiting : null
+            break;
+        case 49: // 1 (Lock Mercury)
+            if (ship.scanning) {
+                for (let i = 0; i < planets.length; i++) {
+                    i !== 0 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
+                }
+            }
+        case 50: // 2 (Lock Venus)
+            if (ship.scanning) {
+                for (let i = 0; i < planets.length; i++) {
+                    i !== 1 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
+                }
+            }
+            break;
+        case 51: // 3 (Lock Earth)
+            if (ship.scanning) {
+                for (let i = 0; i < planets.length; i++) {
+                    i !== 2 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
+                }
+            }
+            break;
+        case 52: // 4 (Lock Mars)
+            if (ship.scanning) {
+                for (let i = 0; i < planets.length; i++) {
+                    i !== 3 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
+                }
+            }
+            break;
+        case 53: // 5 (Lock Jupiter)
+            if (ship.scanning) {
+                for (let i = 0; i < planets.length; i++) {
+                    i !== 4 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
+                }
+            }
+            break;
+        case 54: // 6 (Lock Saturn)
+            if (ship.scanning) {
+                for (let i = 0; i < planets.length; i++) {
+                    i !== 5 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
+                }
+            }
+            break;    
+        case 55: // 7 (Lock Uranus)
+            if (ship.scanning) {
+                for (let i = 0; i < planets.length; i++) {
+                    i !== 6 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
+                }
+            }
+            break;
+        case 56: // 8 (Lock Neptune)
+            if (ship.scanning) {
+                for (let i = 0; i < planets.length; i++) {
+                    i !== 7 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
+                }
+            }
+            break;
+        case 57: // 9 (Lock Pluto)
+            if (ship.scanning) {
+                for (let i = 0; i < planets.length; i++) {
+                    i !== 8 ? planets[i].locked = false : planets[i].locked = !planets[i].locked
+                }
+            }
+            break;
     }
 }
 
