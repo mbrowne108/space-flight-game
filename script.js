@@ -30,7 +30,7 @@ window.addEventListener('mousemove', (e) => {
 })
 window.addEventListener("mousedown", (e) => { // Right Click (Phasers)
     if (e.button != 0) {
-        if (ship.phaserCharge > 0) {
+        if (ship.phaserCharge > 0 && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) <= 500) {
             ship.firing = true;
         }
     }
@@ -40,18 +40,24 @@ window.addEventListener('mouseup', (e) => {
     ship.firing = false;
 })
 window.addEventListener('click', (e) => { // Left Click (Torpedo)
-    ship.torpCount -= 1
-
-    if (ship.torpCount > 0) {
-        ship.torpedoes.push({
-            x: ship.x + 4/3 * ship.height / 1.7 * Math.cos(ship.a),
-            y: ship.y - 4/3 * ship.height / 1.7 * Math.sin(ship.a),
-            xv: torpSpeed * Math.cos(ship.a) / FPS,
-            yv: -torpSpeed * Math.sin(ship.a) / FPS
-        })
+    if (ship.torpLoaded) {
+        ship.torpLoaded = false
+        ship.torpCount -= 1
+        if (ship.torpCount > 0) {
+            ship.torpedoes.push({
+                x: ship.x + 4/3 * ship.height / 1.7 * Math.cos(ship.a),
+                y: ship.y - 4/3 * ship.height / 1.7 * Math.sin(ship.a),
+                xv: torpSpeed * Math.cos(ship.a) / FPS,
+                yv: -torpSpeed * Math.sin(ship.a) / FPS
+            })
+            setTimeout(() => ship.torpLoaded = true, 3000)
+        } else {
+            console.log("out of torpedoes")
+        }
     } else {
-        console.log("out of torpedoes")
+        console.log("reloading torpedo")
     }
+    
 })
 canvas.addEventListener('wheel', (e) => {
     if (e.wheelDelta >= 0 ) {
@@ -103,7 +109,7 @@ function keyDown(e) {
             }
             break;
         case 32: // Spacebar (Shields)
-            ship.shieldsUp = !ship.shieldsUp
+            ship.shieldsUp ? ship.shieldsUp = !ship.shieldsUp : shieldsUpAnim();
             break;
         case 09: // Tab (Overlay)
             e.preventDefault()

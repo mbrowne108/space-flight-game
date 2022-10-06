@@ -44,13 +44,13 @@ function lockedOnView(klingon) {
         klingon.y + klingon.width / 2 + cameraOffset.y < 0 ||
         klingon.y + klingon.width / 2 + cameraOffset.y > canvas.height
     ) {
-        ctx.strokeStyle = "rgb(255, 0, 0)";
+        ctx.strokeStyle = "rgba(54, 54, 255, 0.1)";
         ctx.lineWidth = 5 / scale
-        ctx.setLineDash([30, 100 / scale])
-        ctx.lineDashOffset = 200 / scale
+        ctx.setLineDash([50, 50])
+        ctx.lineDashOffset = 50 / scale
         ctx.beginPath();
         ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
-        ctx.lineCap = 'round';
+        // ctx.lineCap = 'round';
         ctx.lineTo(klingon.x + cameraOffset.x, klingon.y + cameraOffset.y);
         ctx.stroke()
     } else {
@@ -117,7 +117,6 @@ function storeLastKlingonPosition(klingon) {
 }
 
 function drawKlingonTrail(klingon) {
-    
     for (let i = 0; i < klingon.trailPosition.length; i++) {
         let ratio = (i + 1) / klingon.trailPosition.length
         ctx.shadowColor = 'rgba(254,44,2)'
