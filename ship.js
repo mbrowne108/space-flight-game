@@ -1,4 +1,5 @@
 const maxPhaserCharge = 500
+const maxShields = 2040
 const shipThrust = 10
 const friction = 0.7
 const torpSpeed = 500;
@@ -22,7 +23,7 @@ const ship = {
     firing: false,
     orbiting: false,
     shieldsUp: false,
-    shields: 2040,
+    shields: maxShields,
     hull: 510,
     scanning: false,
     thrust: {
@@ -65,15 +66,36 @@ function drawPhasers() {
     ctx.shadowBlur = 0
 }
 
+function fireTorpedoes() {
+    if (ship.torpLoaded) {
+        ship.torpLoaded = false
+        ship.torpCount -= 1
+        if (ship.torpCount > 0) {
+            ship.torpedoes.push({
+                x: ship.x + 4/3 * ship.height / 1.7 * Math.cos(ship.a),
+                y: ship.y - 4/3 * ship.height / 1.7 * Math.sin(ship.a),
+                xv: torpSpeed * Math.cos(ship.a) / FPS,
+                yv: -torpSpeed * Math.sin(ship.a) / FPS
+            })
+            setTimeout(() => ship.torpLoaded = true, 3000)
+        } else {
+            console.log("out of torpedoes")
+        }
+    } else {
+        console.log("reloading torpedo")
+    }
+}
+
+
 function drawTorpedoes() {
-    for (var i = 0; i < ship.torpedoes.length; i++) {
+    for (let i = 0; i < ship.torpedoes.length; i++) {
         ctx.shadowColor = torpedo.shadow
         ctx.shadowBlur = torpedo.height * 3
         ctx.drawImage(torpedo.el, ship.torpedoes[i].x + cameraOffset.x - (torpedo.width / 2), ship.torpedoes[i].y + cameraOffset.y - (torpedo.height / 2), ship.width / 2, ship.height / 2)
         ctx.shadowBlur = 0
     }
 
-    for (var i = 0; i < ship.torpedoes.length; i++) {
+    for (let i = 0; i < ship.torpedoes.length; i++) {
         ship.torpedoes[i].x += ship.torpedoes[i].xv + ship.thrust.x;
         ship.torpedoes[i].y += ship.torpedoes[i].yv + ship.thrust.y;
     }
@@ -95,10 +117,10 @@ function drawTorpedoes() {
                     klingonShields(klingons[i])
                     klingons[i].shields -= 260
                 } else if (klingons[i].shields <= 0 && klingons[i].hull > 0) {
-                    kr = klingons[i].height / 1.1
+                    kr = klingons[i].height / 2
                     klingons[i].hull -= 260
                 } else if (klingons[i].hull <= 0) {
-                    kr = klingons[i].height / 1.1
+                    kr = klingons[i].height / 2
                     klingons.splice(i, 1)
                 }
             }
@@ -166,37 +188,37 @@ function shieldsUpAnim() {
     setTimeout(() => {
         ctx.strokeStyle = `rgb(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.1)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 2, ship.height / 1.5, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 2) / scale, (ship.height / 1.5) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 0)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.2)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.9, ship.height / 1.4, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.9) / scale, (ship.height / 1.4) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 100)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.3)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.8, ship.height / 1.3, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.8) / scale, (ship.height / 1.3) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 200)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.5)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.7, ship.height / 1.2, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.7) / scale, (ship.height / 1.2) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 300)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.7)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.6, ship.height / 1.1, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.6) / scale, (ship.height / 1.1) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 400)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 1)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.5, ship.height / 1, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.5) / scale, (ship.height / 1) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 500)
     
@@ -237,7 +259,6 @@ function shipShields() {
 function orbitPlanet(planet) {
     if (distBetweenPoints(ship.x, ship.y, planet.x + planet.width / 2, planet.y + planet.height / 2) < planet.width + 100) {
         ship.orbit.theta -= ship.orbit.speed
-        
         ship.x = Math.cos(ship.orbit.theta) * (ship.orbit.radius + planet.width / 2) + planet.x + planet.width / 2
         ship.y = Math.sin(ship.orbit.theta) * (ship.orbit.radius + planet.height / 2) + planet.y + (planet.height * 4/3) / 2
     } else {
@@ -253,7 +274,9 @@ function drawShip() {
 
     if (ship.orbiting) {
         planets.map((planet) => {
-            planet.locked ? orbitPlanet(planet) : null
+            if (planet.locked) {
+                orbitPlanet(planet)
+            }
         })
     }
     if (ship.firing) {
@@ -282,6 +305,11 @@ function drawShip() {
         if (ship.phaserCharge < maxPhaserCharge) {ship.phaserCharge += 0.5}
     }
 
+    if (distBetweenPoints(ship.x, ship.y, sun.x, sun.y) < 150) {
+        ship.shields -= 1 / distBetweenPoints(ship.x, ship.y, sun.x, sun.y) * 1000
+        shieldsUpAnim()
+    }
+
     // Rotate
     ctx.save();
     ship.a = Math.atan2(-(mouse.y - (ship.y + cameraOffset.y)), (mouse.x - (ship.x + cameraOffset.x))) + (Math.PI / 2) / FPS;
@@ -308,4 +336,11 @@ function drawShip() {
     ship.y += ship.thrust.y
 
     ship.shieldsUp ? shipShields() : null
+    if (ship.shields > 0 && ship.shieldsUp) {
+        shipShields()
+    } else {
+        ship.shieldsUp = false
+        ship.shields === 0
+    }
+    ship.shields < maxShields ? ship.shields += 0.5 : null
 }

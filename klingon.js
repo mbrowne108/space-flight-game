@@ -1,5 +1,6 @@
 const klingons = []
 let lockId = 0
+const disrSpeed = 500
 
 function createKlingons() {
     let x, y;
@@ -20,7 +21,7 @@ function newKlingon(x, y) {
         width: 30,
         a: 180 * Math.PI,
         trailPosition: [],
-        // torpedoes: [],
+        disruptors: [],
         thrusting: false,
         braking: false,
         // firing: false,
@@ -34,6 +35,13 @@ function newKlingon(x, y) {
         }
     }
     return klingon;
+}
+
+const disruptor = {
+    el: document.getElementById("disruptor"),
+    height: ship.height,
+    width: ship.width * 1.95,
+    shadow: 'rgb(6, 152, 27)'
 }
 
 function lockedOnKlingonView(klingon) {
@@ -51,7 +59,6 @@ function lockedOnKlingonView(klingon) {
         ctx.lineDashOffset = 50
         ctx.beginPath();
         ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
-        ctx.lineCap = 'round';
         ctx.lineTo(klingon.x + cameraOffset.x, klingon.y + cameraOffset.y);
         ctx.stroke()
         ctx.restore()
@@ -140,9 +147,68 @@ function drawKlingonTrail(klingon) {
     }
 }
 
+function fireDisruptors(klingon) {
+    let random = Math.floor(Math.random() * 21)
+    if (distBetweenPoints(ship.x, ship.y, klingon.x, klingon.y) < 500) {
+        if (random === 10) {
+            klingon.disruptors.push({
+                x: klingon.x + 4/3 * klingon.height / 2 * Math.cos(klingon.a) + 12,
+                y: klingon.y - 4/3 * klingon.height / 2 * Math.sin(klingon.a) + 12,
+                xv: disrSpeed * Math.cos(klingon.a) / FPS,
+                yv: -disrSpeed * Math.sin(klingon.a) / FPS
+            })
+        } else if (random === 20) {
+            klingon.disruptors.push({
+                x: klingon.x + 4/3 * klingon.height / 1.7 * Math.cos(klingon.a) - 12,
+                y: klingon.y - 4/3 * klingon.height / 1.7 * Math.sin(klingon.a) - 12,
+                xv: disrSpeed * Math.cos(klingon.a) / FPS,
+                yv: -disrSpeed * Math.sin(klingon.a) / FPS
+            })
+        }
+    }
+}
+
+function drawDisruptors(klingon) {
+    for (let i = 0; i < klingon.disruptors.length; i++) {
+        ctx.save();
+        ctx.translate(klingon.disruptors[i].x + cameraOffset.x, klingon.disruptors[i].y + cameraOffset.y);
+        ctx.rotate(-klingon.a - 90 * Math.PI / 180)
+        ctx.translate(-(klingon.disruptors[i].x + cameraOffset.x), -(klingon.disruptors[i].y + cameraOffset.y));
+        ctx.drawImage(disruptor.el, klingon.disruptors[i].x + cameraOffset.x - (disruptor.width / 2), klingon.disruptors[i].y + cameraOffset.y - (disruptor.height / 2), klingon.width / 1.95 / 4, klingon.height / 4)
+        ctx.restore()
+    }
+
+    for (let i = 0; i < klingon.disruptors.length; i++) {
+        klingon.disruptors[i].x += klingon.disruptors[i].xv + klingon.thrust.x;
+        klingon.disruptors[i].y += klingon.disruptors[i].yv + klingon.thrust.y;
+    }
+
+    // Disruptor hits
+    let sr = ship.height
+    for (let i = klingon.disruptors.length - 1; i >= 0; i--) {
+        tx = klingon.disruptors[i].x + cameraOffset.x
+        ty = klingon.disruptors[i].y + cameraOffset.y
+
+        ship.shields <= 0 ? sr = ship.height / 2 : ship.height
+        if (distBetweenPoints(ship.x + cameraOffset.x, ship.y + cameraOffset.y, klingon.disruptors[i].x + cameraOffset.x, klingon.disruptors[i].y + cameraOffset.y) < sr) {
+            klingon.disruptors.splice(i, 1)
+            if (ship.shields > 0) {
+                shipShields()
+                ship.shields -= 40
+            } else if (ship.shields <= 0 && ship.hull > 0) {
+                ship.hull -= 40
+            } else if (ship.hull <= 0) {
+                // Death here!
+            }
+        }
+    }
+}
+
 function drawKlingons() {
     for (let i = 0; i < klingons.length; i++) {
         drawKlingonTrail(klingons[i])
+        fireDisruptors(klingons[i])
+        drawDisruptors(klingons[i]);
         
         if (klingons[i].shields < 500) {
             klingons[i].attacking = false;

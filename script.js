@@ -40,24 +40,7 @@ window.addEventListener('mouseup', (e) => {
     ship.firing = false;
 })
 window.addEventListener('click', (e) => { // Left Click (Torpedo)
-    if (ship.torpLoaded) {
-        ship.torpLoaded = false
-        ship.torpCount -= 1
-        if (ship.torpCount > 0) {
-            ship.torpedoes.push({
-                x: ship.x + 4/3 * ship.height / 1.7 * Math.cos(ship.a),
-                y: ship.y - 4/3 * ship.height / 1.7 * Math.sin(ship.a),
-                xv: torpSpeed * Math.cos(ship.a) / FPS,
-                yv: -torpSpeed * Math.sin(ship.a) / FPS
-            })
-            setTimeout(() => ship.torpLoaded = true, 3000)
-        } else {
-            console.log("out of torpedoes")
-        }
-    } else {
-        console.log("reloading torpedo")
-    }
-    
+    fireTorpedoes()
 })
 canvas.addEventListener('wheel', (e) => {
     if (e.wheelDelta >= 0 ) {
@@ -116,7 +99,6 @@ function keyDown(e) {
             overlay.show = !overlay.show
             break;
         case 82: // R (Match speed of target)
-            
             ship.scanning ? ship.orbiting = !ship.orbiting : null
             break;
         case 48: // 1 (Clear Planet Locks)
@@ -249,7 +231,6 @@ function loop() {
     drawShip();
     drawKlingons();
     drawSun();
-    
     planets.forEach(drawPlanet);
     drawAsteroids();
 

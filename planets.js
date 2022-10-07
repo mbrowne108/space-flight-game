@@ -146,12 +146,11 @@ function lockedOnPlanetView(planet) {
     ) {
         ctx.save()
         ctx.strokeStyle = "rgba(0, 155, 255, 0.5)";
-        ctx.lineWidth = 5
+        ctx.lineWidth = 5 / scale
         ctx.setLineDash([50, 50])
         ctx.lineDashOffset = 50
         ctx.beginPath();
         ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
-        ctx.lineCap = 'round';
         ctx.lineTo(planet.x + cameraOffset.x + planet.width / 2, planet.y + cameraOffset.y + planet.height / 2);
         ctx.stroke()
         ctx.restore()
