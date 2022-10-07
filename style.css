@@ -12,3 +12,92 @@ html, body {
     position: absolute;
     background-color: rgb(0, 0, 0);
 }
+
+#overlay {
+    background-color: rgba(108, 122, 137, 0.5);
+    color:rgb(191, 191, 191);
+    border: 3px outset rgb(171, 183, 183);
+    padding: 10px;
+    font-family: 'trebuchet ms';
+    height: auto;
+    transition: transform 0.3s ease-out;
+    transform-origin: top left;
+    text-align: center;
+}
+
+.overlay-collapsed {
+    transform: scaleY(0);
+}
+
+#overlay > h1 {
+    font-size: 28px;
+}
+
+#overlay > h5 {
+    padding-bottom: 10px;
+    margin: 0px;
+}
+
+.planet-btn {
+    opacity: 0.7;
+    box-shadow: inset 0px 0px 7px 0px rgb(41, 187, 255);
+	background: linear-gradient(to bottom, rgb(0, 155, 255) 5%, rgb(6, 136, 250) 100%);
+	background-color: rgb(0, 155, 255);
+	border-radius: 3px;
+	border: 1px solid #0b0e07;
+	display: inline-block;
+	cursor: pointer;
+	color: rgb(238, 238, 238);
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	padding: 6px 20px;
+    margin: 1px;
+	text-decoration: none;
+	text-shadow: 0px 1px 0px rgb(38,54,102);
+    text-align: left;
+    width: 100%;
+}
+
+.planet-btn:hover {
+	background: linear-gradient(to bottom, rgb(6, 136, 250) 5%, rgb(45, 171, 249) 100%);
+	background-color:rgb(6, 136, 250);
+}
+.planet-btn:active {
+	position: relative;
+	top:1px;
+}
+
+.planet-btn > p {
+    color:rgb(238, 238, 238);
+    font-size: 12px;
+    display: inline;
+}
+
+.klingon-btn {
+    opacity: 0.7;
+    box-shadow: inset 0px 0px 7px 0px rgb(207, 134, 108);
+	background: linear-gradient(to bottom, rgb(255, 0, 0) 5%, rgb(188, 51, 21) 100%);
+	background-color: rgb(255, 0, 0);
+	border-radius: 3px;
+	border: 1px solid #0b0e07;
+	display: inline-block;
+	cursor: pointer;
+	color: rgb(238, 238, 238);
+	font-family: Trebuchet MS;
+	font-size: 15px;
+	padding: 6px 20px;
+    margin: 1px;
+	text-decoration: none;
+	text-shadow: 0px 1px 0px rgb(133, 70, 41);
+    width: 100%;
+    text-align: left;
+}
+
+.klingon-btn:hover {
+	background: linear-gradient(to bottom, rgb(188, 51, 21) 5%, rgb(208, 69, 27) 100%);
+	background-color:rgb(188, 51, 21);
+}
+.klingon-btn:active {
+	position: relative;
+	top:1px;
+}

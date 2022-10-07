@@ -1,6 +1,7 @@
 const klingons = []
 let lockId = 0
 const disrSpeed = 500
+const klingonThrust = 8
 
 function createKlingons() {
     let x, y;
@@ -15,12 +16,14 @@ function newKlingon(x, y) {
     let klingon = {
         el: document.getElementById("klingon"),
         elThrust: document.getElementById("klingon-thrusting"),
+        trail: document.getElementById("klingon-trail"),
+        name: "Klingon",
         x: x,
         y: y,
         height: 30,
         width: 30,
         a: 180 * Math.PI,
-        trailPosition: [],
+        trailPositions: [],
         disruptors: [],
         thrusting: false,
         braking: false,
@@ -113,51 +116,41 @@ function klingonShields(klingon) {
     ctx.shadowBlur = 0
 }
 
-const klingonMotionTrailLength = 50
-let klingonTrailPositions = []
+const klingonMotionTrailLength = 20
 function storeLastKlingonPosition(klingon) {
-    klingon.trailPosition.push({
+    klingon.trailPositions.push({
         x: klingon.x,
         y: klingon.y
     })
-    if (klingon.trailPosition.length > klingonMotionTrailLength) {
-        klingon.trailPosition.shift()
+    if (klingon.trailPositions.length > klingonMotionTrailLength) {
+        klingon.trailPositions.shift()
     }
 }
 
 function drawKlingonTrail(klingon) {
-    for (let i = 0; i < klingon.trailPosition.length; i++) {
-        let ratio = (i + 1) / klingon.trailPosition.length
-        ctx.shadowColor = 'rgba(254,44,2)'
-        ctx.shadowBlur = 10
-        let radGrad = ctx.createRadialGradient(
-            klingon.trailPosition[i].x + cameraOffset.x, 
-            klingon.trailPosition[i].y + cameraOffset.y, 
-            1 * ratio, 
-            klingon.trailPosition[i].x + cameraOffset.x, 
-            klingon.trailPosition[i].y + cameraOffset.y, 
-            4 * ratio
+    for (let i = 0; i < klingon.trailPositions.length; i++) {
+        let ratio = (i + 1) / klingon.trailPositions.length
+        ctx.drawImage(
+            klingon.trail, 
+            klingon.trailPositions[i].x + cameraOffset.x - klingon.width / 12, 
+            klingon.trailPositions[i].y + cameraOffset.y - klingon.height / 12, 
+            (klingon.width / 4) * ratio, 
+            (klingon.height / 4) * ratio
         )
-        radGrad.addColorStop(0, `rgba(254,44,2,${ratio / 2})`)
-        radGrad.addColorStop(0.2, `rgba(254,44,2,${ratio / 2})`)
-        radGrad.addColorStop(1, `rgba(254,44,2,0)`)
-        ctx.fillStyle = radGrad;
-        ctx.fillRect(klingon.trailPosition[i].x + cameraOffset.x - (klingon.width * 4/3) / 2, klingon.trailPosition[i].y + cameraOffset.y - klingon.height / 2, klingon.width * 4/3, klingon.height)
-        ctx.shadowBlur = 0;
     }
 }
 
 function fireDisruptors(klingon) {
-    let random = Math.floor(Math.random() * 21)
+    let random = Math.floor(Math.random() * 10)
     if (distBetweenPoints(ship.x, ship.y, klingon.x, klingon.y) < 500) {
-        if (random === 10) {
+        if (random === 1) {
             klingon.disruptors.push({
                 x: klingon.x + 4/3 * klingon.height / 2 * Math.cos(klingon.a) + 12,
                 y: klingon.y - 4/3 * klingon.height / 2 * Math.sin(klingon.a) + 12,
                 xv: disrSpeed * Math.cos(klingon.a) / FPS,
                 yv: -disrSpeed * Math.sin(klingon.a) / FPS
             })
-        } else if (random === 20) {
+        } else if (random === 2) {
             klingon.disruptors.push({
                 x: klingon.x + 4/3 * klingon.height / 1.7 * Math.cos(klingon.a) - 12,
                 y: klingon.y - 4/3 * klingon.height / 1.7 * Math.sin(klingon.a) - 12,
@@ -254,8 +247,8 @@ function drawKlingons() {
 
         // Move Klingon
         if (klingons[i].thrusting) {
-            klingons[i].thrust.x += shipThrust * Math.cos(klingons[i].a) / FPS;
-            klingons[i].thrust.y -= shipThrust * Math.sin(klingons[i].a) / FPS;
+            klingons[i].thrust.x += klingonThrust * Math.cos(klingons[i].a) / FPS;
+            klingons[i].thrust.y -= klingonThrust * Math.sin(klingons[i].a) / FPS;
         } else {
             klingons[i].thrust.x -= friction * klingons[i].thrust.x / FPS;
             klingons[i].thrust.y -= friction * klingons[i].thrust.y / FPS;

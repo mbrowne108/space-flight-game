@@ -1,5 +1,6 @@
 const maxPhaserCharge = 500
 const maxShields = 2040
+const maxThrust = 30
 const shipThrust = 10
 const friction = 0.7
 const torpSpeed = 500;
@@ -8,6 +9,7 @@ const scanSpeed = 400;
 const ship = {
     el: document.getElementById("ship"),
     elThrust: document.getElementById("ship-thrusting"),
+    trail: document.getElementById("ship-trail"),
     x: 2300,
     y: 2300,
     height: 50 * (4/3),
@@ -149,7 +151,7 @@ function drawScans() {
     }
 }
 
-const shipTrailLength = 50
+const shipTrailLength = 20
 let shipTrailPositions = []
 function storeLastShipPosition(xPos, yPos) {
     shipTrailPositions.push({
@@ -164,22 +166,13 @@ function storeLastShipPosition(xPos, yPos) {
 function drawShipTrail() {
     for (let i = 0; i < shipTrailPositions.length; i++) {
         let ratio = (i + 1) / shipTrailPositions.length
-        ctx.shadowColor = 'rgba(101,150,240)'
-        ctx.shadowBlur = 10
-        let radGrad = ctx.createRadialGradient(
-            shipTrailPositions[i].x + cameraOffset.x, 
-            shipTrailPositions[i].y + cameraOffset.y, 
-            0 * ratio, 
-            shipTrailPositions[i].x + cameraOffset.x, 
-            shipTrailPositions[i].y + cameraOffset.y, 
-            10 * ratio
+        ctx.drawImage(
+            ship.trail, 
+            shipTrailPositions[i].x + cameraOffset.x - (ship.width * 4/3) / 8, 
+            shipTrailPositions[i].y + cameraOffset.y - ship.height / 8, 
+            (ship.width * 4/3 / 4) * ratio, 
+            (ship.height / 4) * ratio
         )
-        radGrad.addColorStop(0, `rgba(101,150,240,${ratio / 2})`)
-        radGrad.addColorStop(0.2, `rgba(101,150,240,${ratio / 2})`)
-        radGrad.addColorStop(1, `rgba(101,150,240,0)`)
-        ctx.fillStyle = radGrad;
-        ctx.fillRect(shipTrailPositions[i].x + cameraOffset.x - (ship.width * 4/3) / 2, shipTrailPositions[i].y + cameraOffset.y - ship.height / 2, ship.width * 4/3, ship.height)
-        ctx.shadowBlur = 0;
     }
 }
 
@@ -320,7 +313,7 @@ function drawShip() {
     ctx.restore();
 
     // Move ship
-    if (ship.thrusting) {
+    if (ship.thrusting && ship.thrust.x <= maxThrust && ship.thrust.x >= -maxThrust && ship.thrust.y <= maxThrust && ship.thrust.y >= -maxThrust) {
         ship.thrust.x += shipThrust * Math.cos(ship.a) / FPS;
         ship.thrust.y -= shipThrust * Math.sin(ship.a) / FPS;
     } else {
@@ -342,5 +335,5 @@ function drawShip() {
         ship.shieldsUp = false
         ship.shields === 0
     }
-    ship.shields < maxShields ? ship.shields += 0.5 : null
+    ship.shields < maxShields ? ship.shields += 2 : null
 }
