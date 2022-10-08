@@ -40,14 +40,21 @@ function loop() {
     cameraOffset.x = canvas.width / 2 - ship.x
     cameraOffset.y = canvas.height / 2 - ship.y
 
-    drawOverlay();
-    drawScanOverlay();
     drawStars();
-    drawShip();
-    drawKlingons();
+    
+    ctx.save()
+    ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
+    ctx.scale(scale, scale);
+    ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
     drawSun();
     planets.forEach(drawPlanet);
     drawAsteroids();
+    ctx.restore();
+    
+    drawShip();
+    drawKlingons();
+    drawScanOverlay();
+    drawOverlay();
 
     storeLastShipPosition(ship.x, ship.y)
 

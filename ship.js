@@ -130,10 +130,12 @@ function fireTorpedoes() {
 
 function drawTorpedoes() {
     for (let i = 0; i < ship.torpedoes.length; i++) {
+        ctx.save()
         ctx.shadowColor = torpedo.shadow
         ctx.shadowBlur = torpedo.height * 3
         ctx.drawImage(torpedo.el, ship.torpedoes[i].x + cameraOffset.x - (torpedo.width / 2), ship.torpedoes[i].y + cameraOffset.y - (torpedo.height / 2), ship.width / 2, ship.height / 2)
         ctx.shadowBlur = 0
+        ctx.restore()
 
         ship.torpedoes[i].x += ship.torpedoes[i].xv + ship.thrust.x;
         ship.torpedoes[i].y += ship.torpedoes[i].yv + ship.thrust.y;
@@ -160,6 +162,7 @@ function drawTorpedoes() {
                     klingons[i].hull -= 260
                 } else if (klingons[i].hull <= 0) {
                     klingons[i].exploding = !klingons[i].exploding
+                    klingons[i].locked = false
                     for (k = 0; k < 300; k++) {
                         klingons[i].particles.push({
                             x: klingons[i].x + cameraOffset.x,
@@ -172,7 +175,6 @@ function drawTorpedoes() {
                             increment: 1
                         })
                     }
-                    klingons[i].locked = !klingons[i].locked
                     setTimeout(() => {klingons.splice(i, 1)}, 5000)
                 }
             }
@@ -227,76 +229,80 @@ function drawShipTrail() {
 }
 
 function shieldsUpAnim() {
+    ctx.save()
     ctx.lineWidth = 2
     setTimeout(() => {
         ctx.strokeStyle = `rgb(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.1)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 2) / scale, (ship.height / 1.5) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 2), (ship.height / 1.5), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 0)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.2)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.9) / scale, (ship.height / 1.4) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.9), (ship.height / 1.4), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 100)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.3)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.8) / scale, (ship.height / 1.3) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.8), (ship.height / 1.3), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 200)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.5)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.7) / scale, (ship.height / 1.2) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.7), (ship.height / 1.2), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 300)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.7)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.6) / scale, (ship.height / 1.1) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.6), (ship.height / 1.1), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 400)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 1)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.5) / scale, (ship.height / 1) / scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.5), (ship.height / 1), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 500)
+    ctx.restore()
     
     setTimeout(() => ship.redAlert = !ship.redAlert, 600)
 }
 
 function drawShipShields() {
+    ctx.save();
     ctx.lineWidth = 2
     ctx.shadowColor = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 1)`;
     ctx.shadowBlur = 20
-    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 1)`;
     ctx.beginPath();
+    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 1)`;
     ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.5, ship.height / 1, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
     ctx.stroke();
-    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.7)`;
     ctx.beginPath();
+    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.7)`;
     ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.6, ship.height / 1.1, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
     ctx.stroke();
-    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.5)`;
     ctx.beginPath();
+    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.5)`;
     ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.7, ship.height / 1.2, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
     ctx.stroke();
-    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.3)`;
     ctx.beginPath();
+    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.3)`;
     ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.8, ship.height / 1.3, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
     ctx.stroke();
-    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.2)`;
     ctx.beginPath();
+    ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.2)`;
     ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 1.9, ship.height / 1.4, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
     ctx.stroke();
-    ctx.strokeStyle = `rgb(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.1)`;
     ctx.beginPath();
+    ctx.strokeStyle = `rgb(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.1)`;
     ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 2, ship.height / 1.5, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
     ctx.stroke();
     ctx.shadowBlur = 0
+    ctx.restore()
 }
 
 function orbitPlanet(planet) {
@@ -306,7 +312,7 @@ function orbitPlanet(planet) {
         ship.y = Math.sin(ship.orbit.theta) * (ship.orbit.radius + planet.height / 2) + planet.y + (planet.height * 4/3) / 2
     } else {
         ship.orbiting = !ship.orbiting
-        console.log('too far away')
+        alert(`TOO FAR TO ORBIT ${planet.name}`)
     }
 }
 
@@ -360,9 +366,9 @@ function drawShip() {
                 ship.firing = false
             }
         } else if (klingons[lockId].locked && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) > 500) {
-            console.log('out of range')
+            alert('NOT IN PHASER RANGE')
         } else {
-            console.log('not locked on')
+            alert('NO PHASER LOCK')
         }
     } else {
         if (ship.phaserCharge < maxPhaserCharge) {ship.phaserCharge += 0.5}

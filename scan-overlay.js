@@ -11,7 +11,7 @@ function drawScanOverlay() {
     ship.redAlert ? overlay.el.style.boxShadow = "0px 0px 50px rgb(255, 0, 0)" : overlay.el.style.boxShadow = ""
 
     if (planetScanMode) {
-        planets.map((planet) => {
+        planets.map((planet, i) => {
             if (!document.getElementById(`${planet.name}-btn`)) {
                 const btn = document.createElement('button');
                 const dist = document.createElement('p')
@@ -24,10 +24,8 @@ function drawScanOverlay() {
                         const planetBtns = document.querySelectorAll('.planet-btn')
                         planetBtns.forEach((b) => b.classList.remove('highlighted'))
                         btn.classList.add('highlighted')
-                        planets.forEach((pl) => {
-                            btn.classList.add('highlighted')
-                            pl.name !== planet.name ? pl.locked = false : pl.locked = !pl.locked
-                        })
+                        planetLockId = i;
+                        planets.forEach((pl, index) => planetLockId !== index ? pl.locked = false : pl.locked = true)
                     }
                 }
                 dist.id = `${planet.name}-dist`

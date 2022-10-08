@@ -113,20 +113,27 @@ function keyDown(e) {
                 })
             }
             break;
-        case 68: // D (Orbit Planet)
+        case 82: // R (Orbit Planet)
             ship.scanning ? ship.orbiting = !ship.orbiting : null
             break;
-        case 82: // R (Switch Scan Mode)
+        case 20: // Caps Lock
+            e.preventDefault()
             if (ship.scanning) {
                 while (overlay.el.lastChild) {
                     overlay.el.removeChild(overlay.el.lastChild)
                 }
                 const h1 = document.createElement('h1')
-                const h5 = document.createElement('h5')
+                const h5a = document.createElement('h5')
+                const h5b = document.createElement('h5')
+                const h5c = document.createElement('h5')
                 h1.innerText = "Scanning System..."
-                h5.innerText = "Click button to lock target"
+                h5a.innerText = "Press Caps Lock to switch target types"
+                h5b.innerText = "Click to lock target"
+                h5c.innerText = "Q and E to rotate targets"
                 overlay.el.appendChild(h1)
-                overlay.el.appendChild(h5)
+                overlay.el.appendChild(h5a)
+                overlay.el.appendChild(h5b)
+                overlay.el.appendChild(h5c)
                 planetScanMode = !planetScanMode
                 if (planetScanMode) {
                     klingons.forEach((kl) => kl.locked = false)

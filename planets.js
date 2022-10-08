@@ -138,6 +138,7 @@ const asteroidBelt = {
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
 function lockedOnPlanetView(planet) {
+    ctx.save()
     ctx.strokeStyle = "rgb(255, 0, 0)";
     ctx.lineWidth = 10
     if (planet.x + planet.width / 2 + cameraOffset.x < 0 || 
@@ -145,7 +146,6 @@ function lockedOnPlanetView(planet) {
         planet.y + planet.width / 2 + cameraOffset.y < 0 ||
         planet.y + planet.width / 2 + cameraOffset.y > canvas.height
     ) {
-        ctx.save()
         ctx.strokeStyle = "rgba(0, 155, 255, 0.5)";
         ctx.lineWidth = 5 / scale
         ctx.setLineDash([50, 50])
@@ -154,7 +154,6 @@ function lockedOnPlanetView(planet) {
         ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
         ctx.lineTo(planet.x + cameraOffset.x + planet.width / 2, planet.y + cameraOffset.y + planet.height / 2);
         ctx.stroke()
-        ctx.restore()
     } else {
         ctx.strokeStyle = "rgb(0, 155, 255)";
         ctx.lineWidth = 1 / scale
@@ -173,23 +172,22 @@ function lockedOnPlanetView(planet) {
         ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x + 10 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 30 * planet.height / 30);
         ctx.stroke()
     }
+    ctx.restore()
 }
 
 function drawSun() {
-    ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
-    ctx.scale(scale, scale);
-    ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
-
     ctx.drawImage(sun.el, sun.x - (sun.width / 2) + cameraOffset.x, sun.y - (sun.height / 2) + cameraOffset.y, sun.width, sun.height)
 }
 
 function drawPlanet(planet) {
     // Draw orbit
+    ctx.save()
     ctx.beginPath()
     ctx.strokeStyle = orbitColor
     ctx.lineWidth = 1 / scale
     ctx.arc(sun.x + cameraOffset.x, sun.y + cameraOffset.y, planet.radius, 0, 2 * Math.PI)
     ctx.stroke()
+    ctx.restore()
 
     // Locked on
     if (planet.locked && ship.scanning) {
@@ -204,6 +202,7 @@ function drawPlanet(planet) {
 
     // Moon orbit and movement
     planet.moons.map((moon) => {
+        ctx.save()
         ctx.strokeStyle = orbitColor
         ctx.lineWidth = 1 / scale
         ctx.beginPath()
@@ -214,6 +213,7 @@ function drawPlanet(planet) {
         moon.x = Math.cos(moon.theta) * moon.radius + planet.x + moon.width
         moon.y = Math.sin(moon.theta) * moon.radius + planet.y + moon.height
         ctx.drawImage(moon.el, moon.x + cameraOffset.x + moon.width / 3, moon.y + cameraOffset.y + moon.height / 3, moon.width, moon.height)
+        ctx.restore()
     })
 
     // Hover over planet
