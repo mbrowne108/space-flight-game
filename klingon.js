@@ -18,7 +18,7 @@ function newKlingon(x, y) {
         el: document.getElementById("klingon"),
         elThrust: document.getElementById("klingon-thrusting"),
         trail: document.getElementById("klingon-trail"),
-        name: "Klingon",
+        name: "Bird of Prey",
         x: x,
         y: y,
         height: 30,

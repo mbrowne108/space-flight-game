@@ -50,7 +50,7 @@ function keyDown(e) {
         case 83: // S
             ship.braking = true;
             break;
-        case 70: // F (Explode!)
+        case 70: // F
             ship.exploding = !ship.exploding
             if (ship.exploding) {
                 for (i = 0; i < 500; i++) {
@@ -83,7 +83,12 @@ function keyDown(e) {
             }
             break;
         case 32: // Spacebar (Shields)
-            ship.shieldsUp ? ship.shieldsUp = !ship.shieldsUp : shieldsUpAnim();
+            if (ship.shieldsUp) {
+                ship.shieldsUp = !ship.shieldsUp
+            } else {
+                shieldsUpAnim();
+                ship.scanning = true
+            }
             break;
         case 09: // Tab (Overlay)
             e.preventDefault()

@@ -366,8 +366,15 @@ function drawShip() {
     }
 
     if (distBetweenPoints(ship.x, ship.y, sun.x, sun.y) < 150) {
-        ship.shields -= 1 / distBetweenPoints(ship.x, ship.y, sun.x, sun.y) * 1000
-        shieldsUpAnim()
+        if (ship.shields <= 0) {
+            ship.shields = 0
+        } else {
+            ship.shields -= 1 / distBetweenPoints(ship.x, ship.y, sun.x, sun.y) * 1000
+            shieldsUpAnim()
+            alertMsg = "ALERT: SUN IS HOT"
+        }
+    } else {
+        alertMsg = ''
     }
 
     // Rotate

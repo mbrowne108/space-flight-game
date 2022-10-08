@@ -5,9 +5,9 @@ const overlay = {
 }
 
 function drawScanOverlay() {
-    overlay.el.style.width = `${canvas.width / 6}px`
+    overlay.el.style.width = `${canvas.width / 8}px`
 
-    ship.shieldsUp ? overlay.el.style.boxShadow = "0px 0px 50px rgb(255, 0, 0)" : null
+    ship.shieldsUp ? overlay.el.style.boxShadow = "0px 0px 50px rgb(255, 0, 0)" : overlay.el.style.boxShadow = ""
 
     planets.map((planet) => {
         if (!document.getElementById(`${planet.name}-btn`)) {
