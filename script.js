@@ -43,6 +43,7 @@ function loop() {
     drawSun();
     planets.forEach(drawPlanet);
     drawAsteroids();
+    
 
     storeLastShipPosition(ship.x, ship.y)
 

@@ -38,7 +38,7 @@ function drawOverlay() {
     ctx.textAlign = "center"
     ctx.fillText('Shields', window.innerWidth / 2 - 305, 20);
     ctx.fillText('Phasers', window.innerWidth / 2 + 305, 20);
+    ctx.fillText(`Enemy Shields: ${klingons[lockId].shields} Hull: ${klingons[lockId].hull}`, window.innerWidth / 2, 20);
 
     ship.scanning ? null : ctx.fillText('Press TAB to scan', window.innerWidth / 20, 30)
-
 }

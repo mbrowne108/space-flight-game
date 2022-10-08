@@ -50,9 +50,22 @@ function keyDown(e) {
         case 83: // S
             ship.braking = true;
             break;
-        case 70: // F (Scan)
-            
-            
+        case 70: // F (Explode!)
+            ship.exploding = !ship.exploding
+            if (ship.exploding) {
+                for (i = 0; i < 500; i++) {
+                    ship.particles.push({
+                        x: ship.x + cameraOffset.x,
+                        y: ship.y + cameraOffset.y,
+                        dx: (Math.random() - 0.5) * (Math.random() * 6),
+                        dy: (Math.random() - 0.5) * (Math.random() * 6),
+                        r: Math.random() * 3,
+                        alpha: 1,
+                        random: Math.floor(Math.random() * 3),
+                        increment: 1
+                    })
+                }
+            }
             break;
         case 81: // Q (Previous Lock)
             if (ship.scanning) {

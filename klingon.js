@@ -2,6 +2,7 @@ const klingons = []
 let lockId = 0
 const disrSpeed = 500
 const klingonThrust = 8
+const maxKlingonShields = 1020
 
 function createKlingons() {
     let x, y;
@@ -25,13 +26,15 @@ function newKlingon(x, y) {
         a: 180 * Math.PI,
         trailPositions: [],
         disruptors: [],
+        particles: [],
         thrusting: false,
         braking: false,
         // firing: false,
         attacking: true,
         locked: false,
-        shields: 1020,
+        shields: maxKlingonShields,
         hull: 255,
+        exploding: false,
         thrust: {
             x: 0,
             y: 0
@@ -116,6 +119,42 @@ function klingonShields(klingon) {
     ctx.shadowBlur = 0
 }
 
+function drawKlingonExplosion(klingon) {
+    klingon.particles.forEach((particle, i) => {
+        ctx.save();
+        ctx.globalAlpha = particle.alpha;
+        ctx.shadowColor = 'rgb(200, 0, 0)'
+        ctx.shadowBlur = 10
+        if (particle.random === 0) {
+            ctx.beginPath();
+            ctx.fillStyle = `rgb(${255 - (particle.increment * 158/100)}, ${particle.increment * 94/100}, ${particle.increment * 92/100})`;
+            ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2, false);
+            ctx.fill();
+        } 
+        else if (particle.random === 1) {
+            ctx.beginPath();
+            ctx.fillStyle = `rgb(${255 - (particle.increment * 103/100)}, ${255 - (particle.increment * 101/100)}, ${particle.increment * 142/100})`;
+            ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2, false);
+            ctx.fill();
+        } else {
+            ctx.beginPath();
+            ctx.fillStyle = `rgb(${255 - (particle.increment)}, ${80 + (particle.increment * 78/100)}, ${particle.increment * 148/100})`;
+            ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2, false);
+            ctx.fill();
+        }
+        ctx.restore();
+        
+        particle.alpha -= 0.01
+        particle.x += particle.dx
+        particle.y += particle.dy
+        particle.increment += 1.35
+
+        if (particle.alpha <= 0) {
+            klingon.particles.splice(i, 1)
+        }
+    })
+}
+
 const klingonMotionTrailLength = 20
 function storeLastKlingonPosition(klingon) {
     klingon.trailPositions.push({
@@ -186,7 +225,7 @@ function drawDisruptors(klingon) {
         if (distBetweenPoints(ship.x + cameraOffset.x, ship.y + cameraOffset.y, klingon.disruptors[i].x + cameraOffset.x, klingon.disruptors[i].y + cameraOffset.y) < sr) {
             klingon.disruptors.splice(i, 1)
             if (ship.shields > 0) {
-                shipShields()
+                !ship.exploding ? drawShipShields() : null
                 ship.shields -= 40
             } else if (ship.shields <= 0 && ship.hull > 0) {
                 ship.hull -= 40
@@ -199,10 +238,14 @@ function drawDisruptors(klingon) {
 
 function drawKlingons() {
     for (let i = 0; i < klingons.length; i++) {
-        drawKlingonTrail(klingons[i])
-        fireDisruptors(klingons[i])
-        drawDisruptors(klingons[i]);
-        
+        if (!klingons[i].exploding) {
+            drawKlingonTrail(klingons[i])
+            klingons[i].attacking ? fireDisruptors(klingons[i]) : null;
+            drawDisruptors(klingons[i]);
+        } else {
+            drawKlingonExplosion(klingons[i])
+        }
+
         if (klingons[i].shields < 500) {
             klingons[i].attacking = false;
         } else {
@@ -218,7 +261,7 @@ function drawKlingons() {
         ctx.translate(klingons[i].x + cameraOffset.x, klingons[i].y + cameraOffset.y);
         ctx.rotate(-klingons[i].a + 90 * Math.PI / 180)
         ctx.translate(-(klingons[i].x + cameraOffset.x), -(klingons[i].y + cameraOffset.y));
-        ctx.drawImage(klingons[i].thrusting ? klingons[i].elThrust : klingons[i].el, klingons[i].x - (klingons[i].width / 2) + cameraOffset.x, klingons[i].y - (klingons[i].height / 2) + cameraOffset.y, klingons[i].width, klingons[i].height)
+        !klingons[i].exploding ? ctx.drawImage(klingons[i].thrusting ? klingons[i].elThrust : klingons[i].el, klingons[i].x - (klingons[i].width / 2) + cameraOffset.x, klingons[i].y - (klingons[i].height / 2) + cameraOffset.y, klingons[i].width, klingons[i].height) : null
         ctx.restore()
 
         if (klingons[i].attacking) {
@@ -257,8 +300,8 @@ function drawKlingons() {
             klingons[i].thrust.x -= 3 * friction * klingons[i].thrust.x / FPS;
             klingons[i].thrust.y -= 3 * friction * klingons[i].thrust.y / FPS;
         }
-        klingons[i].x += klingons[i].thrust.x
-        klingons[i].y += klingons[i].thrust.y
+        // klingons[i].x += klingons[i].thrust.x
+        // klingons[i].y += klingons[i].thrust.y
         
         // Locked on
         if (klingons[i].locked && ship.scanning) {

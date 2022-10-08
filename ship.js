@@ -20,6 +20,7 @@ const ship = {
     torpCount: 250,
     torpedoes: [],
     scans: [],
+    particles: [],
     thrusting: false,
     braking: false,
     firing: false,
@@ -28,6 +29,7 @@ const ship = {
     shields: maxShields,
     hull: 510,
     scanning: false,
+    exploding: false,
     thrust: {
         x: 0,
         y: 0
@@ -44,6 +46,43 @@ const torpedo = {
     height: ship.height / 2,
     width: ship.width / 2,
     shadow: 'rgb(248,58,37)'
+}
+
+function drawShipExplosion() {
+    ship.particles.forEach((particle, i) => {
+        ctx.save();
+        ctx.globalAlpha = particle.alpha;
+        ctx.shadowColor = 'rgb(200, 0, 0)'
+        ctx.shadowBlur = 10
+        if (particle.random === 0) {
+            ctx.beginPath();
+            ctx.fillStyle = `rgb(${255 - (particle.increment * 158/100)}, ${particle.increment * 94/100}, ${particle.increment * 92/100})`;
+            ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2, false);
+            ctx.fill();
+        } 
+        else if (particle.random === 1) {
+            ctx.beginPath();
+            ctx.fillStyle = `rgb(${255 - (particle.increment * 103/100)}, ${255 - (particle.increment * 101/100)}, ${particle.increment * 142/100})`;
+            ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2, false);
+            ctx.fill();
+        } else {
+            ctx.beginPath();
+            ctx.fillStyle = `rgb(${255 - (particle.increment)}, ${80 + (particle.increment * 78/100)}, ${particle.increment * 148/100})`;
+            ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2, false);
+            ctx.fill();
+        }
+        
+        ctx.restore();
+        
+        particle.alpha -= 0.01
+        particle.x += particle.dx
+        particle.y += particle.dy
+        particle.increment += 1.35
+
+        if (particle.alpha <= 0) {
+            ship.particles.splice(i, 1)
+        }
+    })
 }
 
 function drawPhasers() {
@@ -95,9 +134,7 @@ function drawTorpedoes() {
         ctx.shadowBlur = torpedo.height * 3
         ctx.drawImage(torpedo.el, ship.torpedoes[i].x + cameraOffset.x - (torpedo.width / 2), ship.torpedoes[i].y + cameraOffset.y - (torpedo.height / 2), ship.width / 2, ship.height / 2)
         ctx.shadowBlur = 0
-    }
 
-    for (let i = 0; i < ship.torpedoes.length; i++) {
         ship.torpedoes[i].x += ship.torpedoes[i].xv + ship.thrust.x;
         ship.torpedoes[i].y += ship.torpedoes[i].yv + ship.thrust.y;
     }
@@ -122,8 +159,21 @@ function drawTorpedoes() {
                     kr = klingons[i].height / 2
                     klingons[i].hull -= 260
                 } else if (klingons[i].hull <= 0) {
-                    kr = klingons[i].height / 2
-                    klingons.splice(i, 1)
+                    klingons[i].exploding = !klingons[i].exploding
+                    for (k = 0; k < 300; k++) {
+                        klingons[i].particles.push({
+                            x: klingons[i].x + cameraOffset.x,
+                            y: klingons[i].y + cameraOffset.y,
+                            dx: (Math.random() - 0.5) * (Math.random() * 6),
+                            dy: (Math.random() - 0.5) * (Math.random() * 6),
+                            r: Math.random() * 2,
+                            alpha: 1,
+                            random: Math.floor(Math.random() * 3),
+                            increment: 1
+                        })
+                    }
+                    klingons[i].locked = !klingons[i].locked
+                    setTimeout(() => {klingons.splice(i, 1)}, 5000)
                 }
             }
         }
@@ -218,7 +268,7 @@ function shieldsUpAnim() {
     setTimeout(() => ship.shieldsUp = !ship.shieldsUp, 600)
 }
 
-function shipShields() {
+function drawShipShields() {
     ctx.lineWidth = 2
     ctx.shadowColor = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 1)`;
     ctx.shadowBlur = 20
@@ -261,10 +311,14 @@ function orbitPlanet(planet) {
 }
 
 function drawShip() {
-    drawShipTrail();
-    drawTorpedoes();
-    drawScans();
-
+    if (!ship.exploding) {
+        drawShipTrail()
+        drawTorpedoes();
+        drawScans();
+    } else {
+        drawShipExplosion();
+    }
+    
     if (ship.orbiting) {
         planets.map((planet) => {
             if (planet.locked) {
@@ -282,8 +336,21 @@ function drawShip() {
                 } else if (klingons[lockId].shields <= 0 && klingons[lockId].hull > 0) {
                     klingons[lockId].hull -= 1
                 } else if (klingons[lockId].hull <= 0) {
-                    klingons.splice(lockId, 1)
+                    klingons[lockId].exploding = !klingons[lockId].exploding
+                    for (i = 0; i < 300; i++) {  
+                        klingons[lockId].particles.push({
+                            x: klingons[lockId].x + cameraOffset.x,
+                            y: klingons[lockId].y + cameraOffset.y,
+                            dx: (Math.random() - 0.5) * (Math.random() * 6),
+                            dy: (Math.random() - 0.5) * (Math.random() * 6),
+                            r: Math.random() * 2,
+                            alpha: 1,
+                            random: Math.floor(Math.random() * 3),
+                            increment: 1
+                        })
+                    }
                     klingons[lockId].locked = !klingons[lockId].locked
+                    setTimeout(() => {klingons.splice(lockId, 1)}, 5000)
                 }
                 
             } else {
@@ -309,7 +376,7 @@ function drawShip() {
     ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
     ctx.rotate(-ship.a + 90 * Math.PI / 180)
     ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
-    ctx.drawImage(ship.thrusting ? ship.elThrust : ship.el, ship.x - (ship.width / 2) + cameraOffset.x, ship.y - (ship.height / 1.7) + cameraOffset.y, ship.width, ship.height)
+    !ship.exploding ? ctx.drawImage(ship.thrusting ? ship.elThrust : ship.el, ship.x - (ship.width / 2) + cameraOffset.x, ship.y - (ship.height / 1.7) + cameraOffset.y, ship.width, ship.height) : null
     ctx.restore();
 
     // Move ship
@@ -328,12 +395,15 @@ function drawShip() {
     ship.x += ship.thrust.x
     ship.y += ship.thrust.y
 
-    ship.shieldsUp ? shipShields() : null
-    if (ship.shields > 0 && ship.shieldsUp) {
-        shipShields()
-    } else {
-        ship.shieldsUp = false
-        ship.shields === 0
+    if (!ship.exploding) {
+        ship.shieldsUp ? drawShipShields() : null
+        if (ship.shields > 0 && ship.shieldsUp) {
+            drawShipShields()
+        } else {
+            ship.shieldsUp = false
+            ship.shields === 0
+        }    
     }
+    
     ship.shields < maxShields ? ship.shields += 2 : null
 }
