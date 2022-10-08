@@ -17,6 +17,11 @@ function distBetweenPoints(x1, y1, x2, y2) {
 const camera = {x: ship.x - (canvas.width / 2), y: ship.y - (canvas.height / 2)}
 const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.y}
 
+function alert(text) {
+    alertMsg = text
+    setTimeout(() => {alertMsg = '' }, 5000)
+}
+
 //   _____          __  __ ______   _      ____   ____  _____  
 //  / ____|   /\   |  \/  |  ____| | |    / __ \ / __ \|  __ \ 
 // | |  __   /  \  | \  / | |__    | |   | |  | | |  | | |__) |
@@ -43,7 +48,6 @@ function loop() {
     drawSun();
     planets.forEach(drawPlanet);
     drawAsteroids();
-    
 
     storeLastShipPosition(ship.x, ship.y)
 

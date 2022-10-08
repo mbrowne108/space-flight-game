@@ -230,7 +230,22 @@ function drawDisruptors(klingon) {
             } else if (ship.shields <= 0 && ship.hull > 0) {
                 ship.hull -= 40
             } else if (ship.hull <= 0) {
-                // Death here!
+                alert('GAME OVER')
+                ship.exploding = !ship.exploding
+                if (ship.exploding) {
+                    for (i = 0; i < 500; i++) {
+                        ship.particles.push({
+                            x: ship.x + cameraOffset.x,
+                            y: ship.y + cameraOffset.y,
+                            dx: (Math.random() - 0.5) * (Math.random() * 6),
+                            dy: (Math.random() - 0.5) * (Math.random() * 6),
+                            r: Math.random() * 3,
+                            alpha: 1,
+                            random: Math.floor(Math.random() * 3),
+                            increment: 1
+                        })
+                    }
+                }
             }
         }
     }

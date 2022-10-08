@@ -51,6 +51,7 @@ function keyDown(e) {
             ship.braking = true;
             break;
         case 70: // F
+            alert('GAME OVER')
             ship.exploding = !ship.exploding
             if (ship.exploding) {
                 for (i = 0; i < 500; i++) {

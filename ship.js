@@ -317,6 +317,7 @@ function drawShip() {
         drawScans();
     } else {
         drawShipExplosion();
+        alertMsg = 'GAME OVER'
     }
     
     if (ship.orbiting) {
@@ -371,10 +372,8 @@ function drawShip() {
         } else {
             ship.shields -= 1 / distBetweenPoints(ship.x, ship.y, sun.x, sun.y) * 1000
             shieldsUpAnim()
-            alertMsg = "ALERT: SUN IS HOT"
+            alert("ALERT: SUN IS HOT")
         }
-    } else {
-        alertMsg = ''
     }
 
     // Rotate
