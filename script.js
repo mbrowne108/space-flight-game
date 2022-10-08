@@ -19,7 +19,7 @@ const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.
 
 function alert(text) {
     alertMsg = text
-    setTimeout(() => {alertMsg = '' }, 5000)
+    setTimeout(() => {alertMsg = '' }, 3000)
 }
 
 //   _____          __  __ ______   _      ____   ____  _____  

@@ -70,32 +70,40 @@ function keyDown(e) {
             break;
         case 81: // Q (Previous Lock)
             if (ship.scanning) {
-                klingons[lockId].locked = !klingons[lockId].locked
-                lockId === 0 ? lockId = klingons.length - 1 : lockId -= 1
-                klingons[lockId].locked = !klingons[lockId].locked
+                if (planetScanMode) {
+                    planetLockId === 0 ? planetLockId = planets.length - 1 : planetLockId -= 1
+                    planets.forEach((pl, index) => planetLockId !== index ? pl.locked = false : pl.locked = !pl.locked)
+                } else {
+                    lockId === 0 ? lockId = klingons.length - 1 : lockId -= 1
+                    klingons.forEach((kl, index) => lockId !== index ? kl.locked = false : kl.locked = true)
+                }
             }
             break;
         case 69: // E (Next Lock)
             if (ship.scanning) {
-                klingons[lockId].locked = !klingons[lockId].locked
-                lockId === klingons.length - 1 ? lockId = 0 : lockId += 1
-                klingons[lockId].locked = !klingons[lockId].locked
-                console.log(lockId)
+                if (planetScanMode) {
+                    planetLockId === planets.length - 1 ? planetLockId = 0 : planetLockId += 1
+                    planets.forEach((pl, index) => planetLockId !== index ? pl.locked = false : pl.locked = !pl.locked)
+                } else {
+                    lockId === klingons.length - 1 ? lockId = 0 : lockId += 1
+                    klingons.forEach((kl, index) => lockId !== index ? kl.locked = false : kl.locked = true)
+                }
             }
             break;
-        case 32: // Spacebar (Shields)
-            if (ship.shieldsUp) {
-                ship.shieldsUp = !ship.shieldsUp
+        case 32: // Spacebar (Red Alert)
+            if (ship.redAlert) {
+                ship.redAlert = !ship.redAlert
+                document.querySelector('#overlay').classList.toggle('overlay-collapsed');
             } else {
                 shieldsUpAnim();
                 ship.scanning = true
+                document.querySelector('#overlay').classList.toggle('overlay-collapsed');
             }
             break;
         case 09: // Tab (Overlay)
             e.preventDefault()
             document.querySelector('#overlay').classList.toggle('overlay-collapsed');
             ship.scanning = !ship.scanning
-            klingons[lockId].locked = !klingons[lockId].locked
             if (ship.scanning) {
                 ship.scans.push({
                     x: ship.x + ship.width,
@@ -105,7 +113,27 @@ function keyDown(e) {
                 })
             }
             break;
-        case 82: // R (Match speed of target)
+        case 68: // D (Orbit Planet)
+            ship.scanning ? ship.orbiting = !ship.orbiting : null
+            break;
+        case 82: // R (Switch Scan Mode)
+            if (ship.scanning) {
+                while (overlay.el.lastChild) {
+                    overlay.el.removeChild(overlay.el.lastChild)
+                }
+                const h1 = document.createElement('h1')
+                const h5 = document.createElement('h5')
+                h1.innerText = "Scanning System..."
+                h5.innerText = "Click button to lock target"
+                overlay.el.appendChild(h1)
+                overlay.el.appendChild(h5)
+                planetScanMode = !planetScanMode
+                if (planetScanMode) {
+                    klingons.forEach((kl) => kl.locked = false)
+                } else {
+                    planets.forEach((pl) => pl.locked = false)
+                }
+            }
             ship.scanning ? ship.orbiting = !ship.orbiting : null
             break;
         case 48: // 0 (Clear Planet Locks)

@@ -1,4 +1,5 @@
 const orbitColor = 'rgb(100,100,100)';
+let planetLockId = 0
 
 const sun = {
     el: document.getElementById("sun"),

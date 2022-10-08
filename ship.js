@@ -17,7 +17,7 @@ const ship = {
     a: 90 / 180 * Math.PI,
     phaserCharge: maxPhaserCharge,
     torpLoaded: true,
-    torpCount: 250,
+    torpCount: 50,
     torpedoes: [],
     scans: [],
     particles: [],
@@ -25,7 +25,7 @@ const ship = {
     braking: false,
     firing: false,
     orbiting: false,
-    shieldsUp: false,
+    redAlert: false,
     shields: maxShields,
     hull: 510,
     scanning: false,
@@ -120,10 +120,10 @@ function fireTorpedoes() {
             })
             setTimeout(() => ship.torpLoaded = true, 3000)
         } else {
-            console.log("out of torpedoes")
+            alert("NO TORPEDOES LEFT")
         }
     } else {
-        console.log("reloading torpedo")
+        alert("RELOADING TORPEDO")
     }
 }
 
@@ -215,7 +215,7 @@ function storeLastShipPosition(xPos, yPos) {
 
 function drawShipTrail() {
     for (let i = 0; i < shipTrailPositions.length; i++) {
-        let ratio = (i + 1) / shipTrailPositions.length
+        let ratio = (i + 10) / shipTrailPositions.length
         ctx.drawImage(
             ship.trail, 
             shipTrailPositions[i].x + cameraOffset.x - (ship.width * 4/3) / 8, 
@@ -265,7 +265,7 @@ function shieldsUpAnim() {
         ctx.stroke();
     }, 500)
     
-    setTimeout(() => ship.shieldsUp = !ship.shieldsUp, 600)
+    setTimeout(() => ship.redAlert = !ship.redAlert, 600)
 }
 
 function drawShipShields() {
@@ -312,7 +312,9 @@ function orbitPlanet(planet) {
 
 function drawShip() {
     if (!ship.exploding) {
-        drawShipTrail()
+        if ((ship.thrust.x > 0.1 || ship.thrust.x < -0.1) || (ship.thrust.y > 0.1 || ship.thrust.y < -0.1)) {
+            drawShipTrail()
+        }    
         drawTorpedoes();
         drawScans();
     } else {
@@ -402,11 +404,11 @@ function drawShip() {
     ship.y += ship.thrust.y
 
     if (!ship.exploding) {
-        ship.shieldsUp ? drawShipShields() : null
-        if (ship.shields > 0 && ship.shieldsUp) {
+        ship.redAlert ? drawShipShields() : null
+        if (ship.shields > 0 && ship.redAlert) {
             drawShipShields()
         } else {
-            ship.shieldsUp = false
+            ship.redAlert = false
             ship.shields === 0
         }    
     }
