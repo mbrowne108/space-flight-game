@@ -138,22 +138,21 @@ const asteroidBelt = {
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
 function lockedOnPlanetView(planet) {
-    ctx.save()
-    ctx.strokeStyle = "rgb(255, 0, 0)";
+    ctx.save();
     ctx.lineWidth = 10
     if (planet.x + planet.width / 2 + cameraOffset.x < 0 || 
         planet.x + planet.width / 2 + cameraOffset.x > canvas.width ||
         planet.y + planet.width / 2 + cameraOffset.y < 0 ||
         planet.y + planet.width / 2 + cameraOffset.y > canvas.height
     ) {
-        ctx.strokeStyle = "rgba(0, 155, 255, 0.5)";
         ctx.lineWidth = 5 / scale
         ctx.setLineDash([50, 50])
+        ctx.strokeStyle = "rgba(0, 155, 255, 0.5)";
         ctx.lineDashOffset = 50
         ctx.beginPath();
         ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
         ctx.lineTo(planet.x + cameraOffset.x + planet.width / 2, planet.y + cameraOffset.y + planet.height / 2);
-        ctx.stroke()
+        ctx.stroke();
     } else {
         ctx.strokeStyle = "rgb(0, 155, 255)";
         ctx.lineWidth = 1 / scale
@@ -170,7 +169,7 @@ function lockedOnPlanetView(planet) {
         ctx.moveTo(planet.x + planet.width / 2 + cameraOffset.x + 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 10 * planet.height / 30);
         ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x + 30 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 30 * planet.height / 30);
         ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x + 10 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 30 * planet.height / 30);
-        ctx.stroke()
+        ctx.stroke();
     }
     ctx.restore()
 }
@@ -202,7 +201,6 @@ function drawPlanet(planet) {
 
     // Moon orbit and movement
     planet.moons.map((moon) => {
-        ctx.save()
         ctx.strokeStyle = orbitColor
         ctx.lineWidth = 1 / scale
         ctx.beginPath()
@@ -213,7 +211,6 @@ function drawPlanet(planet) {
         moon.x = Math.cos(moon.theta) * moon.radius + planet.x + moon.width
         moon.y = Math.sin(moon.theta) * moon.radius + planet.y + moon.height
         ctx.drawImage(moon.el, moon.x + cameraOffset.x + moon.width / 3, moon.y + cameraOffset.y + moon.height / 3, moon.width, moon.height)
-        ctx.restore()
     })
 
     // Hover over planet

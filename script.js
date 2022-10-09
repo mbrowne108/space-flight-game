@@ -5,6 +5,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
+ctx.imageSmoothingEnabled = false;
 
 createAsteroids();
 createKlingons();
@@ -46,15 +47,15 @@ function loop() {
     ctx.translate(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
     ctx.scale(scale, scale);
     ctx.translate(-(ship.x + cameraOffset.x), -(ship.y + cameraOffset.y));
-    drawSun();
-    planets.forEach(drawPlanet);
-    drawAsteroids();
+        drawSun();
+        planets.forEach(drawPlanet);
+        drawAsteroids();
     ctx.restore();
-    
+
+    drawOverlay();
     drawShip();
     drawKlingons();
     drawScanOverlay();
-    drawOverlay();
 
     storeLastShipPosition(ship.x, ship.y)
 

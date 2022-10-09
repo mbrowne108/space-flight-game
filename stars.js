@@ -14,5 +14,7 @@ function drawStars() {
         ctx.fillStyle = `rgb(${(Math.random() * 10)+ 245}, ${(Math.random() * 10)+ 245}, ${(Math.random() * 10) + 200})`
         ctx.beginPath()
         ctx.fillRect(star.x, star.y, star.size, star.size)
+        ctx.stroke();
+        ctx.closePath()
     })
 }

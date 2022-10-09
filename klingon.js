@@ -59,27 +59,23 @@ const disruptor = {
 }
 
 function lockedOnKlingonView(klingon) {
-    ctx.save()
-    ctx.strokeStyle = "rgb(255, 0, 0)";
     ctx.lineWidth = 10
     if (klingon.x + klingon.width / 2 + cameraOffset.x < 0 || 
         klingon.x + klingon.width / 2 + cameraOffset.x > canvas.width ||
         klingon.y + klingon.width / 2 + cameraOffset.y < 0 ||
         klingon.y + klingon.width / 2 + cameraOffset.y > canvas.height
     ) {
-        ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
-        ctx.lineWidth = 5
+        ctx.lineWidth = 5 / scale
         ctx.setLineDash([50, 50])
+        ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
         ctx.lineDashOffset = 50
         ctx.beginPath();
         ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
         ctx.lineTo(klingon.x + cameraOffset.x, klingon.y + cameraOffset.y);
         ctx.stroke()
-        ctx.restore()
     } else {
-        ctx.save()
         ctx.strokeStyle = "rgb(255, 0, 0)";
-        ctx.lineWidth = 1
+        ctx.lineWidth = 1 / scale
         ctx.beginPath();
         ctx.moveTo(klingon.x + cameraOffset.x - 10 - klingon.thrust.x, klingon.y + cameraOffset.y - 30 - klingon.thrust.y);
         ctx.lineTo(klingon.x + cameraOffset.x - 30 - klingon.thrust.x, klingon.y + cameraOffset.y - 30 - klingon.thrust.y);
@@ -94,12 +90,10 @@ function lockedOnKlingonView(klingon) {
         ctx.lineTo(klingon.x + cameraOffset.x + 30 - klingon.thrust.x, klingon.y + cameraOffset.y - 30 - klingon.thrust.y);
         ctx.lineTo(klingon.x + cameraOffset.x + 10 - klingon.thrust.x, klingon.y + cameraOffset.y - 30 - klingon.thrust.y);
         ctx.stroke()
-        ctx.restore()
     }
 }
 
 function klingonShields(klingon) {
-    ctx.save()
     ctx.lineWidth = 2
     ctx.shadowColor = `rgb(${255 - klingon.shields / 4}, ${klingon.shields / 4}, 0, 1)`;
     ctx.shadowBlur = 10
@@ -128,7 +122,6 @@ function klingonShields(klingon) {
     ctx.arc(klingon.x + cameraOffset.x - klingon.thrust.x, klingon.y + cameraOffset.y - klingon.thrust.y, klingon.height / 1.6, 0, 2 * Math.PI)
     ctx.stroke();
     ctx.shadowBlur = 0
-    ctx.restore()
 }
 
 function drawKlingonExplosion(klingon) {
@@ -277,12 +270,10 @@ function fireKlingonTorpedoes(klingon) {
 
 function drawKlingonTorpedoes(klingon) {
     for (let i = 0; i < klingon.torpedoes.length; i++) {
-        ctx.save()
         ctx.shadowColor = klingon.torpedoes[i].shadow
         ctx.shadowBlur = klingon.torpedoes[i].height * 3
         ctx.drawImage(klingonTorpedo.el, klingon.torpedoes[i].x + cameraOffset.x - (klingonTorpedo.width / 2), klingon.torpedoes[i].y + cameraOffset.y - (klingonTorpedo.height / 2), klingon.width / 2, klingon.height / 2)
         ctx.shadowBlur = 0
-        ctx.restore()
 
         klingon.torpedoes[i].x += klingon.torpedoes[i].xv + klingon.thrust.x;
         klingon.torpedoes[i].y += klingon.torpedoes[i].yv + klingon.thrust.y;
@@ -334,11 +325,9 @@ function drawKlingons() {
             drawKlingonExplosion(klingons[i])
         }
 
-        if (klingons[i].shields < 500) {
-            klingons[i].attacking = false;
-        } else {
-            klingons[i].attacking = true;
-        }
+        klingons[i].shields < 350 ? klingons[i].attacking = false : klingons[i].attacking = true;
+
+        klingons[i].hull < 100 && klingons[i].shields < 350 ? klingons[i].attacking = true : null
 
         ctx.save();
         if (klingons[i].attacking) {
@@ -388,8 +377,8 @@ function drawKlingons() {
             klingons[i].thrust.x -= 3 * friction * klingons[i].thrust.x / FPS;
             klingons[i].thrust.y -= 3 * friction * klingons[i].thrust.y / FPS;
         }
-        // klingons[i].x += klingons[i].thrust.x
-        // klingons[i].y += klingons[i].thrust.y
+        klingons[i].x += klingons[i].thrust.x
+        klingons[i].y += klingons[i].thrust.y
         
         // Locked on
         if (klingons[i].locked && ship.scanning) {

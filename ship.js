@@ -103,7 +103,7 @@ function drawPhasers() {
     } else if (ship.x < klingons[lockId].x && ship.y > klingons[lockId].y) {
         ctx.lineTo(klingons[lockId].x - klingons[lockId].width / 2 + cameraOffset.x + Math.random() * 2, klingons[lockId].y + klingons[lockId].height / 2 + cameraOffset.y + Math.random() * 2);
     }
-    ctx.stroke();
+    ctx.stroke()
     ctx.shadowBlur = 0
 }
 
@@ -130,12 +130,10 @@ function fireTorpedoes() {
 
 function drawTorpedoes() {
     for (let i = 0; i < ship.torpedoes.length; i++) {
-        ctx.save()
         ctx.shadowColor = torpedo.shadow
         ctx.shadowBlur = torpedo.height * 3
         ctx.drawImage(torpedo.el, ship.torpedoes[i].x + cameraOffset.x - (torpedo.width / 2), ship.torpedoes[i].y + cameraOffset.y - (torpedo.height / 2), ship.width / 2, ship.height / 2)
         ctx.shadowBlur = 0
-        ctx.restore()
 
         ship.torpedoes[i].x += ship.torpedoes[i].xv + ship.thrust.x;
         ship.torpedoes[i].y += ship.torpedoes[i].yv + ship.thrust.y;
@@ -159,7 +157,11 @@ function drawTorpedoes() {
                     klingons[i].shields -= 260
                 } else if (klingons[i].shields <= 0 && klingons[i].hull > 0) {
                     kr = klingons[i].height / 2
-                    klingons[i].hull -= 260
+                    if (klingons[i].hull <= 260) {
+                        klingons[i].hull -= klingons[i].hull
+                    } else {
+                        klingons[i].hull -= 260
+                    }
                 } else if (klingons[i].hull <= 0) {
                     klingons[i].exploding = !klingons[i].exploding
                     klingons[i].locked = false
@@ -175,7 +177,7 @@ function drawTorpedoes() {
                             increment: 1
                         })
                     }
-                    setTimeout(() => {klingons.splice(i, 1)}, 5000)
+                    setTimeout(() => {klingons.splice(i, 1)}, 3000)
                 }
             }
         }
@@ -203,7 +205,7 @@ function drawScans() {
     }
 }
 
-const shipTrailLength = 20
+const shipTrailLength = 15
 let shipTrailPositions = []
 function storeLastShipPosition(xPos, yPos) {
     shipTrailPositions.push({
@@ -229,7 +231,6 @@ function drawShipTrail() {
 }
 
 function shieldsUpAnim() {
-    ctx.save()
     ctx.lineWidth = 2
     setTimeout(() => {
         ctx.strokeStyle = `rgb(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.1)`;
@@ -267,13 +268,11 @@ function shieldsUpAnim() {
         ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.5), (ship.height / 1), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 500)
-    ctx.restore()
     
     setTimeout(() => ship.redAlert = !ship.redAlert, 600)
 }
 
 function drawShipShields() {
-    ctx.save();
     ctx.lineWidth = 2
     ctx.shadowColor = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 1)`;
     ctx.shadowBlur = 20
@@ -302,7 +301,6 @@ function drawShipShields() {
     ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, ship.height / 2, ship.height / 1.5, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
     ctx.stroke();
     ctx.shadowBlur = 0
-    ctx.restore()
 }
 
 function orbitPlanet(planet) {
@@ -312,7 +310,7 @@ function orbitPlanet(planet) {
         ship.y = Math.sin(ship.orbit.theta) * (ship.orbit.radius + planet.height / 2) + planet.y + (planet.height * 4/3) / 2
     } else {
         ship.orbiting = !ship.orbiting
-        alert(`TOO FAR TO ORBIT ${planet.name}`)
+        alert(`TOO FAR TO ORBIT ${planet.name.toUpperCase()}`)
     }
 }
 
@@ -346,6 +344,7 @@ function drawShip() {
                     klingons[lockId].hull -= 1
                 } else if (klingons[lockId].hull <= 0) {
                     klingons[lockId].exploding = !klingons[lockId].exploding
+                    klingons[lockId].locked = false
                     for (i = 0; i < 300; i++) {  
                         klingons[lockId].particles.push({
                             x: klingons[lockId].x + cameraOffset.x,
@@ -358,17 +357,13 @@ function drawShip() {
                             increment: 1
                         })
                     }
-                    klingons[lockId].locked = !klingons[lockId].locked
-                    setTimeout(() => {klingons.splice(lockId, 1)}, 5000)
+                    setTimeout(() => {klingons.splice(lockId, 1)}, 3000)
                 }
-                
             } else {
                 ship.firing = false
             }
         } else if (klingons[lockId].locked && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) > 500) {
             alert('NOT IN PHASER RANGE')
-        } else {
-            alert('NO PHASER LOCK')
         }
     } else {
         if (ship.phaserCharge < maxPhaserCharge) {ship.phaserCharge += 0.5}
