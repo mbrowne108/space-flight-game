@@ -65,7 +65,7 @@ function lockedOnKlingonView(klingon) {
         klingon.y + klingon.width / 2 + cameraOffset.y < 0 ||
         klingon.y + klingon.width / 2 + cameraOffset.y > canvas.height
     ) {
-        ctx.lineWidth = 5 / scale
+        ctx.lineWidth = 5
         ctx.setLineDash([50, 50])
         ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
         ctx.lineDashOffset = 50
@@ -75,7 +75,7 @@ function lockedOnKlingonView(klingon) {
         ctx.stroke()
     } else {
         ctx.strokeStyle = "rgb(255, 0, 0)";
-        ctx.lineWidth = 1 / scale
+        ctx.lineWidth = 1
         ctx.beginPath();
         ctx.moveTo(klingon.x + cameraOffset.x - 10 - klingon.thrust.x, klingon.y + cameraOffset.y - 30 - klingon.thrust.y);
         ctx.lineTo(klingon.x + cameraOffset.x - 30 - klingon.thrust.x, klingon.y + cameraOffset.y - 30 - klingon.thrust.y);
@@ -226,35 +226,25 @@ function drawDisruptors(klingon) {
 
     // Disruptor hits
     let sr = ship.height
-    for (let i = klingon.disruptors.length - 1; i >= 0; i--) {
-        ship.shields <= 0 ? sr = ship.height / 2 : sr = ship.height
-        if (distBetweenPoints(ship.x, ship.y, klingon.disruptors[i].x, klingon.disruptors[i].y) < sr) {
-            klingon.disruptors.splice(i, 1)
-            if (ship.shields > 0) {
-                !ship.exploding ? drawShipShields() : null
-                ship.shields -= 20
-            } else if (ship.shields <= 0 && ship.hull > 0) {
-                ship.hull -= 20
-            } else if (ship.hull <= 0) {
-                // alert('GAME OVER')
-                // ship.exploding = !ship.exploding
-                // if (ship.exploding) {
-                //     for (i = 0; i < 500; i++) {
-                //         ship.particles.push({
-                //             x: ship.x + cameraOffset.x,
-                //             y: ship.y + cameraOffset.y,
-                //             dx: (Math.random() - 0.5) * (Math.random() * 6),
-                //             dy: (Math.random() - 0.5) * (Math.random() * 6),
-                //             r: Math.random() * 3,
-                //             alpha: 1,
-                //             random: Math.floor(Math.random() * 3),
-                //             increment: 1
-                //         })
-                //     }
-                // }
+    if (!ship.exploding) {
+        for (let i = klingon.disruptors.length - 1; i >= 0; i--) {
+            ship.shields <= 0 ? sr = ship.height / 2 : sr = ship.height
+            if (distBetweenPoints(ship.x, ship.y, klingon.disruptors[i].x, klingon.disruptors[i].y) < sr) {
+                klingon.disruptors.splice(i, 1)
+                if (ship.shields > 0) {
+                    !ship.exploding ? drawShipShields() : null
+                    ship.shields -= 200
+                } else if (ship.shields <= 0 && ship.hull > 0) {
+                    ship.shields = 0
+                    ship.hull -= 200
+                } else if (ship.hull <= 0) {
+                    ship.hull = 0
+                    explodeShip()
+                }
             }
         }
     }
+    
 }
 
 function fireKlingonTorpedoes(klingon) {
@@ -291,23 +281,10 @@ function drawKlingonTorpedoes(klingon) {
                 ship.shields -= 100
             } else if (ship.shields <= 0 && ship.hull > 0) {
                 ship.hull -= 100
+                ship.shields = 0
             } else if (ship.hull <= 0) {
-                // alert('GAME OVER')
-                // ship.exploding = !ship.exploding
-                // if (ship.exploding) {
-                //     for (i = 0; i < 500; i++) {
-                //         ship.particles.push({
-                //             x: ship.x + cameraOffset.x,
-                //             y: ship.y + cameraOffset.y,
-                //             dx: (Math.random() - 0.5) * (Math.random() * 6),
-                //             dy: (Math.random() - 0.5) * (Math.random() * 6),
-                //             r: Math.random() * 3,
-                //             alpha: 1,
-                //             random: Math.floor(Math.random() * 3),
-                //             increment: 1
-                //         })
-                //     }
-                // }
+                ship.hull = 0
+                explodeShip()
             }
         }
     }
@@ -320,8 +297,10 @@ function drawKlingons() {
                 drawKlingonTrail(klingons[i])
             }    
             klingons[i].attacking ? fireWeapons(klingons[i]) : null;
-            drawDisruptors(klingons[i]);
-            drawKlingonTorpedoes(klingons[i]);
+            if (!ship.exploding) {
+                drawDisruptors(klingons[i]);
+                drawKlingonTorpedoes(klingons[i]);
+            }
         } else {
             drawKlingonExplosion(klingons[i])
         }

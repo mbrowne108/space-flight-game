@@ -48,6 +48,27 @@ const torpedo = {
     shadow: 'rgb(248,58,37)'
 }
 
+function explodeShip() {
+    ship.exploding = !ship.exploding
+    if (ship.exploding) {
+        for (let j = 0; j < 500; j++) {
+            ship.particles.push({
+                x: ship.x + cameraOffset.x,
+                y: ship.y + cameraOffset.y,
+                dx: (Math.random() - 0.5) * (Math.random() * 6),
+                dy: (Math.random() - 0.5) * (Math.random() * 6),
+                r: Math.random() * 3,
+                alpha: 1,
+                random: Math.floor(Math.random() * 3),
+                increment: 1
+            })
+        }
+    }
+    setTimeout(() => {
+        dead = true;
+    }, 3000)
+}
+
 function drawShipExplosion() {
     ship.particles.forEach((particle, i) => {
         ctx.globalAlpha = particle.alpha;
@@ -221,8 +242,8 @@ function drawShipTrail() {
         let ratio = (i + 10) / shipTrailPositions.length
         ctx.drawImage(
             ship.trail, 
-            shipTrailPositions[i].x + cameraOffset.x - (ship.width * 4/3) / 8, 
-            shipTrailPositions[i].y + cameraOffset.y - ship.height / 8, 
+            shipTrailPositions[i].x + cameraOffset.x - (ship.width * 4/3) / 6, 
+            shipTrailPositions[i].y + cameraOffset.y - ship.height / 6, 
             (ship.width * 4/3 / 4) * ratio, 
             (ship.height / 4) * ratio
         )
@@ -322,10 +343,6 @@ function drawShip() {
         drawScans();
     } else {
         drawShipExplosion();
-        alertMsg = 'GAME OVER'
-        setTimeout(() => {
-            paused = true
-        }, 3500)
     }
     
     if (ship.orbiting) {
@@ -372,9 +389,11 @@ function drawShip() {
     }
 
     if (distBetweenPoints(ship.x, ship.y, sun.x, sun.y) < 150) {
-        if (ship.shields <= 0) {
-            ship.shields = 0
-        } else {
+        if (ship.shields <= 0 && !ship.exploding) {
+            ship.hull = 0
+            ship.shields = -100
+            explodeShip()
+        } else if (ship.shields > 0 && !ship.exploding) {
             ship.shields -= 1 / distBetweenPoints(ship.x, ship.y, sun.x, sun.y) * 1000
             shieldsUpAnim()
             alert("ALERT: SUN IS HOT")
@@ -415,6 +434,7 @@ function drawShip() {
             ship.shields === 0
         }    
     }
+
     storeLastShipPosition(ship.x, ship.y)
     ship.shields < maxShields ? ship.shields += 2 : null
 }

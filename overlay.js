@@ -17,26 +17,26 @@ function drawOverlay() {
     grd = ctx.createLinearGradient(0, 0, 0, window.innerHeight + window.innerHeight / 6)
     grd.addColorStop(0, `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}`);
     grd.addColorStop(1, 'rgb(171, 183, 183)');
-    ctx.fillStyle = grd
+    ship.shields >= 0 ? ctx.fillStyle = grd : ctx.fillStyle = 'transparent'
     ctx.fillRect(window.innerWidth - (window.innerWidth / 15), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * ship.shields / maxShields))
+    
 
     // Hull
     grd = ctx.createLinearGradient(0, 0, 0, window.innerHeight + window.innerHeight / 6)
     grd.addColorStop(0, `rgb(97, 94, 92)`);
     grd.addColorStop(1, 'rgb(171, 183, 183)');
-    ctx.fillStyle = grd
+    ship.hull >= 0 ? ctx.fillStyle = grd : ctx.fillStyle = 'transparent'
     ctx.fillRect(window.innerWidth - (window.innerWidth / 10), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * ship.hull * 2 / maxShields))
-        
-    ship.shields >= 0 ? ctx.fillStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}` : ctx.fillStyle = 'black'
 
     // Phasers
     grd = ctx.createLinearGradient(0, 0, 0, window.innerHeight + window.innerHeight / 6)
     grd.addColorStop(0, 'rgb(200, 0, 0)');
     grd.addColorStop(1, 'rgb(171, 183, 183)');
-    ctx.fillStyle = grd
+    ship.phaserCharge >= 0 ? ctx.fillStyle = grd : ctx.fillStyle = 'transparent'
     ctx.fillRect(window.innerWidth - (window.innerWidth / 30), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * ship.phaserCharge / maxPhaserCharge))
 
     // Outlines
+    ctx.setLineDash([])
     ctx.strokeStyle = 'rgb(171, 183, 183)'
     ctx.lineWidth = 1
     ctx.strokeRect(window.innerWidth - (window.innerWidth / 15), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -window.innerHeight / 3)
@@ -46,7 +46,8 @@ function drawOverlay() {
     // Text
     ctx.fillStyle = 'rgb(171, 183, 183)'
     ctx.font = "16px trebuchet ms";
-    ship.scanning ? null : ctx.fillText('Press TAB to scan', window.innerWidth / 100, window.innerHeight / 50)
+    ship.scanning ? null : ctx.fillText('Press Tab to scan', window.innerWidth / 100, window.innerHeight / 50)
+    ship.scanning ? null : ctx.fillText('Press ESC to pause', window.innerWidth / 100, window.innerHeight / 25)
     ctx.textAlign = "center"
     ctx.fillText('Shields', window.innerWidth - (window.innerWidth / 15) + window.innerWidth / 100, window.innerHeight / 3 - window.innerHeight / 100);
     ctx.fillText('Hull', window.innerWidth - (window.innerWidth / 10) + window.innerWidth / 100, window.innerHeight / 2 - window.innerHeight / 100);
@@ -59,7 +60,10 @@ function drawOverlay() {
     // Scanner
     if (ship.scanning) {
         ctx.setLineDash([])
-        ctx.fillStyle = 'rgba(108, 122, 137, 0.5)'
+        grd = ctx.createLinearGradient(window.innerWidth / 6, 0, 0, 0)
+        grd.addColorStop(0, 'rgba(108, 122, 137, 0.9)');
+        grd.addColorStop(1, 'rgb(171, 183, 183, 0.9)');
+        ctx.fillStyle = grd
         ctx.textAlign = "center"
         ctx.fillRect(0, 0, window.innerWidth / 6, window.innerHeight / 1.65)
         ctx.strokeStyle = 'rgb(171, 183, 183)'
@@ -68,17 +72,21 @@ function drawOverlay() {
         ship.redAlert ? ctx.shadowBlur = 20 : null
         ctx.strokeRect(0, 0, window.innerWidth / 6, window.innerHeight / 1.65)
         ship.redAlert ? ctx.shadowBlur = 0 : null
-        ctx.fillStyle = 'rgb(171, 183, 183)'
-        ctx.font = 26*textRatio+'px trebuchet ms'
+        ctx.fillStyle = 'rgb(238, 238, 238)'
+        ctx.font = '26px trebuchet ms'
         ctx.fillText('Scanning System...', window.innerWidth / 12, window.innerHeight / 20)
         ctx.font = "14px trebuchet ms"
         ctx.fillText('Press A to switch target types', window.innerWidth / 12, window.innerHeight / 20 + 20)
-        ctx.fillText('Q and E to rotate targets', window.innerWidth / 12, window.innerHeight / 20 + 40)
-        ctx.fillText('Press R to deselect target', window.innerWidth / 12, window.innerHeight / 20 + 60)
-        ctx.fillText('Press Tab to exit scanner', window.innerWidth / 12, window.innerHeight / 20 + 80)
+        ctx.fillText('Q and E to rotate targets', window.innerWidth / 12, window.innerHeight / 20 + 38)
+        ctx.fillText('Press R to deselect target', window.innerWidth / 12, window.innerHeight / 20 + 56)
+        ctx.fillText('Press Tab to exit scanner', window.innerWidth / 12, window.innerHeight / 20 + 74)
         if (planetScanMode) {
             planets.map((planet, i) => {
                 ctx.fillStyle = 'rgb(0, 155, 255)'
+                grd = ctx.createLinearGradient(0, window.innerHeight / 10 + ((i + 1) * 45) + 250, 0, 0)
+                grd.addColorStop(0, 'rgb(0, 155, 255)');
+                grd.addColorStop(1, 'rgb(171, 183, 183)');
+                ctx.fillStyle = grd
                 ctx.fillRect(window.innerWidth / 48, window.innerHeight / 10 + ((i + 1) * 45), window.innerWidth / 8, window.innerHeight / 30)
                 if (planet.locked) {
                     ctx.strokeStyle = "rgb(255, 218, 95)"
@@ -100,6 +108,10 @@ function drawOverlay() {
         } else {
             klingons.map((klingon, i) => {
                 ctx.fillStyle = 'rgb(255, 0, 0)'
+                grd = ctx.createLinearGradient(0, window.innerHeight / 10 + ((i + 1) * 45) + 250, 0, 0)
+                grd.addColorStop(0, 'rgb(255, 0, 0)');
+                grd.addColorStop(1, 'rgb(171, 183, 183)');
+                ctx.fillStyle = grd
                 ctx.fillRect(window.innerWidth / 48, window.innerHeight / 10 + ((i + 1) * 45), window.innerWidth / 8, window.innerHeight / 30)
                 if (klingon.locked) {
                     ctx.strokeStyle = "rgb(255, 218, 95)"
@@ -159,14 +171,14 @@ function drawOverlay() {
         ctx.strokeRect(window.innerWidth / 2 - innerWidth / 32, window.innerHeight / 9, planets[planetLockId].el.width / 5.5, planets[planetLockId].el.height / 5.5)
     }
 
-    if (!ship.orbiting) {
+    if (ship.orbiting) {
         if (distBetweenPoints(ship.x, ship.y, planets[planetLockId].x + planets[planetLockId].width / 2, planets[planetLockId].y + planets[planetLockId].height / 2) < planets[planetLockId].width + 100) {
-            alert(`WITHIN RANGE TO ORBIT ${planets[planetLockId].name.toUpperCase()}. PRESS R`)
+            alert(`WITHIN RANGE TO ORBIT ${planets[planetLockId].name.toUpperCase()}. PRESS F`)
         }
     }
 
 
-    ctx.font = "bold 36px sans-serif";
+    ctx.font = "36px trebuchet ms";
     ctx.strokeStyle = 'rgb(200, 0, 0)'
     alertMsg ? ctx.strokeText(alertMsg, window.innerWidth / 2, window.innerHeight / 4 + window.innerHeight / 33) : null;
 

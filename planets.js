@@ -209,12 +209,4 @@ function drawPlanet(planet) {
         moon.y = Math.sin(moon.theta) * moon.radius + planet.y + moon.height
         ctx.drawImage(moon.el, moon.x + cameraOffset.x + moon.width / 3, moon.y + cameraOffset.y + moon.height / 3, moon.width, moon.height)
     })
-
-    // Hover over planet
-    if ((mouse.x > planet.x + cameraOffset.x && mouse.x < planet.x + planet.width + cameraOffset.x) && 
-        (mouse.y > planet.y + cameraOffset.y && mouse.y < planet.y + planet.height + cameraOffset.y)) {
-            ctx.fillStyle = "white";
-            ctx.font = "16px serif";
-            ctx.fillText(planet.name, planet.x + cameraOffset.x, planet.y + cameraOffset.y - 5)
-        }
 }

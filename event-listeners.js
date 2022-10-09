@@ -73,22 +73,7 @@ function keyDown(e) {
             ship.braking = true;
             break;
         case "KeyV": // V Explode (testing)
-            alert('GAME OVER')
-            ship.exploding = !ship.exploding
-            if (ship.exploding) {
-                for (i = 0; i < 500; i++) {
-                    ship.particles.push({
-                        x: ship.x + cameraOffset.x,
-                        y: ship.y + cameraOffset.y,
-                        dx: (Math.random() - 0.5) * (Math.random() * 6),
-                        dy: (Math.random() - 0.5) * (Math.random() * 6),
-                        r: Math.random() * 3,
-                        alpha: 1,
-                        random: Math.floor(Math.random() * 3),
-                        increment: 1
-                    })
-                }
-            }
+            explodeShip()
             break;
         case "KeyF": // F (Orbit Planet)
             ship.scanning ? ship.orbiting = !ship.orbiting : null
@@ -169,8 +154,13 @@ function keyDown(e) {
             }
             break;
         case "Escape": // ESC (Pause Menu)
-            showPauseMenu = !showPauseMenu
-            paused = !paused
+            if (!showPauseMenu) {
+                showPauseMenu = true
+            } else {
+                showPauseMenu = false
+                requestAnimationFrame(loop)
+            }
+
             
             break;
     }
