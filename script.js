@@ -55,7 +55,6 @@ function loop() {
     drawOverlay();
     drawShip();
     drawKlingons();
-    drawScanOverlay();
 
     storeLastShipPosition(ship.x, ship.y)
 

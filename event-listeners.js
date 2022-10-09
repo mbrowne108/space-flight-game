@@ -116,7 +116,6 @@ function keyDown(e) {
             break;
         case 09: // Tab (Overlay)
             e.preventDefault()
-            document.querySelector('#overlay').classList.toggle('overlay-collapsed');
             ship.scanning = !ship.scanning
             if (ship.scanning) {
                 ship.scans.push({
@@ -130,23 +129,8 @@ function keyDown(e) {
         case 82: // R (Orbit Planet)
             ship.scanning ? ship.orbiting = !ship.orbiting : null
             break;
-        case 65: // A (Scan Mode)
+        case 65: // A (Toggle Scan Mode)
             if (ship.scanning) {
-                while (overlay.el.lastChild) {
-                    overlay.el.removeChild(overlay.el.lastChild)
-                }
-                const h1 = document.createElement('h1')
-                const h5a = document.createElement('h5')
-                const h5b = document.createElement('h5')
-                const h5c = document.createElement('h5')
-                h1.innerText = "Scanning System..."
-                h5a.innerText = "Press A to switch target types"
-                h5b.innerText = "Click to lock target"
-                h5c.innerText = "Q and E to rotate targets"
-                overlay.el.appendChild(h1)
-                overlay.el.appendChild(h5a)
-                overlay.el.appendChild(h5b)
-                overlay.el.appendChild(h5c)
                 planetScanMode = !planetScanMode
                 if (planetScanMode) {
                     klingons.forEach((kl) => kl.locked = false)

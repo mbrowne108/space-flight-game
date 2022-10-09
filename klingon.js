@@ -377,8 +377,8 @@ function drawKlingons() {
             klingons[i].thrust.x -= 3 * friction * klingons[i].thrust.x / FPS;
             klingons[i].thrust.y -= 3 * friction * klingons[i].thrust.y / FPS;
         }
-        klingons[i].x += klingons[i].thrust.x
-        klingons[i].y += klingons[i].thrust.y
+        // klingons[i].x += klingons[i].thrust.x
+        // klingons[i].y += klingons[i].thrust.y
         
         // Locked on
         if (klingons[i].locked && ship.scanning) {
