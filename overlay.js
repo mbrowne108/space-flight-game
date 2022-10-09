@@ -1,5 +1,6 @@
 let alertMsg = ''
 let planetScanMode = false
+const textRatio = window.innerWidth / 1920
 
 function drawOverlay() {
         // ctx.fillStyle = "red";
@@ -11,7 +12,6 @@ function drawOverlay() {
         // ctx.fillText(`Dist between ${distBetweenPoints(ship.x, ship.y, sun.x, sun.y)}`, 5, 75);
         // ctx.fillText(`Shields:${ship.shields}`, 5, 90);
         // ctx.fillText(`Thrust X: ${ship.thrust.y}, Y: ${ship.thrust.x}`, 5, 105);
-
 
     // Shields
     grd = ctx.createLinearGradient(0, 0, 0, window.innerHeight + window.innerHeight / 6)
@@ -58,6 +58,7 @@ function drawOverlay() {
 
     // Scanner
     if (ship.scanning) {
+        ctx.setLineDash([])
         ctx.fillStyle = 'rgba(108, 122, 137, 0.5)'
         ctx.textAlign = "center"
         ctx.fillRect(0, 0, window.innerWidth / 6, window.innerHeight / 1.65)
@@ -68,13 +69,13 @@ function drawOverlay() {
         ctx.strokeRect(0, 0, window.innerWidth / 6, window.innerHeight / 1.65)
         ship.redAlert ? ctx.shadowBlur = 0 : null
         ctx.fillStyle = 'rgb(171, 183, 183)'
-        ctx.font = "28px trebuchet ms"
+        ctx.font = 26*textRatio+'px trebuchet ms'
         ctx.fillText('Scanning System...', window.innerWidth / 12, window.innerHeight / 20)
-        ctx.stroke()
         ctx.font = "14px trebuchet ms"
         ctx.fillText('Press A to switch target types', window.innerWidth / 12, window.innerHeight / 20 + 20)
         ctx.fillText('Q and E to rotate targets', window.innerWidth / 12, window.innerHeight / 20 + 40)
-        ctx.fillText('Press Tab to exit scanner', window.innerWidth / 12, window.innerHeight / 20 + 60)
+        ctx.fillText('Press R to deselect target', window.innerWidth / 12, window.innerHeight / 20 + 60)
+        ctx.fillText('Press Tab to exit scanner', window.innerWidth / 12, window.innerHeight / 20 + 80)
         if (planetScanMode) {
             planets.map((planet, i) => {
                 ctx.fillStyle = 'rgb(0, 155, 255)'
@@ -91,7 +92,7 @@ function drawOverlay() {
                 } 
                 ctx.fillStyle = 'rgb(238, 238, 238)'
                 ctx.font = "bold 16px trebuchet ms"
-                ctx.fillText(`${planet.name}`, window.innerWidth / 24, window.innerHeight / 10 + ((i + 1) * 45 + 20))
+                ctx.fillText(`${planet.name}`, window.innerWidth / 20, window.innerHeight / 10 + ((i + 1) * 45 + 20))
                 const distConvert = (Math.round((distBetweenPoints(ship.x, ship.y, planet.x, planet.y) / 6) * 1.60934))
                 ctx.font = "12px trebuchet ms"
                 ctx.fillText(`${distConvert} million km away`, window.innerWidth / 9, window.innerHeight / 10 + ((i + 1) * 45 + 20))
@@ -119,21 +120,6 @@ function drawOverlay() {
             })
         }
     }    
-        
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if (klingons[lockId]) {
         if (klingons[lockId].locked) {
@@ -183,4 +169,5 @@ function drawOverlay() {
     ctx.font = "bold 36px sans-serif";
     ctx.strokeStyle = 'rgb(200, 0, 0)'
     alertMsg ? ctx.strokeText(alertMsg, window.innerWidth / 2, window.innerHeight / 4 + window.innerHeight / 33) : null;
+
 }

@@ -12,8 +12,8 @@ const ship = {
     trail: document.getElementById("ship-trail"),
     x: 2300,
     y: 2300,
-    height: 50 * (4/3),
-    width: 50,
+    height: 75 * (4/3),
+    width: 75,
     a: 90 / 180 * Math.PI,
     phaserCharge: maxPhaserCharge,
     torpLoaded: true,
@@ -50,7 +50,6 @@ const torpedo = {
 
 function drawShipExplosion() {
     ship.particles.forEach((particle, i) => {
-        ctx.save();
         ctx.globalAlpha = particle.alpha;
         ctx.shadowColor = 'rgb(200, 0, 0)'
         ctx.shadowBlur = 10
@@ -72,8 +71,6 @@ function drawShipExplosion() {
             ctx.fill();
         }
         
-        ctx.restore();
-        
         particle.alpha -= 0.01
         particle.x += particle.dx
         particle.y += particle.dy
@@ -82,6 +79,8 @@ function drawShipExplosion() {
         if (particle.alpha <= 0) {
             ship.particles.splice(i, 1)
         }
+        ctx.shadowBlur = 0
+        ctx.globalAlpha = 1;
     })
 }
 
@@ -324,6 +323,9 @@ function drawShip() {
     } else {
         drawShipExplosion();
         alertMsg = 'GAME OVER'
+        setTimeout(() => {
+            paused = true
+        }, 3500)
     }
     
     if (ship.orbiting) {
@@ -413,6 +415,6 @@ function drawShip() {
             ship.shields === 0
         }    
     }
-    
+    storeLastShipPosition(ship.x, ship.y)
     ship.shields < maxShields ? ship.shields += 2 : null
 }

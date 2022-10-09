@@ -138,7 +138,6 @@ const asteroidBelt = {
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
 function lockedOnPlanetView(planet) {
-    ctx.save();
     ctx.lineWidth = 10
     if (planet.x + planet.width / 2 + cameraOffset.x < 0 || 
         planet.x + planet.width / 2 + cameraOffset.x > canvas.width ||
@@ -171,7 +170,6 @@ function lockedOnPlanetView(planet) {
         ctx.lineTo(planet.x + planet.width / 2 + cameraOffset.x + 10 * planet.width / 40, planet.y + planet.height / 2 + cameraOffset.y - 30 * planet.height / 30);
         ctx.stroke();
     }
-    ctx.restore()
 }
 
 function drawSun() {
@@ -180,13 +178,12 @@ function drawSun() {
 
 function drawPlanet(planet) {
     // Draw orbit
-    ctx.save()
+    ctx.setLineDash([])
     ctx.beginPath()
     ctx.strokeStyle = orbitColor
     ctx.lineWidth = 1 / scale
     ctx.arc(sun.x + cameraOffset.x, sun.y + cameraOffset.y, planet.radius, 0, 2 * Math.PI)
     ctx.stroke()
-    ctx.restore()
 
     // Locked on
     if (planet.locked && ship.scanning) {

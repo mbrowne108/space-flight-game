@@ -18,11 +18,11 @@ function newKlingon(x, y) {
         el: document.getElementById("klingon"),
         elThrust: document.getElementById("klingon-thrusting"),
         trail: document.getElementById("klingon-trail"),
-        name: "Bird of Prey",
+        name: "Klingon",
         x: x,
         y: y,
-        height: 30,
-        width: 30,
+        height: 50,
+        width: 50,
         a: 180 * Math.PI,
         trailPositions: [],
         disruptors: [],
@@ -126,7 +126,6 @@ function klingonShields(klingon) {
 
 function drawKlingonExplosion(klingon) {
     klingon.particles.forEach((particle, i) => {
-        ctx.save();
         ctx.globalAlpha = particle.alpha;
         ctx.shadowColor = 'rgb(200, 0, 0)'
         ctx.shadowBlur = 10
@@ -147,7 +146,6 @@ function drawKlingonExplosion(klingon) {
             ctx.arc(particle.x, particle.y, particle.r, 0, Math.PI * 2, false);
             ctx.fill();
         }
-        ctx.restore();
         
         particle.alpha -= 0.01
         particle.x += particle.dx
@@ -157,6 +155,9 @@ function drawKlingonExplosion(klingon) {
         if (particle.alpha <= 0) {
             klingon.particles.splice(i, 1)
         }
+
+        ctx.shadowBlur = 0
+        ctx.globalAlpha = 1;
     })
 }
 

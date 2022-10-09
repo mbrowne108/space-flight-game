@@ -1,5 +1,7 @@
 const FPS = 60
 let scale = 1
+let paused = false
+let showPauseMenu = false
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -52,15 +54,14 @@ function loop() {
         drawAsteroids();
     ctx.restore();
 
-    drawOverlay();
     drawShip();
     drawKlingons();
-
-    storeLastShipPosition(ship.x, ship.y)
+    drawOverlay();
+    showPauseMenu ? drawPauseMenu() : null;
 
     setTimeout(() => {
-        requestAnimationFrame(loop);
+        requestAnimationFrame(loop)
     }, 1000 / FPS)
 }
 
-requestAnimationFrame(loop);
+requestAnimationFrame(loop)

@@ -11,10 +11,16 @@ const mouse = {x: 0, y: 0}
 window.addEventListener("keydown", keyDown);
 window.addEventListener("keyup", keyUp);
 canvas.addEventListener('mousemove', (e) => {
+    if (ship.exploding) {
+        return;
+    }
     mouse.x = e.clientX
     mouse.y = e.clientY
 })
 canvas.addEventListener("mousedown", (e) => { // Right Click (Phasers)
+    if (ship.exploding) {
+        return;
+    }
     if (e.button != 0) {
         if (ship.phaserCharge > 0 && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) <= 500) {
             ship.firing = true;
@@ -23,12 +29,21 @@ canvas.addEventListener("mousedown", (e) => { // Right Click (Phasers)
 });
 
 canvas.addEventListener('mouseup', (e) => {
+    if (ship.exploding) {
+        return;
+    }
     ship.firing = false;
 })
 canvas.addEventListener('click', (e) => { // Left Click (Torpedo)
+    if (ship.exploding) {
+        return;
+    }
     fireTorpedoes()
 })
 canvas.addEventListener('wheel', (e) => {
+    if (ship.exploding) {
+        return;
+    }
     if (e.wheelDelta >= 0 ) {
         scale += 0.1 * scale
     } else {
@@ -38,19 +53,26 @@ canvas.addEventListener('wheel', (e) => {
     }
 })
 canvas.addEventListener('contextmenu', function(e) {
+    if (ship.exploding) {
+        return;
+    }
     e.preventDefault();
     return false;
 }, false);
 
 function keyDown(e) {
-    switch(e.keyCode) {
-        case 87: // W
+    if (ship.exploding) {
+        return;
+    }
+
+    switch(e.code) {
+        case "KeyW": // W Thrust
             ship.thrusting = true;
             break;
-        case 83: // S
+        case "KeyS": // S Brake
             ship.braking = true;
             break;
-        case 70: // F
+        case "KeyV": // V Explode (testing)
             alert('GAME OVER')
             ship.exploding = !ship.exploding
             if (ship.exploding) {
@@ -68,7 +90,10 @@ function keyDown(e) {
                 }
             }
             break;
-        case 81: // Q (Previous Lock)
+        case "KeyF": // F (Orbit Planet)
+            ship.scanning ? ship.orbiting = !ship.orbiting : null
+            break;
+        case "KeyQ": // Q (Previous Lock)
             if (ship.scanning) {
                 if (planetScanMode) {
                     planetLockId === 0 ? planetLockId = planets.length - 1 : planetLockId -= 1
@@ -86,7 +111,7 @@ function keyDown(e) {
                 }
             }
             break;
-        case 69: // E (Next Lock)
+        case "KeyE": // E (Next Lock)
             if (ship.scanning) {
                 if (planetScanMode) {
                     planetLockId === planets.length - 1 ? planetLockId = 0 : planetLockId += 1
@@ -104,7 +129,7 @@ function keyDown(e) {
                 }
             }
             break;
-        case 32: // Spacebar (Red Alert)
+        case "Space": // Spacebar (Red Alert)
             if (ship.redAlert) {
                 ship.redAlert = !ship.redAlert
                 document.querySelector('#overlay').classList.toggle('overlay-collapsed');
@@ -114,7 +139,7 @@ function keyDown(e) {
                 document.querySelector('#overlay').classList.toggle('overlay-collapsed');
             }
             break;
-        case 09: // Tab (Overlay)
+        case "Tab": // Tab (Overlay)
             e.preventDefault()
             ship.scanning = !ship.scanning
             if (ship.scanning) {
@@ -126,29 +151,41 @@ function keyDown(e) {
                 })
             }
             break;
-        case 82: // R (Orbit Planet)
-            ship.scanning ? ship.orbiting = !ship.orbiting : null
+        case "KeyR": // R (Clear Target Locks)
+            klingons.forEach((kl) => kl.locked = false)
+            planets.forEach((pl) => pl.locked = false)
             break;
-        case 65: // A (Toggle Scan Mode)
+        case "KeyA": // A (Toggle Scan Mode)
             if (ship.scanning) {
                 planetScanMode = !planetScanMode
                 if (planetScanMode) {
                     klingons.forEach((kl) => kl.locked = false)
+                    planets[planetLockId].locked = true
+                    !ship.orbiting
                 } else {
                     planets.forEach((pl) => pl.locked = false)
+                    klingons[lockId].locked = true
                 }
             }
-            ship.scanning ? ship.orbiting = !ship.orbiting : null
+            break;
+        case "Escape": // ESC (Pause Menu)
+            showPauseMenu = !showPauseMenu
+            paused = !paused
+            
             break;
     }
 }
 
 function keyUp(e) {
-    switch(e.keyCode) {
-        case 87: // W
+    if (ship.exploding) {
+        return;
+    }
+
+    switch(e.code) {
+        case "KeyW": // W
             ship.thrusting = false;
             break;
-        case 83: // S
+        case "KeyS": // S
             ship.braking = false;
             break;
     }
