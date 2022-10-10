@@ -171,8 +171,8 @@ function drawOverlay() {
         ctx.strokeRect(window.innerWidth / 2 - innerWidth / 32, window.innerHeight / 9, planets[planetLockId].el.width / 5.5, planets[planetLockId].el.height / 5.5)
     }
 
-    if (ship.orbiting) {
-        if (distBetweenPoints(ship.x, ship.y, planets[planetLockId].x + planets[planetLockId].width / 2, planets[planetLockId].y + planets[planetLockId].height / 2) < planets[planetLockId].width + 100) {
+    if (ship.scanning) {
+        if (!ship.orbiting && distBetweenPoints(ship.x, ship.y, planets[planetLockId].x + planets[planetLockId].width / 2, planets[planetLockId].y + planets[planetLockId].height / 2) < planets[planetLockId].width + 100) {
             alert(`WITHIN RANGE TO ORBIT ${planets[planetLockId].name.toUpperCase()}. PRESS F`)
         }
     }
