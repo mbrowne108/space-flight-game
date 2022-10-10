@@ -15,7 +15,7 @@ const mercury = {
     name: 'Mercury',
     height: 3.8 * 2,
     width: 3.8 * (4/3) * 2,
-    speed: 0.004787,
+    speed: 0.002787,
     theta: Math.random() * 2 * Math.PI,
     radius: 35 * 6,
     locked: false,
@@ -25,7 +25,7 @@ const mercury = {
 const venus = {
     el: document.getElementById("venus"),
     name: 'Venus',
-    speed: -(0.003502),
+    speed: -(0.002202),
     height: 9.5 * 2,
     width: 9.5 * (4/3) * 2,
     theta: Math.random() * 2 * Math.PI,
@@ -37,7 +37,7 @@ const venus = {
 const earth = {
     el: document.getElementById("earth"),
     name: 'Earth',
-    speed: 0.002978,
+    speed: 0.001578,
     height: 10 * 2,
     width: 10 * (4/3) * 2,
     theta: Math.random() * 2 * Math.PI,
@@ -48,7 +48,7 @@ const earth = {
         name: 'Moon',
         height: 2.7 * 2,
         width: 2.7 * (4/3) * 2,
-        speed: 0.0002978 * 12,
+        speed: 0.0001478 * 12,
         theta: Math.random() * 2 * Math.PI,
         radius: 5 * 6,
         locked: false
@@ -58,7 +58,7 @@ const earth = {
 const mars = {
     el: document.getElementById("mars"),
     name: 'Mars',
-    speed: 0.0024077,
+    speed: 0.0014077,
     height: 5.3 * 2,
     width: 5.3 * (4/3) * 2,
     theta: Math.random() * 2 * Math.PI,
@@ -72,7 +72,7 @@ const jupiter = {
     name: 'Jupiter',
     height: 112 * 2,
     width: 112 * (4/3) * 2,
-    speed: 0.001307,
+    speed: 0.000807,
     theta: Math.random() * 2 * Math.PI,
     radius: 484 * 6,
     locked: false,
@@ -84,7 +84,7 @@ const saturn = {
     name: 'Saturn',
     height: 94.5 * 2,
     width: 94.5 * (4/3) * 2,
-    speed: 0.000969,
+    speed: 0.000469,
     theta: Math.random() * 2 * Math.PI,
     radius: 889 * 6,
     locked: false,
@@ -96,7 +96,7 @@ const uranus = {
     name: 'Uranus',
     height: 40 * 2,
     width: 40 * (4/3) * 2,
-    speed: -(0.000681),
+    speed: -(0.000381),
     theta: Math.random() * 2 * Math.PI,
     radius: 1790 * 6,
     locked: false,
@@ -108,7 +108,7 @@ const neptune = {
     name: 'Neptune',
     height: 38.8 * 2,
     width: 38.8 * (4/3) * 2,
-    speed: 0.000543,
+    speed: 0.000243,
     theta: Math.random() * 2 * Math.PI,
     radius: 2880 * 6,
     locked: false,
@@ -120,7 +120,7 @@ const pluto = {
     name: 'Pluto',
     height: 2 * 2,
     width: 2 * (4/3) * 2,
-    speed: 0.0000474,
+    speed: 0.0000274,
     theta: Math.random() * 2 * Math.PI,
     radius: 3670 * 6,
     locked: false,
@@ -130,7 +130,7 @@ const pluto = {
 const asteroidBelt = {
     num: 300,
     size: 20,
-    speed: 0.00004077,
+    speed: 0.00002077,
     radius: 300 * 6
 }
 

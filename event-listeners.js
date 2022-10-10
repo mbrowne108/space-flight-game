@@ -130,6 +130,7 @@ function keyDown(e) {
             break;
         case "Tab": // Tab (Overlay)
             e.preventDefault()
+            scannerExpand = 0
             ship.scanning = !ship.scanning
             if (ship.scanning) {
                 if (!planetScanMode) {
@@ -150,6 +151,7 @@ function keyDown(e) {
             break;
         case "KeyA": // A (Toggle Scan Mode)
             if (ship.scanning) {
+                scannerExpand = 0
                 planetScanMode = !planetScanMode
                 if (planetScanMode) {
                     klingons.forEach((kl) => kl.locked = false)

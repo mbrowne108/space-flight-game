@@ -1,4 +1,6 @@
 function drawPauseMenu() {
+    textRatio = window.innerWidth / 1920
+
     grd = ctx.createLinearGradient(window.innerWidth / 1.5, 0, 0, 0)
     grd.addColorStop(0, 'rgba(108, 122, 137, 0.9)');
     grd.addColorStop(1, 'rgb(171, 183, 183, 0.9)');
@@ -13,9 +15,9 @@ function drawPauseMenu() {
     ship.redAlert ? ctx.shadowBlur = 0 : null
     ctx.textAlign = "center"
     ctx.fillStyle = 'rgb(238, 238, 238)'
-    ctx.font = '32px trebuchet ms'
+    ctx.font = `${32 * textRatio}px trebuchet ms`
     ctx.fillText("Controls", window.innerWidth / 2, window.innerHeight / 6 + 10)
-    ctx.font = '24px trebuchet ms'
+    ctx.font = `${24 * textRatio}px trebuchet ms`
 
     ctx.textAlign = "right"
     ctx.fillText("Mouse", window.innerWidth / 2.1, window.innerHeight / 6 + 60)
@@ -47,7 +49,7 @@ function drawPauseMenu() {
     ctx.fillText("De-select target", window.innerWidth / 1.9, window.innerHeight / 6 + 440)
     ctx.fillText("Orbit Planet", window.innerWidth / 1.9, window.innerHeight / 6 + 480)
 
-    ctx.font = '18px trebuchet ms'
+    ctx.font = `${18 * textRatio}px trebuchet ms`
     ctx.fillText("ESC to unpause", window.innerWidth - window.innerWidth / 2.45, window.innerHeight / 6)
 }
 
@@ -59,7 +61,7 @@ function drawDeathMenu() {
     ctx.strokeRect(window.innerWidth / 4, window.innerHeight / 8, window.innerWidth / 2, 5/9 * (window.innerWidth / 2))
     ctx.textAlign = "center"
     ctx.strokeStyle = 'rgb(200, 0, 0)'
-    ctx.font = "bold 88px trebuchet ms";
+    ctx.font = `bold ${88 * textRatio}px trebuchet ms`
     ctx.strokeText("GAME", window.innerWidth / 2.5, window.innerHeight / 1.5)
     ctx.strokeText("OVER", window.innerWidth - window.innerWidth / 2.5 , window.innerHeight / 1.5)
 }

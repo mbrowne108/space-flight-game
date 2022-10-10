@@ -1,10 +1,10 @@
 const maxPhaserCharge = 500;
 const maxShields = 2040;
 const maxThrust = 30;
-const shipThrust = 10;
-const friction = 0.7;
-const torpSpeed = 500;
-const scanSpeed = 400;
+const shipThrust = 5;
+const friction = 0.35;
+const torpSpeed = 250;
+const scanSpeed = 200;
 let klingonsDestroyed = 0;
 
 const ship = {

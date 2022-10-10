@@ -4,6 +4,7 @@ let paused = false
 let showPauseMenu = false
 let dead = false
 let showMainMenu = true
+let textRatio
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
@@ -42,6 +43,8 @@ function drawMenuStars() {
 }
 
 function menuLoop() {
+    textRatio = window.innerWidth / 1920
+
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
@@ -278,7 +281,7 @@ function menuLoop() {
         ctx.fillStyle = "rgb(30, 30, 30)"
         ctx.fillRect(canvas.width - canvas.width / 2.5, canvas.height - canvas.height / 4, canvas.width / 12, canvas.height / 15)
         
-        ctx.font = "24pt trebuchet ms"
+        ctx.font = `${24 * textRatio}pt trebuchet ms`
         ctx.textAlign = "center"
         ctx.fillStyle = "rgb(30, 30, 30)"
         ctx.fillStyle = "rgb(171, 183, 183)"
@@ -291,7 +294,7 @@ function menuLoop() {
         ctx.fillStyle = "rgb(171, 183, 183)"
         ctx.fillRect(canvas.width - canvas.width / 2.5, canvas.height - canvas.height / 4, canvas.width / 12, canvas.height / 15)
         
-        ctx.font = "24pt trebuchet ms"
+        ctx.font = `${24 * textRatio}pt trebuchet ms`
         ctx.textAlign = "center"
         ctx.fillStyle = 'rgb(20, 20, 20)'
         ctx.fillText('START', canvas.width - canvas.width / 2.78, canvas.height - canvas.height / 4.95)
@@ -299,7 +302,7 @@ function menuLoop() {
         ctx.fillText('LEADERS', canvas.width - canvas.width / 4.8, canvas.height - canvas.height / 4.90)
     }
 
-    ctx.font = "16pt trebuchet ms"
+    ctx.font = `${16 * textRatio}pt trebuchet ms`
     ctx.textAlign = "center"
     ctx.fillStyle = "rgb(171, 183, 183)"
     ctx.fillText('Press Esc for Controls', canvas.width - canvas.width / 16, canvas.height / 32)
