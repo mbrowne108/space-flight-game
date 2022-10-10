@@ -8,7 +8,6 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
-ctx.imageSmoothingEnabled = false;
 
 // Initial position of camera
 const camera = {x: ship.x - (canvas.width / 2), y: ship.y - (canvas.height / 2)}
@@ -33,7 +32,7 @@ function alert(text) {
 // | |__| |/ ____ \| |  | | |____  | |___| |__| | |__| | |     
 //  \_____/_/    \_\_|  |_|______| |______\____/ \____/|_|     
                                                            
-                                                        
+                                      
 function loop() {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight

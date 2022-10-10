@@ -4,11 +4,10 @@ let planetLockId = 0
 const sun = {
     el: document.getElementById("sun"),
     name: "Sun",
-    height: 1500,
-    width: 1500,
+    height: 2000,
+    width: 2000,
     x: 3000,
-    y: 3000,
-    shadow: "rgb(242, 187, 36)"
+    y: 3000
 }
 
 const mercury = {

@@ -233,10 +233,10 @@ function drawDisruptors(klingon) {
                 klingon.disruptors.splice(i, 1)
                 if (ship.shields > 0) {
                     !ship.exploding ? drawShipShields() : null
-                    ship.shields -= 200
+                    ship.shields -= 20
                 } else if (ship.shields <= 0 && ship.hull > 0) {
                     ship.shields = 0
-                    ship.hull -= 200
+                    ship.hull -= 20
                 } else if (ship.hull <= 0) {
                     ship.hull = 0
                     explodeShip()

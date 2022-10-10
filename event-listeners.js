@@ -64,6 +64,9 @@ function keyDown(e) {
     if (ship.exploding) {
         return;
     }
+    if (ship.onMainMenu) {
+        return;
+    }
 
     switch(e.code) {
         case "KeyW": // W Thrust
@@ -160,9 +163,15 @@ function keyDown(e) {
                 showPauseMenu = false
                 requestAnimationFrame(loop)
             }
-
-            
             break;
+        case "Enter": // Enter (Start Game)
+            if (!onMainMenu) {
+                onMainMenu = true
+            } else {
+                onMainMenu = false
+                requestAnimationFrame(loop)
+            }
+
     }
 }
 
@@ -179,4 +188,10 @@ function keyUp(e) {
             ship.braking = false;
             break;
     }
+}
+
+window.addEventListener("keydown", menuKeyDown);
+
+function menuKeyDown(e) {
+    
 }
