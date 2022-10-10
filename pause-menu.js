@@ -48,7 +48,7 @@ function drawPauseMenu() {
     ctx.fillText("Orbit Planet", window.innerWidth / 1.9, window.innerHeight / 6 + 480)
 
     ctx.font = '18px trebuchet ms'
-    ctx.fillText("ESC to unpause", window.innerWidth - window.innerWidth / 2.45, window.innerHeight / 6 + 10)
+    ctx.fillText("ESC to unpause", window.innerWidth - window.innerWidth / 2.45, window.innerHeight / 6)
 }
 
 function drawDeathMenu() {

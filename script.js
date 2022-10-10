@@ -1,29 +1,9 @@
-const FPS = 60
-let scale = 1
-let paused = false
-let showPauseMenu = false
-let dead = false
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
-
 // Initial position of camera
 const camera = {x: ship.x - (canvas.width / 2), y: ship.y - (canvas.height / 2)}
 const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.y}
 
 createAsteroids();
-createKlingons();
-
-function distBetweenPoints(x1, y1, x2, y2) {
-    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
-
-function alert(text) {
-    alertMsg = text
-    setTimeout(() => {alertMsg = '' }, 3000)
-}
+spawnInitialKlingons();
 
 //   _____          __  __ ______   _      ____   ____  _____  
 //  / ____|   /\   |  \/  |  ____| | |    / __ \ / __ \|  __ \ 
@@ -32,7 +12,8 @@ function alert(text) {
 // | |__| |/ ____ \| |  | | |____  | |___| |__| | |__| | |     
 //  \_____/_/    \_\_|  |_|______| |______\____/ \____/|_|     
                                                            
-                                      
+if (showMainMenu) requestAnimationFrame(menuLoop)
+
 function loop() {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
@@ -58,15 +39,15 @@ function loop() {
     drawKlingons();
     drawOverlay();
 
-    if (!showPauseMenu && !dead) {
+    if (!showPauseMenu && !dead && !showMainMenu) {
         setTimeout(() => {
             requestAnimationFrame(loop)
         }, 1000 / FPS)
     } else if (!showPauseMenu && dead) {
         drawDeathMenu();
     } else if (showPauseMenu && !dead) {
-        drawPauseMenu()
+        drawPauseMenu();
     }
 }
 
-requestAnimationFrame(loop)
+// requestAnimationFrame(loop)

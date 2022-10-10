@@ -8,6 +8,7 @@
 
 const mouse = {x: 0, y: 0}
 
+
 window.addEventListener("keydown", keyDown);
 window.addEventListener("keyup", keyUp);
 canvas.addEventListener('mousemove', (e) => {
@@ -131,6 +132,10 @@ function keyDown(e) {
             e.preventDefault()
             ship.scanning = !ship.scanning
             if (ship.scanning) {
+                if (!planetScanMode) {
+                    klingons.forEach((kl) => kl.locked = false)
+                    findClosestTarget()
+                }
                 ship.scans.push({
                     x: ship.x + ship.width,
                     y: ship.y + ship.height,
@@ -157,21 +162,30 @@ function keyDown(e) {
             }
             break;
         case "Escape": // ESC (Pause Menu)
-            if (!showPauseMenu) {
-                showPauseMenu = true
-            } else {
-                showPauseMenu = false
-                requestAnimationFrame(loop)
-            }
-            break;
+                if (!showPauseMenu) {
+                    showPauseMenu = true
+                } else {
+                    showPauseMenu = false
+                    requestAnimationFrame(loop) 
+                }
+                break;
         case "Enter": // Enter (Start Game)
-            if (!onMainMenu) {
-                onMainMenu = true
-            } else {
-                onMainMenu = false
-                requestAnimationFrame(loop)
-            }
-
+            if (showMainMenu) {
+                if (startSelected) {
+                    cancelAnimationFrame(menuLoop)
+                    showMainMenu = !showMainMenu
+                    requestAnimationFrame(loop)
+                } else {
+                    console.log('leaderboard')
+                }
+            } 
+            break;
+        case "ArrowLeft":
+            if (showMainMenu) startSelected = !startSelected
+            break;
+        case "ArrowRight":
+            if (showMainMenu) startSelected = !startSelected
+            break;
     }
 }
 
@@ -188,10 +202,4 @@ function keyUp(e) {
             ship.braking = false;
             break;
     }
-}
-
-window.addEventListener("keydown", menuKeyDown);
-
-function menuKeyDown(e) {
-    
 }

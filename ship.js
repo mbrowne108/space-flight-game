@@ -1,10 +1,11 @@
-const maxPhaserCharge = 500
-const maxShields = 2040
-const maxThrust = 30
-const shipThrust = 10
-const friction = 0.7
+const maxPhaserCharge = 500;
+const maxShields = 2040;
+const maxThrust = 30;
+const shipThrust = 10;
+const friction = 0.7;
 const torpSpeed = 500;
 const scanSpeed = 400;
+let klingonsDestroyed = 0;
 
 const ship = {
     el: document.getElementById("ship"),
@@ -178,11 +179,27 @@ function drawTorpedoes() {
                 } else if (klingons[i].shields <= 0 && klingons[i].hull > 0) {
                     kr = klingons[i].height / 2
                     if (klingons[i].hull <= 260) {
-                        klingons[i].hull -= klingons[i].hull
+                        klingonsDestroyed += 1
+                        klingons[i].exploding = !klingons[i].exploding
+                        klingons[i].locked = false
+                        for (k = 0; k < 300; k++) {
+                            klingons[i].particles.push({
+                                x: klingons[i].x + cameraOffset.x,
+                                y: klingons[i].y + cameraOffset.y,
+                                dx: (Math.random() - 0.5) * (Math.random() * 6),
+                                dy: (Math.random() - 0.5) * (Math.random() * 6),
+                                r: Math.random() * 2,
+                                alpha: 1,
+                                random: Math.floor(Math.random() * 3),
+                                increment: 1
+                            })
+                        }
+                        setTimeout(() => {klingons.splice(i, 1)}, 3000)
                     } else {
                         klingons[i].hull -= 260
                     }
                 } else if (klingons[i].hull <= 0) {
+                    klingonsDestroyed += 1
                     klingons[i].exploding = !klingons[i].exploding
                     klingons[i].locked = false
                     for (k = 0; k < 300; k++) {
@@ -334,6 +351,22 @@ function orbitPlanet(planet) {
     }
 }
 
+function findClosestTarget() {
+    const distances = []
+    klingons.map((klingon, i) => {
+        let dist = distBetweenPoints(ship.x, ship.y, klingon.x, klingon.y)
+        distances.push({dist, i})
+    })
+    distances.sort((a, b) => {
+        if (a.dist > b.dist) return 1;
+        else if (a.dist < b.dist) return -1;
+        else return 0;
+    })
+    console.log(distances)
+    lockId = distances[0].i
+    klingons[distances[0].i].locked = true
+}
+
 function drawShip() {
     if (!ship.exploding) {
         if ((ship.thrust.x > 0.1 || ship.thrust.x < -0.1) || (ship.thrust.y > 0.1 || ship.thrust.y < -0.1)) {
@@ -358,10 +391,11 @@ function drawShip() {
                 ship.phaserCharge -= 1
                 drawPhasers();
                 if (klingons[lockId].shields > 0) {
-                    klingons[lockId].shields -= 1
+                    klingons[lockId].shields -= 3
                 } else if (klingons[lockId].shields <= 0 && klingons[lockId].hull > 0) {
-                    klingons[lockId].hull -= 1
+                    klingons[lockId].hull -= 3
                 } else if (klingons[lockId].hull <= 0) {
+                    klingonsDestroyed += 1
                     klingons[lockId].exploding = !klingons[lockId].exploding
                     klingons[lockId].locked = false
                     for (i = 0; i < 300; i++) {  

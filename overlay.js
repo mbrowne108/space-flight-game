@@ -8,7 +8,7 @@ function drawOverlay() {
         // ctx.fillText(`Ship: ${Math.round(ship.x)}, ${Math.round(ship.y)}`, 5, 15);
         // ctx.fillText(`Camera: ${Math.round(camera.x)}, ${Math.round(camera.y)}`, 5, 30);
         // ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
-        // ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, 5, 60);
+        // ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, window.innerWidth / 2, 60);
         // ctx.fillText(`Dist between ${distBetweenPoints(ship.x, ship.y, sun.x, sun.y)}`, 5, 75);
         // ctx.fillText(`Shields:${ship.shields}`, 5, 90);
         // ctx.fillText(`Thrust X: ${ship.thrust.y}, Y: ${ship.thrust.x}`, 5, 105);
@@ -56,13 +56,20 @@ function drawOverlay() {
     ctx.font = "28px trebuchet ms";
     ctx.fillStyle = 'rgb(200, 0, 0)'
     ctx.fillText(ship.torpCount, window.innerWidth - (window.innerWidth / 17.5), window.innerHeight - window.innerHeight / 3 + window.innerHeight / 18);
+    
+    ctx.fillStyle = 'rgb(171, 183, 183)'
+    ctx.font = "16px trebuchet ms";
+    ctx.fillText('Klingons Destroyed', window.innerWidth / 2, window.innerHeight / 50);
+    ctx.font = "28px trebuchet ms";
+    ctx.fillStyle = 'rgb(200, 0, 0)'
+    ctx.fillText(klingonsDestroyed, window.innerWidth / 2, window.innerHeight / 20);
 
     // Scanner
     if (ship.scanning) {
         ctx.setLineDash([])
         grd = ctx.createLinearGradient(window.innerWidth / 6, 0, 0, 0)
-        grd.addColorStop(0, 'rgba(108, 122, 137, 0.9)');
-        grd.addColorStop(1, 'rgb(171, 183, 183, 0.9)');
+        grd.addColorStop(0, 'rgba(108, 122, 137, 0.5)');
+        grd.addColorStop(1, 'rgb(171, 183, 183, 0.5)');
         ctx.fillStyle = grd
         ctx.textAlign = "center"
         ctx.fillRect(0, 0, window.innerWidth / 6, window.innerHeight / 1.65)
@@ -146,7 +153,7 @@ function drawOverlay() {
             klingons[lockId].shields >= 0 ? ctx.fillStyle = `rgb(${255 - klingons[lockId].shields / 4}, ${klingons[lockId].shields / 4}, 0)` : ctx.fillStyle = 'black'  
             let grd = ctx.createLinearGradient(0, 135, 0, 0)
             grd.addColorStop(0, `rgb(${255 - klingons[lockId].shields / 4}, ${klingons[lockId].shields / 4}, 0)`);
-            grd.addColorStop(0.25, 'rgb(171, 183, 183)');
+            grd.addColorStop(0.3, 'rgb(171, 183, 183)');
             ctx.fillStyle = grd
             ctx.fillRect(
                 window.innerWidth / 2 - innerWidth / 16, 
@@ -165,10 +172,10 @@ function drawOverlay() {
         planets[planetLockId].locked ? ctx.fillText(`${Math.round((distBetweenPoints(ship.x, ship.y, planets[planetLockId].x, planets[planetLockId].y) / 6) * 1.60934)} million km away`, window.innerWidth / 2, window.innerHeight / 5) : null;
 
         // Planets Image
-        ctx.drawImage(planets[planetLockId].el, window.innerWidth / 2 - innerWidth / 32, window.innerHeight / 9, planets[planetLockId].el.width / 5.5, planets[planetLockId].el.height / 5.5)
+        ctx.drawImage(planets[planetLockId].el, window.innerWidth / 2 - planets[planetLockId].el.width / 11, window.innerHeight / 9, planets[planetLockId].el.width / 5.5, planets[planetLockId].el.height / 5.5)
         ctx.strokeStyle = "rgb(0, 155, 255)"
         ctx.lineWidth = 3
-        ctx.strokeRect(window.innerWidth / 2 - innerWidth / 32, window.innerHeight / 9, planets[planetLockId].el.width / 5.5, planets[planetLockId].el.height / 5.5)
+        ctx.strokeRect(window.innerWidth / 2 - planets[planetLockId].el.width / 11, window.innerHeight / 9, planets[planetLockId].el.width / 5.5, planets[planetLockId].el.height / 5.5)
     }
 
     if (ship.scanning) {

@@ -4,12 +4,22 @@ const disrSpeed = 500
 const klingonThrust = 8
 const maxKlingonShields = 1020
 
-function createKlingons() {
+function spawnInitialKlingons() {
     let x, y;
     for (let i = 0; i < 3; i++) {
-        x = Math.random() * 2800 + 1000;
-        y = Math.random() * 2800 + 1000;
+        x = Math.random() * 2800 + 3000;
+        y = Math.random() * 2800 + 3000;
         klingons.push(newKlingon(x, y));
+    }
+}
+
+function spawnNewKlingon() {
+    let random = Math.floor(Math.random() * 1000)
+    if (random === 1) {
+        let x = Math.random() * 2800 + 3000;
+        let y = Math.random() * 2800 + 3000;
+        klingons.push(newKlingon(x, y));
+        alert('NEW KLINGON UNCLOAKED')
     }
 }
 
@@ -291,6 +301,8 @@ function drawKlingonTorpedoes(klingon) {
 }
 
 function drawKlingons() {
+    if (klingons.length < 9) spawnNewKlingon()
+
     for (let i = 0; i < klingons.length; i++) {
         if (!klingons[i].exploding) {
             if ((klingons[i].thrust.x > 0.1 || klingons[i].thrust.x < -0.1) || (klingons[i].thrust.y > 0.1 || klingons[i].thrust.y < -0.1)) {
@@ -313,7 +325,21 @@ function drawKlingons() {
         if (klingons[i].attacking) {
             klingons[i].a = Math.atan2(-(ship.y + cameraOffset.y - (klingons[i].y + cameraOffset.y)), (ship.x + cameraOffset.x - (klingons[i].x + cameraOffset.x))) + (Math.PI / 2) / FPS // Point towards ship
         } else {
-            klingons[i].a = Math.atan2((ship.y + cameraOffset.y - (klingons[i].y + cameraOffset.y)), -(ship.x + cameraOffset.x - (klingons[i].x + cameraOffset.x))) + (Math.PI / 2) / FPS // Point away from ship
+            let random = Math.floor(Math.random() * 500)
+            console.log(klingons[i].a)
+            if (random === 0) {
+                klingons[i].a = Math.atan2((ship.y + cameraOffset.y - (klingons[i].y + cameraOffset.y)), -(ship.x + cameraOffset.x - (klingons[i].x + cameraOffset.x))) + (Math.PI / 2) + 1/ FPS
+            } else if (random === 1) {
+                klingons[i].a = Math.atan2((ship.y + cameraOffset.y - (klingons[i].y + cameraOffset.y)), -(ship.x + cameraOffset.x - (klingons[i].x + cameraOffset.x))) + (Math.PI / 2) - 1 / FPS
+            } else if (random === 2) {
+                klingons[i].a = Math.atan2((ship.y + cameraOffset.y - (klingons[i].y + cameraOffset.y)), -(ship.x + cameraOffset.x - (klingons[i].x + cameraOffset.x))) + (Math.PI / 2) + 0.5 / FPS
+            } else if (random === 3) {
+                klingons[i].a = Math.atan2((ship.y + cameraOffset.y - (klingons[i].y + cameraOffset.y)), -(ship.x + cameraOffset.x - (klingons[i].x + cameraOffset.x))) + (Math.PI / 2) - 0.5 / FPS
+            } else if (random === 4) {
+                klingons[i].a = Math.atan2((ship.y + cameraOffset.y - (klingons[i].y + cameraOffset.y)), -(ship.x + cameraOffset.x - (klingons[i].x + cameraOffset.x))) + (Math.PI / 2) / FPS // Point away from ship
+            } else {
+                null
+            }
         }
         ctx.translate(klingons[i].x + cameraOffset.x, klingons[i].y + cameraOffset.y);
         ctx.rotate(-klingons[i].a + 90 * Math.PI / 180)
@@ -339,7 +365,7 @@ function drawKlingons() {
             } else if (distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) > 500 && distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) <= 800){
                 klingons[i].thrusting = false
                 klingons[i].braking = false
-            } else if (distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) > 800) {
+            } else if (distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) > 3000) {
                 klingons[i].thrusting = false
                 klingons[i].braking = true
             }
