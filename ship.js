@@ -362,7 +362,6 @@ function findClosestTarget() {
         else if (a.dist < b.dist) return -1;
         else return 0;
     })
-    console.log(distances)
     lockId = distances[0].i
     klingons[distances[0].i].locked = true
 }

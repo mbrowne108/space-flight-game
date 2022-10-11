@@ -50,6 +50,7 @@ function drawOverlay() {
     ctx.font = `${16 * textRatio}px trebuchet ms`
     ship.scanning ? null : ctx.fillText('Press Tab to scan', window.innerWidth / 100, window.innerHeight / 50)
     ship.scanning ? null : ctx.fillText('Press ESC to pause', window.innerWidth / 100, window.innerHeight / 25)
+    ctx.fillText(soundOn ? 'Press M to Mute Audio' : 'Press M to Unmute Audio', window.innerWidth - window.innerWidth / 10, window.innerHeight / 50)
     ctx.textAlign = "center"
     ctx.fillText('Shields', window.innerWidth - (window.innerWidth / 15) + window.innerWidth / 100, window.innerHeight / 3 - window.innerHeight / 100);
     ctx.fillText('Hull', window.innerWidth - (window.innerWidth / 10) + window.innerWidth / 100, window.innerHeight / 2 - window.innerHeight / 100);

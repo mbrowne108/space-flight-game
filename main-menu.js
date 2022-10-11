@@ -1,5 +1,7 @@
 const FPS = 30
 let scale = 1
+
+let soundOn = true
 let paused = false
 let showPauseMenu = false
 let dead = false
@@ -43,6 +45,7 @@ function drawMenuStars() {
 }
 
 function menuLoop() {
+    musicMainMenu.play()
     textRatio = window.innerWidth / 1920
 
     canvas.width = window.innerWidth
@@ -306,10 +309,12 @@ function menuLoop() {
     ctx.textAlign = "center"
     ctx.fillStyle = "rgb(171, 183, 183)"
     ctx.fillText('Press Esc for Controls', canvas.width - canvas.width / 16, canvas.height / 32)
+    ctx.fillText(soundOn ? 'Press M to Mute Audio' : 'Press M to Unmute Audio', canvas.width - canvas.width / 16, canvas.height / 18)
     
     if (showPauseMenu) drawPauseMenu();
 
     if (!showMainMenu) {
+        musicMainMenu.stop()
         requestAnimationFrame(loop) 
     } else {
         setTimeout(() => {

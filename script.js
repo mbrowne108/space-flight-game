@@ -5,6 +5,42 @@ const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.
 createAsteroids();
 spawnInitialKlingons();
 
+const musicMainMenu = new Music("sounds/music/main-menu.mp3", 1)
+const musicEarth = new Music("sounds/music/earth.mp3")
+
+// function Sound(src, maxStreams = 1, vol = 1.0) {
+//     this.streamNum = 0;
+//     this.streams = [];
+//     for (let i = 0; i < maxStreams; i++) {
+//         this.streams.push(new Audio(src));
+//         this.streams[i].volume = vol;
+//     }
+//     this.play = function() {
+//         if (soundOn) {
+//             this.streamNum = (this.streamNum + 1) % maxStreams;
+//             this.streams[this.streamNum].play();
+//         }
+//     }
+//     this.stop = function() {
+//         this.streams[this.streamNum].pause();
+//         this.streams[this.streamNum].currentTime = 0;
+//     }
+// }
+
+function Music(src) {
+    this.piece = new Audio(src);
+    this.play = function() {
+        if (soundOn) {
+            this.piece.play()
+        } else {
+            this.piece.pause()
+        }
+    }
+    this.stop = function() {
+        this.piece.pause();
+    }
+}
+
 //   _____          __  __ ______   _      ____   ____  _____  
 //  / ____|   /\   |  \/  |  ____| | |    / __ \ / __ \|  __ \ 
 // | |  __   /  \  | \  / | |__    | |   | |  | | |  | | |__) |
@@ -38,6 +74,19 @@ function loop() {
     drawShip();
     drawKlingons();
     drawOverlay();
+
+    if (distBetweenPoints(ship.x, ship.y, planets[2].x, planets[2].y) < 1000) {
+        musicEarth.play()
+        if (1 / distBetweenPoints(ship.x, ship.y, planets[2].x, planets[2].y) * 10 < 1) {
+            musicEarth.piece.volume = 1 / distBetweenPoints(ship.x, ship.y, planets[2].x, planets[2].y) * 10
+        } else {
+            musicEarth.piece.volume = 1
+        }
+        
+    } else {
+        musicEarth.stop()
+    }
+    // ship.orbiting ? musicEarth.piece.volume = 1 : musicEarth.piece.volume = 1 / distBetweenPoints(ship.x, ship.y, planets[2].x, planets[2].y)
 
     if (!showPauseMenu && !dead && !showMainMenu) {
         setTimeout(() => {
