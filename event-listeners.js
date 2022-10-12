@@ -136,11 +136,11 @@ function keyDown(e) {
             case "Space": // Spacebar (Red Alert)
                 if (ship.redAlert) {
                     ship.redAlert = !ship.redAlert
-                    document.querySelector('#overlay').classList.toggle('overlay-collapsed');
+                    shieldExpand = 0
                 } else {
                     shieldsUpAnim();
                     ship.scanning = true
-                    document.querySelector('#overlay').classList.toggle('overlay-collapsed');
+                    shieldExpand = 0
                 }
                 break;
             case "Tab": // Tab (Overlay)
@@ -178,6 +178,17 @@ function keyDown(e) {
                     }
                 }
                 break;
+            case "KeyT": // T (Transporter)
+                if (ship.orbiting && !ship.redAlert) {
+                    ship.transporting = !ship.transporting
+                } else if (!ship.orbiting && !ship.redAlert) {
+                    alert('MUST BE IN ORBIT TO BEAM UP PASSENGERS')
+                } else if (ship.orbiting && ship.redAlert) {
+                    alert('CAN\'T USE TRANSPORTER WHILE AT RED ALERT')
+                } else {
+                    console.log('help')
+                }
+                break;
             case "KeyM": // M Mute Sound
                 soundOn = !soundOn;
                 break;
@@ -207,7 +218,7 @@ function keyDown(e) {
                         requestAnimationFrame(loop)
                         showMainMenu = false
                     } else {
-                        console.log('leaderboard')
+                        showAboutMenu = !showAboutMenu
                     }
                 } 
                 break;
@@ -219,6 +230,9 @@ function keyDown(e) {
                 break;
             case "KeyM": // M Mute Sound
                 soundOn = !soundOn;
+                break;
+            case "Space": // Spacebar (Red Alert)
+                startAudio = true
                 break;
         }
     }

@@ -21,6 +21,7 @@ const mercury = {
     theta: Math.random() * 2 * Math.PI,
     radius: 35 * 6,
     locked: false,
+    passengers: 120,
     moons: []
 }
 
@@ -34,6 +35,7 @@ const venus = {
     theta: Math.random() * 2 * Math.PI,
     radius: 67 * 6,
     locked: false,
+    passengers: 340,
     moons: []
 }
 
@@ -47,6 +49,7 @@ const earth = {
     theta: Math.random() * 2 * Math.PI,
     radius: 93 * 6,
     locked: false,
+    passengers: 0,
     moons: [{
         el: document.getElementById("moon"),
         name: 'Moon',
@@ -69,6 +72,7 @@ const mars = {
     theta: Math.random() * 2 * Math.PI,
     radius: 142 * 6,
     locked: false,
+    passengers: 881,
     moons: [{
         el: document.getElementById("phobos"),
         name: 'Phobos',
@@ -100,6 +104,7 @@ const jupiter = {
     speed: 0.000807,
     theta: Math.random() * 2 * Math.PI,
     radius: 484 * 6,
+    passengers: 749,
     locked: false,
     moons: [{
         el: document.getElementById("io"),
@@ -152,6 +157,7 @@ const saturn = {
     speed: 0.000469,
     theta: Math.random() * 2 * Math.PI,
     radius: 889 * 6,
+    passengers: 601,
     locked: false,
     moons: []
 }
@@ -166,6 +172,7 @@ const uranus = {
     theta: Math.random() * 2 * Math.PI,
     radius: 1790 * 6,
     locked: false,
+    passengers: 117,
     moons: []
 }
 
@@ -179,6 +186,7 @@ const neptune = {
     theta: Math.random() * 2 * Math.PI,
     radius: 2880 * 6,
     locked: false,
+    passengers: 433,
     moons: []
 }
 
@@ -192,6 +200,7 @@ const pluto = {
     theta: Math.random() * 2 * Math.PI,
     radius: 3670 * 6,
     locked: false,
+    passengers: 210,
     moons: []
 }
 
@@ -203,7 +212,6 @@ const asteroidBelt = {
 }
 
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
-
 
 function lockedOnPlanetView(planet) {
     ctx.lineWidth = 10

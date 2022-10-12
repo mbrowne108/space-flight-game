@@ -1,17 +1,13 @@
 let alertMsg = ''
 let planetScanMode = false
 let scannerExpand = 0
+let shieldExpand = 0
 
 function drawOverlay() {
         // ctx.fillStyle = "red";
         // ctx.font = "15px serif";
-        // ctx.fillText(`Ship: ${Math.round(ship.x)}, ${Math.round(ship.y)}`, 5, 15);
-        // ctx.fillText(`Camera: ${Math.round(camera.x)}, ${Math.round(camera.y)}`, 5, 30);
-        // ctx.fillText(`Crosshair: ${mouse.x}, ${mouse.y}`, 5, 45);
-        // ctx.fillText(`Offset: ${Math.round(cameraOffset.x)}, ${Math.round(camera.y)}`, window.innerWidth / 2, 60);
-        // ctx.fillText(`Dist between ${distBetweenPoints(ship.x, ship.y, sun.x, sun.y)}`, 5, 75);
-        // ctx.fillText(`Shields:${ship.shields}`, 5, 90);
-        // ctx.fillText(`Thrust X: ${ship.thrust.y}, Y: ${ship.thrust.x}`, 5, 105);
+        // ctx.fillText(`Ship: ${ship.passengers}`, window.innerWidth / 2 + 100, 15);
+        // ctx.fillText(`Mars: ${mars.passengers}`, window.innerWidth / 2 + 100, 30);
 
     textRatio = window.innerWidth / 1920
 
@@ -20,7 +16,16 @@ function drawOverlay() {
     grd.addColorStop(0, `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}`);
     grd.addColorStop(1, 'rgb(171, 183, 183)');
     ship.shields >= 0 ? ctx.fillStyle = grd : ctx.fillStyle = 'transparent'
-    ctx.fillRect(window.innerWidth - (window.innerWidth / 15), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * ship.shields / maxShields))
+    if (ship.redAlert) {
+        if (shieldExpand < ship.shields) {
+            ctx.fillRect(window.innerWidth - (window.innerWidth / 15), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * shieldExpand / maxShields))
+            shieldExpand += 100
+        } else {
+            ctx.fillRect(window.innerWidth - (window.innerWidth / 15), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * ship.shields / maxShields))
+        }
+    } else {
+        ctx.fillRect(window.innerWidth - (window.innerWidth / 15), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * 0 / maxShields))
+    }
     
 
     // Hull
@@ -28,7 +33,7 @@ function drawOverlay() {
     grd.addColorStop(0, `rgb(97, 94, 92)`);
     grd.addColorStop(1, 'rgb(171, 183, 183)');
     ship.hull >= 0 ? ctx.fillStyle = grd : ctx.fillStyle = 'transparent'
-    ctx.fillRect(window.innerWidth - (window.innerWidth / 10), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * ship.hull * 2 / maxShields))
+    ctx.fillRect(window.innerWidth - (window.innerWidth / 10), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * ship.hull / maxShields))
 
     // Phasers
     grd = ctx.createLinearGradient(0, 0, 0, window.innerHeight + window.innerHeight / 6)
@@ -62,10 +67,13 @@ function drawOverlay() {
     
     ctx.fillStyle = 'rgb(171, 183, 183)'
     ctx.font = `${16 * textRatio}px trebuchet ms`
-    ctx.fillText('Klingons Destroyed', window.innerWidth / 2, window.innerHeight / 50);
+    ctx.fillText('Klingons Destroyed', window.innerWidth / 2 - window.innerWidth / 15, window.innerHeight / 50);
+    ctx.fillText('Passengers Rescued', window.innerWidth / 2 + window.innerWidth / 15, window.innerHeight / 50);
     ctx.font = `${28 * textRatio}px trebuchet ms`
     ctx.fillStyle = 'rgb(200, 0, 0)'
-    ctx.fillText(klingonsDestroyed, window.innerWidth / 2, window.innerHeight / 20);
+    ctx.fillText(klingonsDestroyed, window.innerWidth / 2 - window.innerWidth / 15, window.innerHeight / 20);
+    ctx.fillStyle = "rgb(0, 155, 255)"
+    ctx.fillText(ship.passengers, window.innerWidth / 2 + window.innerWidth / 15, window.innerHeight / 20);
 
     
 
@@ -177,6 +185,13 @@ function drawOverlay() {
         ctx.font = `${16 * textRatio}px trebuchet ms`
         planets[planetLockId].locked ? ctx.fillText(`Locked on to ${planets[planetLockId].name}`, window.innerWidth / 2, window.innerHeight / 10) : null;
         planets[planetLockId].locked ? ctx.fillText(`${Math.round((distBetweenPoints(ship.x, ship.y, planets[planetLockId].x, planets[planetLockId].y) / 6) * 1.60934)} million km away`, window.innerWidth / 2, window.innerHeight / 5) : null;
+        
+        if (planets[planetLockId].name !== "Earth") {
+            planets[planetLockId].locked ? ctx.fillText(`${planets[planetLockId].passengers} passengers awaiting transport`, window.innerWidth / 2, window.innerHeight / 4.5) : null
+        } else {
+            planets[planetLockId].locked ? ctx.fillText(`${planets[planetLockId].passengers} passengers safe`, window.innerWidth / 2, window.innerHeight / 4.5) : null
+        }
+        
 
         // Planets Image
         ctx.drawImage(planets[planetLockId].el, window.innerWidth / 2 - planets[planetLockId].el.width / 11, window.innerHeight / 9, planets[planetLockId].el.width / 5.5, planets[planetLockId].el.height / 5.5)

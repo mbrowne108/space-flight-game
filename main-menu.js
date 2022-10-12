@@ -1,9 +1,11 @@
 const FPS = 30
 let scale = 1
 
+let startAudio = false
 let soundOn = true
 let paused = false
 let showPauseMenu = false
+let showAboutMenu = false
 let dead = false
 let showMainMenu = true
 let textRatio
@@ -46,7 +48,8 @@ function drawMenuStars() {
 }
 
 function menuLoop() {
-    musicMainMenu.play()
+    if (startAudio) musicMainMenu.play() 
+    
     textRatio = window.innerWidth / 1920
 
     canvas.width = window.innerWidth
@@ -291,7 +294,7 @@ function menuLoop() {
         ctx.fillStyle = "rgb(171, 183, 183)"
         ctx.fillText('START', canvas.width - canvas.width / 2.78, canvas.height - canvas.height / 4.95)
         ctx.fillStyle = "rgb(30, 30, 30)"
-        ctx.fillText('LEADERS', canvas.width - canvas.width / 4.8, canvas.height - canvas.height / 4.95)
+        ctx.fillText('ABOUT', canvas.width - canvas.width / 4.8, canvas.height - canvas.height / 4.95)
     } else {
         ctx.fillStyle = "rgb(30, 30, 30)"
         ctx.fillRect(canvas.width - canvas.width / 4, canvas.height - canvas.height / 4, canvas.width / 12, canvas.height / 15)
@@ -303,7 +306,7 @@ function menuLoop() {
         ctx.fillStyle = 'rgb(20, 20, 20)'
         ctx.fillText('START', canvas.width - canvas.width / 2.78, canvas.height - canvas.height / 4.95)
         ctx.fillStyle = "rgb(171, 183, 183)"
-        ctx.fillText('LEADERS', canvas.width - canvas.width / 4.8, canvas.height - canvas.height / 4.90)
+        ctx.fillText('ABOUT', canvas.width - canvas.width / 4.8, canvas.height - canvas.height / 4.90)
     }
 
     ctx.font = `${16 * textRatio}pt trebuchet ms`
@@ -311,8 +314,11 @@ function menuLoop() {
     ctx.fillStyle = "rgb(171, 183, 183)"
     ctx.fillText('Press Esc for Controls', canvas.width - canvas.width / 16, canvas.height / 32)
     ctx.fillText(soundOn ? 'Press M to Mute Audio' : 'Press M to Unmute Audio', canvas.width - canvas.width / 16, canvas.height / 18)
+    ctx.font = `${22 * textRatio}pt trebuchet ms`
+    ctx.fillText(startAudio ? '' : 'Press Space to Start Audio', canvas.width / 2, canvas.height / 12)
     
     if (showPauseMenu) drawPauseMenu();
+    if (showAboutMenu) drawAboutMenu();
 
     if (!showMainMenu) {
         musicMainMenu.stop()

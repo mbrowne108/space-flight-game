@@ -241,11 +241,10 @@ function drawDisruptors(klingon) {
             ship.shields <= 0 ? sr = ship.height / 2 : sr = ship.height
             if (distBetweenPoints(ship.x, ship.y, klingon.disruptors[i].x, klingon.disruptors[i].y) < sr) {
                 klingon.disruptors.splice(i, 1)
-                if (ship.shields > 0) {
+                if (ship.shields > 0 && ship.redAlert) {
                     !ship.exploding ? drawShipShields() : null
                     ship.shields -= 20
-                } else if (ship.shields <= 0 && ship.hull > 0) {
-                    ship.shields = 0
+                } else if ((ship.shields <= 0 && ship.hull > 0 && ship.redAlert) || (!ship.redAlert && ship.hull > 0)) {
                     ship.hull -= 20
                 } else if (ship.hull <= 0) {
                     ship.hull = 0
@@ -286,12 +285,11 @@ function drawKlingonTorpedoes(klingon) {
         ship.shields <= 0 ? sr = ship.height / 2 : sr = ship.height
         if (distBetweenPoints(ship.x, ship.y, klingon.torpedoes[i].x, klingon.torpedoes[i].y) < sr) {
             ship.torpedoes.splice(i, 1)
-            if (ship.shields > 0) {
-                drawShipShields()
-                ship.shields -= 100
-            } else if (ship.shields <= 0 && ship.hull > 0) {
-                ship.hull -= 100
-                ship.shields = 0
+            if (ship.shields > 0 && ship.redAlert) {
+                !ship.exploding ? drawShipShields() : null
+                ship.shields -= 20
+            } else if ((ship.shields <= 0 && ship.hull > 0 && ship.redAlert) || (!ship.redAlert && ship.hull > 0)) {
+                ship.hull -= 20
             } else if (ship.hull <= 0) {
                 ship.hull = 0
                 explodeShip()
@@ -384,8 +382,8 @@ function drawKlingons() {
             klingons[i].thrust.x -= 3 * friction * klingons[i].thrust.x / FPS;
             klingons[i].thrust.y -= 3 * friction * klingons[i].thrust.y / FPS;
         }
-        klingons[i].x += klingons[i].thrust.x
-        klingons[i].y += klingons[i].thrust.y
+        // klingons[i].x += klingons[i].thrust.x
+        // klingons[i].y += klingons[i].thrust.y
         
         // Locked on
         if (klingons[i].locked && ship.scanning) {

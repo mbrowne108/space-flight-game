@@ -19,6 +19,7 @@ const ship = {
     phaserCharge: maxPhaserCharge,
     torpLoaded: true,
     torpCount: 50,
+    passengers: 0,
     torpedoes: [],
     scans: [],
     particles: [],
@@ -27,8 +28,9 @@ const ship = {
     firing: false,
     orbiting: false,
     redAlert: false,
+    transporting: false,
     shields: maxShields,
-    hull: 510,
+    hull: 1020,
     scanning: false,
     exploding: false,
     thrust: {
@@ -351,6 +353,38 @@ function orbitPlanet(planet) {
     }
 }
 
+function beamUpPassengers(planet) {
+    if (ship.transporting && !ship.redAlert && ship.orbiting) {
+        if (planet.name === "Earth") {
+            alert('TRANSPORTING PASSENGERS TO EARTH...')
+            if (ship.passengers > 0) {
+                ship.passengers -= 1
+                planet.passengers += 1
+            } else {
+                ship.transporting = !ship.transporting
+                alert('ALL PASSENGERS SAFE ON EARTH')
+            }
+        }
+        alert('TRANSPORTING PASSENGERS...')
+        let rand = Math.floor(Math.random() * 5)
+        if (rand === 1) {
+            if (planet.passengers > 0) {
+                planet.passengers -= 1
+                ship.passengers += 1
+            } else {
+                ship.transporting = !ship.transporting
+                alert('ALL PASSENGERS TRANSPORTED')
+            }
+        } else {
+            null
+        }
+    } else if (ship.transporting && ship.redAlert && ship.orbiting) {
+        alert('CAN\'T USE TRANSPORTER WHILE AT RED ALERT')
+    } else if (ship.transporting && !ship.redAlert && !ship.orbiting) {
+        alert('MUST BE IN ORBIT TO BEAM UP PASSENGERS')
+    }
+}
+
 function findClosestTarget() {
     const distances = []
     klingons.map((klingon, i) => {
@@ -384,6 +418,15 @@ function drawShip() {
             }
         })
     }
+
+    if (ship.transporting) {
+        planets.map((planet) => {
+            if (planet.locked) {
+                beamUpPassengers(planet)
+            }
+        })
+    }
+
     if (ship.firing) {
         if (klingons[lockId].locked && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) <= 500) {
             if (ship.phaserCharge > 0) {
@@ -469,5 +512,9 @@ function drawShip() {
     }
 
     storeLastShipPosition(ship.x, ship.y)
-    ship.shields < maxShields ? ship.shields += 2 : null
+
+    if (ship.redAlert) {
+        if (ship.shields < maxShields) ship.shields += 1
+    }
+    
 }
