@@ -1,4 +1,4 @@
-const FPS = 30
+const FPS = 60
 let scale = 1
 
 let startAudio = false

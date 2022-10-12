@@ -208,14 +208,13 @@ function keyDown(e) {
                         showPauseMenu = true
                     } else {
                         showPauseMenu = false
-                        requestAnimationFrame(loop) 
                     }
                     break;
             case "Enter": // Enter (Start Game)
                 if (showMainMenu) {
                     if (startSelected) {
-                        cancelAnimationFrame(menuLoop)
-                        requestAnimationFrame(loop)
+                        // cancelAnimationFrame(menuLoop)
+                        // requestAnimationFrame(loop)
                         showMainMenu = false
                     } else {
                         showAboutMenu = !showAboutMenu

@@ -94,5 +94,3 @@ function loop() {
         drawPauseMenu();
     }
 }
-
-// requestAnimationFrame(loop)
