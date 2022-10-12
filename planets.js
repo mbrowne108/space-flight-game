@@ -51,7 +51,7 @@ const earth = {
         el: document.getElementById("moon"),
         name: 'Moon',
         height: 2.7 * 2,
-        width: 2.7 * (4/3) * 2,
+        width: 2.7 * 2,
         speed: 0.0001478 * 12,
         theta: Math.random() * 2 * Math.PI,
         radius: 5 * 6,
@@ -69,7 +69,26 @@ const mars = {
     theta: Math.random() * 2 * Math.PI,
     radius: 142 * 6,
     locked: false,
-    moons: []
+    moons: [{
+        el: document.getElementById("phobos"),
+        name: 'Phobos',
+        height: 1.7 * 2,
+        width: 1.7 * 2,
+        speed: 0.0001073 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 3 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("deimos"),
+        name: 'Deimos',
+        height: 1.4 * 2,
+        width: 1.4 * 2,
+        speed: 0.0001478 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 5 * 6,
+        locked: false
+    }]
 }
 
 const jupiter = {
@@ -82,7 +101,46 @@ const jupiter = {
     theta: Math.random() * 2 * Math.PI,
     radius: 484 * 6,
     locked: false,
-    moons: []
+    moons: [{
+        el: document.getElementById("io"),
+        name: 'Io',
+        height: 3.6 * 2,
+        width: 3.6 * 2,
+        speed: 0.0001073 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 22 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("europa"),
+        name: 'Europa',
+        height: 3.1 * 2,
+        width: 3.1 * 2,
+        speed: 0.0001478 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 29 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("ganymede"),
+        name: 'Ganymede',
+        height: 5.2 * 2,
+        width: 5.2 * 2,
+        speed: 0.0002173 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 38 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("callisto"),
+        name: 'Callisto',
+        height: 4.8 * 2,
+        width: 4.8 * 2,
+        speed: 0.0001978 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 51 * 6,
+        locked: false
+    }]
 }
 
 const saturn = {
@@ -100,7 +158,7 @@ const saturn = {
 
 const uranus = {
     el: document.getElementById("uranus"),
-    music: '',
+    music: 'sounds/music/uranus.mp3',
     name: 'Uranus',
     height: 40 * 2,
     width: 40 * (4/3) * 2,
@@ -208,6 +266,7 @@ function drawPlanet(planet) {
 
     // Moon orbit and movement
     planet.moons.map((moon) => {
+        ctx.setLineDash([])
         ctx.strokeStyle = orbitColor
         ctx.lineWidth = 1 / scale
         ctx.beginPath()
@@ -217,6 +276,6 @@ function drawPlanet(planet) {
         moon.theta -= moon.speed
         moon.x = Math.cos(moon.theta) * moon.radius + planet.x + moon.width
         moon.y = Math.sin(moon.theta) * moon.radius + planet.y + moon.height
-        ctx.drawImage(moon.el, moon.x + cameraOffset.x + moon.width / 3, moon.y + cameraOffset.y + moon.height / 3, moon.width, moon.height)
+        ctx.drawImage(moon.el, moon.x + cameraOffset.x + (planet.width / 2) - (moon.width * 1.5), moon.y + cameraOffset.y + (planet.height / 2) - (moon.height * 1.5), moon.width, moon.height)
     })
 }

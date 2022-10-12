@@ -187,7 +187,7 @@ function drawOverlay() {
 
     if (ship.scanning) {
         if (!ship.orbiting && distBetweenPoints(ship.x, ship.y, planets[planetLockId].x + planets[planetLockId].width / 2, planets[planetLockId].y + planets[planetLockId].height / 2) < planets[planetLockId].width + 100) {
-            alert(`WITHIN RANGE TO ORBIT ${planets[planetLockId].name.toUpperCase()}. PRESS F`)
+            alert(`WITHIN RANGE TO ORBIT ${planets[planetLockId].name.toUpperCase()}`)
         }
     }
 
