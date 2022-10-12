@@ -8,6 +8,7 @@ let dead = false
 let showMainMenu = true
 let textRatio
 
+const wrapper = document.getElementById("wrapper");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth

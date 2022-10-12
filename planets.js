@@ -3,6 +3,7 @@ let planetLockId = 0
 
 const sun = {
     el: document.getElementById("sun"),
+    music: '',
     name: "Sun",
     height: 1500,
     width: 1500,
@@ -12,6 +13,7 @@ const sun = {
 
 const mercury = {
     el: document.getElementById("mercury"),
+    music: '',
     name: 'Mercury',
     height: 3.8 * 2,
     width: 3.8 * (4/3) * 2,
@@ -24,6 +26,7 @@ const mercury = {
 
 const venus = {
     el: document.getElementById("venus"),
+    music: 'sounds/music/venus.mp3',
     name: 'Venus',
     speed: -(0.002202),
     height: 9.5 * 2,
@@ -36,6 +39,7 @@ const venus = {
 
 const earth = {
     el: document.getElementById("earth"),
+    music: 'sounds/music/earth.mp3',
     name: 'Earth',
     speed: 0.001578,
     height: 10 * 2,
@@ -57,6 +61,7 @@ const earth = {
 
 const mars = {
     el: document.getElementById("mars"),
+    music: 'sounds/music/mars.mp3',
     name: 'Mars',
     speed: 0.0014077,
     height: 5.3 * 2,
@@ -69,6 +74,7 @@ const mars = {
 
 const jupiter = {
     el: document.getElementById("jupiter"),
+    music: 'sounds/music/jupiter.mp3',
     name: 'Jupiter',
     height: 112 * 2,
     width: 112 * (4/3) * 2,
@@ -81,6 +87,7 @@ const jupiter = {
 
 const saturn = {
     el: document.getElementById("saturn"),
+    music: 'sounds/music/title-screen.mp3',
     name: 'Saturn',
     height: 94.5 * 2,
     width: 94.5 * (4/3) * 2,
@@ -93,6 +100,7 @@ const saturn = {
 
 const uranus = {
     el: document.getElementById("uranus"),
+    music: '',
     name: 'Uranus',
     height: 40 * 2,
     width: 40 * (4/3) * 2,
@@ -105,6 +113,7 @@ const uranus = {
 
 const neptune = {
     el: document.getElementById("neptune"),
+    music: 'sounds/music/neptune.mp3',
     name: 'Neptune',
     height: 38.8 * 2,
     width: 38.8 * (4/3) * 2,
@@ -117,6 +126,7 @@ const neptune = {
 
 const pluto = {
     el: document.getElementById("pluto"),
+    music: 'sounds/music/pluto.mp3',
     name: 'Pluto',
     height: 2 * 2,
     width: 2 * (4/3) * 2,
@@ -135,6 +145,7 @@ const asteroidBelt = {
 }
 
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
+
 
 function lockedOnPlanetView(planet) {
     ctx.lineWidth = 10

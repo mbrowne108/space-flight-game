@@ -1,3 +1,7 @@
+function addPlayer(player) {
+    console.log(player)
+}
+
 function drawPauseMenu() {
     textRatio = window.innerWidth / 1920
 
@@ -54,6 +58,7 @@ function drawPauseMenu() {
 }
 
 function drawDeathMenu() {
+
     const img = document.getElementById("game-over")
     ctx.drawImage(img, window.innerWidth / 4, window.innerHeight / 8, window.innerWidth / 2, 5/9 * (window.innerWidth / 2))
     ctx.strokeStyle = 'rgb(171, 183, 183)'
@@ -64,4 +69,47 @@ function drawDeathMenu() {
     ctx.font = `bold ${88 * textRatio}px trebuchet ms`
     ctx.strokeText("GAME", window.innerWidth / 2.5, window.innerHeight / 1.5)
     ctx.strokeText("OVER", window.innerWidth - window.innerWidth / 2.5 , window.innerHeight / 1.5)
+    
+    // let nameInput = ''
+    // const form = document.createElement("form")
+    // const label = document.createElement("label")
+    // const input = document.createElement("input")
+    // const submit = document.createElement("input")
+
+    // form.setAttribute('method', 'post')
+    // form.setAttribute('action' , '')
+    // form.style = `position:absolute;width:200px;height:50px`
+    // form.style.left = window.innerWidth / 2 - window.innerWidth / 22 + 'px'
+    // form.style.top = window.innerHeight / 1.4 + 'px'
+
+    // label.innerHTML = "Enter Name: "
+    // label.style = "color:rgb(171, 183, 183);text-align:center;font-family:Trebuchet MS,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Tahoma,sans-serif;"
+    // label.style.left = window.innerWidth / 22
+
+    // input.setAttribute('type', 'text')
+    // input.setAttribute('name', 'name')
+    // input.setAttribute('value', nameInput)
+
+    // submit.setAttribute('type', 'submit')
+    // submit.setAttribute('name', 'formsubmit')
+    // submit.setAttribute('value', 'Submit')
+
+    // wrapper.appendChild(form)
+    // form.appendChild(label)
+    // form.appendChild(input)
+    // form.appendChild(submit)
+
+    // form.addEventListener('submit', (e) => {
+    //     e.preventDefault();
+    //     fetch('/leaderboard.json', {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify({name: input.value, score: klingonsDestroyed})          
+    //     })
+    //     .then(r => r.json())
+    //     .then(newPlayer => addPlayer(newPlayer))
+    // })
+
 }
