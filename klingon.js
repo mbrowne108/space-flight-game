@@ -1,7 +1,7 @@
 const klingons = []
 let lockId = 0
 const disrSpeed = 250
-const klingonThrust = 4
+const klingonThrust = 8
 const maxKlingonShields = 1020
 
 function spawnInitialKlingons() {
@@ -14,7 +14,7 @@ function spawnInitialKlingons() {
 }
 
 function spawnNewKlingon() {
-    let random = Math.floor(Math.random() * 2000)
+    let random = Math.floor(Math.random() * 1000)
     if (random === 1) {
         let x = (Math.random() * 2800) + 3000;
         let y = (Math.random() * 2800) + 3000;

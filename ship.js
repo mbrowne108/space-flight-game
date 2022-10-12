@@ -3,8 +3,8 @@ const maxShields = 2040;
 const maxThrust = 30;
 const shipThrust = 10;
 const friction = 0.7;
-const torpSpeed = 250;
-const scanSpeed = 200;
+const torpSpeed = 500;
+const scanSpeed = 400;
 let klingonsDestroyed = 0;
 
 const ship = {
@@ -366,7 +366,7 @@ function beamUpPassengers(planet) {
             }
         }
         alert('TRANSPORTING PASSENGERS...')
-        let rand = Math.floor(Math.random() * 5)
+        let rand = Math.floor(Math.random() * 2)
         if (rand === 1) {
             if (planet.passengers > 0) {
                 planet.passengers -= 1

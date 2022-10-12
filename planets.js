@@ -1,4 +1,3 @@
-const orbitColor = 'rgb(100,100,100)';
 let planetLockId = 0
 
 const sun = {
@@ -256,7 +255,7 @@ function drawPlanet(planet) {
     // Draw orbit
     ctx.setLineDash([])
     ctx.beginPath()
-    ctx.strokeStyle = orbitColor
+    ctx.strokeStyle = 'rgb(100,100,100)'
     ctx.lineWidth = 1 / scale
     ctx.arc(sun.x + cameraOffset.x, sun.y + cameraOffset.y, planet.radius, 0, 2 * Math.PI)
     ctx.stroke()
@@ -275,7 +274,7 @@ function drawPlanet(planet) {
     // Moon orbit and movement
     planet.moons.map((moon) => {
         ctx.setLineDash([])
-        ctx.strokeStyle = orbitColor
+        ctx.strokeStyle = 'rgba(100,100,100,0.5)'
         ctx.lineWidth = 1 / scale
         ctx.beginPath()
         ctx.arc(planet.x + (planet.width / 2) + cameraOffset.x, planet.y + (planet.height / 2) + cameraOffset.y, moon.radius, 0, 2 * Math.PI)
