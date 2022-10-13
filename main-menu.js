@@ -7,6 +7,7 @@ let paused = false
 let showPauseMenu = false
 let showAboutMenu = false
 let dead = false
+let win = false
 let showMainMenu = true
 let textRatio
 

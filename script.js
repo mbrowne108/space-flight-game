@@ -84,13 +84,19 @@ function loop() {
 
     playMusic();
 
-    if (!showPauseMenu && !dead && !showMainMenu) {
+    if (earth.passengers === totalPassengers) {
+        win = true
+    }
+
+    if (!showPauseMenu && !dead && !showMainMenu && !win) {
         setTimeout(() => {
             requestAnimationFrame(loop)
         }, 1000 / FPS)
-    } else if (!showPauseMenu && dead) {
+    } else if (!showPauseMenu && dead && !win) {
         drawDeathMenu();
-    } else if (showPauseMenu && !dead) {
+    } else if (showPauseMenu && !dead && !win) {
         drawPauseMenu();
+    } else if (!showPauseMenu && !dead && win) {
+        drawWinMenu();
     }
 }

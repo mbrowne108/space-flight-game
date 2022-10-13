@@ -379,8 +379,10 @@ function beamUpPassengers(planet) {
             null
         }
     } else if (ship.transporting && ship.redAlert && ship.orbiting) {
+        ship.transporting = !ship.transporting
         alert('CAN\'T USE TRANSPORTER WHILE AT RED ALERT')
     } else if (ship.transporting && !ship.redAlert && !ship.orbiting) {
+        ship.transporting = !ship.transporting
         alert('MUST BE IN ORBIT TO BEAM UP PASSENGERS')
     }
 }

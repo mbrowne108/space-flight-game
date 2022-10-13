@@ -212,6 +212,9 @@ const asteroidBelt = {
 
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
+let totalPassengers = 10
+// planets.map((planet) => totalPassengers += planet.passengers)
+
 function lockedOnPlanetView(planet) {
     ctx.lineWidth = 10
     if (planet.x + planet.width / 2 + cameraOffset.x < 0 || 

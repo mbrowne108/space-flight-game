@@ -130,3 +130,16 @@ function drawDeathMenu() {
     ctx.strokeText("GAME", window.innerWidth / 2.5, window.innerHeight / 1.5)
     ctx.strokeText("OVER", window.innerWidth - window.innerWidth / 2.5 , window.innerHeight / 1.5)
 }
+
+function drawWinMenu() {
+    const img = document.getElementById("win-screen")
+    ctx.drawImage(img, window.innerWidth / 4, window.innerHeight / 8, window.innerWidth / 2, 3/4 * (window.innerWidth / 2))
+    ctx.strokeStyle = 'rgb(171, 183, 183)'
+    ctx.lineWidth = 3
+    ctx.strokeRect(window.innerWidth / 4, window.innerHeight / 8, window.innerWidth / 2, 3/4 * (window.innerWidth / 2))
+    ctx.textAlign = "center"
+    ctx.strokeStyle = "rgb(0, 155, 255)"
+    ctx.font = `bold ${88 * textRatio}px trebuchet ms`
+    ctx.strokeText("YOU", window.innerWidth / 2, window.innerHeight / 3.5)
+    ctx.strokeText("WIN!", window.innerWidth - window.innerWidth / 2, window.innerHeight / 2.7)
+}
