@@ -40,7 +40,7 @@ const ship = {
     orbit: {
         speed: 0.00474,
         theta: Math.random() * 2 * Math.PI,
-        radius: 1 * 6
+        radius: 6
     }
 }
 
@@ -73,6 +73,7 @@ function explodeShip() {
 }
 
 function drawShipExplosion() {
+    fxEnterpriseExplodes.play()
     ship.particles.forEach((particle, i) => {
         ctx.globalAlpha = particle.alpha;
         ctx.shadowColor = 'rgb(200, 0, 0)'
@@ -108,6 +109,7 @@ function drawShipExplosion() {
     })
 }
 
+// Fire phasers
 function drawPhasers() {
     ctx.lineWidth = 1
     ctx.shadowColor = 'rgb(200, 0, 0)'
@@ -132,6 +134,7 @@ function drawPhasers() {
 
 function fireTorpedoes() {
     if (ship.torpLoaded) {
+        fxEnterpriseTorpedo.play();
         ship.torpLoaded = false
         ship.torpCount -= 1
         if (ship.torpCount > 0) {
@@ -355,6 +358,7 @@ function orbitPlanet(planet) {
 
 function beamUpPassengers(planet) {
     if (ship.transporting && !ship.redAlert && ship.orbiting) {
+        fxTransporter.play()
         if (planet.name === "Earth") {
             alert('TRANSPORTING PASSENGERS TO EARTH...')
             if (ship.passengers > 0) {
@@ -379,9 +383,11 @@ function beamUpPassengers(planet) {
             null
         }
     } else if (ship.transporting && ship.redAlert && ship.orbiting) {
+        fxTransporter.stop()
         ship.transporting = !ship.transporting
         alert('CAN\'T USE TRANSPORTER WHILE AT RED ALERT')
     } else if (ship.transporting && !ship.redAlert && !ship.orbiting) {
+        fxTransporter.stop()
         ship.transporting = !ship.transporting
         alert('MUST BE IN ORBIT TO BEAM UP PASSENGERS')
     }
@@ -432,6 +438,7 @@ function drawShip() {
     if (ship.firing) {
         if (klingons[lockId].locked && distBetweenPoints(ship.x, ship.y, klingons[lockId].x, klingons[lockId].y) <= 500) {
             if (ship.phaserCharge > 0) {
+                fxPhasers.play();
                 ship.phaserCharge -= 1
                 drawPhasers();
                 if (klingons[lockId].shields > 0) {
@@ -463,6 +470,7 @@ function drawShip() {
             alert('NOT IN PHASER RANGE')
         }
     } else {
+        fxPhasers.stop();
         if (ship.phaserCharge < maxPhaserCharge) {ship.phaserCharge += 0.5}
     }
 
@@ -489,9 +497,11 @@ function drawShip() {
 
     // Move ship
     if (ship.thrusting && ship.thrust.x <= maxThrust && ship.thrust.x >= -maxThrust && ship.thrust.y <= maxThrust && ship.thrust.y >= -maxThrust) {
+        fxThrust.play()
         ship.thrust.x += shipThrust * Math.cos(ship.a) / FPS;
         ship.thrust.y -= shipThrust * Math.sin(ship.a) / FPS;
     } else {
+        fxThrust.stop()
         ship.thrust.x -= friction * ship.thrust.x / FPS;
         ship.thrust.y -= friction * ship.thrust.y / FPS;
     }

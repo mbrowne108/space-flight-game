@@ -16,6 +16,7 @@ function spawnInitialKlingons() {
 function spawnNewKlingon() {
     let random = Math.floor(Math.random() * 1000)
     if (random === 1) {
+        fxKlingonCloak.play()
         let x = (Math.random() * 2800) + 3000;
         let y = (Math.random() * 2800) + 3000;
         klingons.push(newKlingon(x, y));
@@ -135,6 +136,7 @@ function klingonShields(klingon) {
 }
 
 function drawKlingonExplosion(klingon) {
+    fxKlingonExplodes.play()
     klingon.particles.forEach((particle, i) => {
         ctx.globalAlpha = particle.alpha;
         ctx.shadowColor = 'rgb(200, 0, 0)'
@@ -199,6 +201,7 @@ function fireWeapons(klingon) {
     let random = Math.floor(Math.random() * 1000)
     if (distBetweenPoints(ship.x, ship.y, klingon.x, klingon.y) < 500) {
         if (random >= 0 && random < 100) {
+            fxDisurptor.play()
             klingon.disruptors.push({
                 x: klingon.x + 4/3 * klingon.height / 2 * Math.cos(klingon.a) + 12,
                 y: klingon.y - 4/3 * klingon.height / 2 * Math.sin(klingon.a) + 12,
@@ -206,14 +209,14 @@ function fireWeapons(klingon) {
                 yv: -disrSpeed * Math.sin(klingon.a) / FPS
             })
         } else if (random >= 100 && random < 200) {
+            fxDisurptor.play()
             klingon.disruptors.push({
                 x: klingon.x + 4/3 * klingon.height / 1.7 * Math.cos(klingon.a) - 12,
                 y: klingon.y - 4/3 * klingon.height / 1.7 * Math.sin(klingon.a) - 12,
                 xv: disrSpeed * Math.cos(klingon.a) / FPS,
                 yv: -disrSpeed * Math.sin(klingon.a) / FPS
             })
-        } else if (random === 808) {
-
+        } else if (random >= 800 && random < 820) {
             fireKlingonTorpedoes(klingon)
         }
     }
@@ -257,6 +260,7 @@ function drawDisruptors(klingon) {
 }
 
 function fireKlingonTorpedoes(klingon) {
+    fxKlingonTorpedo.play()
     klingon.torpCount -= 1
     if (klingon.torpCount > 0) {
         klingon.torpedoes.push({

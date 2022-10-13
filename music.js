@@ -1,5 +1,5 @@
 function playMusic() {
-    if (distBetweenPoints(ship.x, ship.y, planets[0].x + planets[0].width / 2, planets[0].y + planets[0].height / 2) < 1000) {
+    if (distBetweenPoints(ship.x, ship.y, planets[0].x + planets[0].width / 2, planets[0].y + planets[0].height / 2) < 500) {
         musicMercury.play()
         if (1 / distBetweenPoints(ship.x, ship.y, planets[0].x + planets[0].width / 2, planets[0].y + planets[0].height / 2) * 10 < 1) {
             musicMercury.piece.volume = 1 / distBetweenPoints(ship.x, ship.y, planets[0].x + planets[0].width / 2, planets[0].y + planets[0].height / 2) * 10
@@ -9,7 +9,7 @@ function playMusic() {
     } else {
         musicMercury.stop()
     }
-    if (distBetweenPoints(ship.x, ship.y, planets[1].x + planets[1].width / 2, planets[1].y + planets[1].height / 2) < 1000) {
+    if (distBetweenPoints(ship.x, ship.y, planets[1].x + planets[1].width / 2, planets[1].y + planets[1].height / 2) < 700) {
         musicVenus.play()
         if (1 / distBetweenPoints(ship.x, ship.y, planets[1].x + planets[1].width / 2, planets[1].y + planets[1].height / 2) * 10 < 1) {
             musicVenus.piece.volume = 1 / distBetweenPoints(ship.x, ship.y, planets[1].x + planets[1].width / 2, planets[1].y + planets[1].height / 2) * 10
@@ -41,8 +41,8 @@ function playMusic() {
     }
     if (distBetweenPoints(ship.x, ship.y, planets[4].x + planets[4].width / 2, planets[4].y + planets[4].height / 2) < 2000) {
         musicJupiter.play()
-        if (1 / distBetweenPoints(ship.x, ship.y, planets[4].x + planets[4].width / 2, planets[4].y + planets[4].height / 2) * 20 < 1) {
-            musicJupiter.piece.volume = 1 / distBetweenPoints(ship.x, ship.y, planets[4].x + planets[4].width / 2, planets[4].y + planets[4].height / 2) * 20
+        if (1 / distBetweenPoints(ship.x, ship.y, planets[4].x + planets[4].width / 2, planets[4].y + planets[4].height / 2) * 30 < 1) {
+            musicJupiter.piece.volume = 1 / distBetweenPoints(ship.x, ship.y, planets[4].x + planets[4].width / 2, planets[4].y + planets[4].height / 2) * 30
         } else {
             musicJupiter.piece.volume = 0.99
         }
@@ -51,8 +51,8 @@ function playMusic() {
     }
     if (distBetweenPoints(ship.x, ship.y, planets[5].x + planets[5].width / 2, planets[5].y + planets[5].height / 2) < 2000) {
         musicSaturn.play()
-        if (1 / distBetweenPoints(ship.x, ship.y, planets[5].x + planets[5].width / 2, planets[5].y + planets[5].height / 2) * 20 < 1) {
-            musicSaturn.piece.volume = 1 / distBetweenPoints(ship.x, ship.y, planets[5].x + planets[5].width / 2, planets[5].y + planets[5].height / 2) * 20
+        if (1 / distBetweenPoints(ship.x, ship.y, planets[5].x + planets[5].width / 2, planets[5].y + planets[5].height / 2) + planets[5].width * 30 < 1) {
+            musicSaturn.piece.volume = 1 / distBetweenPoints(ship.x, ship.y, planets[5].x + planets[5].width / 2, planets[5].y + planets[5].height / 2) + planets[5].width * 30
         } else {
             musicSaturn.piece.volume = 0.99
         }

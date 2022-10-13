@@ -49,6 +49,9 @@ function drawMenuStars() {
 }
 
 function menuLoop() {
+
+    console.log(mouse.x, mouse.y)
+
     if (startAudio) musicMainMenu.play() 
     
     textRatio = window.innerWidth / 1920

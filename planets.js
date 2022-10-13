@@ -158,7 +158,56 @@ const saturn = {
     radius: 889 * 6,
     passengers: 601,
     locked: false,
-    moons: []
+    moons: [{
+        el: document.getElementById("tethys"),
+        name: 'Tethys',
+        height: 1.06 * 2,
+        width: 1.06 * 2,
+        speed: 0.0001073 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 27 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("dione"),
+        name: 'Dione',
+        height: 3.1 * 2,
+        width: 3.1 * 2,
+        speed: 0.0001478 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 36 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("rhea"),
+        name: 'Rhea',
+        height: 1.52 * 2,
+        width: 1.52 * 2,
+        speed: 0.0002173 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 44 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("titan"),
+        name: 'Titan',
+        height: 5.15 * 2,
+        width: 5.15 * 2,
+        speed: 0.0001978 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 55 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("iapetus"),
+        name: 'Iapetus',
+        height: 1.47 * 2,
+        width: 1.47 * 2,
+        speed: 0.0001978 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 64 * 6,
+        locked: false
+    }]
 }
 
 const uranus = {
@@ -172,7 +221,36 @@ const uranus = {
     radius: 1790 * 6,
     locked: false,
     passengers: 117,
-    moons: []
+    moons: [{
+        el: document.getElementById("umbriel"),
+        name: 'Umbriel',
+        height: 2.89 * 2,
+        width: 2.89 * 2,
+        speed: 0.0001073 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 16 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("titania"),
+        name: 'Titania',
+        height: 3.89 * 2,
+        width: 3.89 * 2,
+        speed: 0.0001478 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 23 * 6,
+        locked: false
+    },
+    {
+        el: document.getElementById("oberon"),
+        name: 'Oberon',
+        height: 3.68 * 2,
+        width: 3.68 * 2,
+        speed: 0.0002173 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 31 * 6,
+        locked: false
+    }]
 }
 
 const neptune = {
@@ -186,7 +264,16 @@ const neptune = {
     radius: 2880 * 6,
     locked: false,
     passengers: 433,
-    moons: []
+    moons: [{
+        el: document.getElementById("triton"),
+        name: 'Triton',
+        height: 3 * 2,
+        width: 3 * 2,
+        speed: 0.0001073 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 19 * 6,
+        locked: false
+    }]
 }
 
 const pluto = {
@@ -200,7 +287,16 @@ const pluto = {
     radius: 3670 * 6,
     locked: false,
     passengers: 210,
-    moons: []
+    moons: [{
+        el: document.getElementById("charon"),
+        name: 'Charon',
+        height: 1 * 2,
+        width: 1 * 2,
+        speed: 0.0001073 * 12,
+        theta: Math.random() * 2 * Math.PI,
+        radius: 3 * 6,
+        locked: false
+    }]
 }
 
 const asteroidBelt = {
@@ -212,8 +308,8 @@ const asteroidBelt = {
 
 const planets = [mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, pluto]
 
-let totalPassengers = 10
-// planets.map((planet) => totalPassengers += planet.passengers)
+let totalPassengers = 0
+planets.map((planet) => totalPassengers += planet.passengers)
 
 function lockedOnPlanetView(planet) {
     ctx.lineWidth = 10

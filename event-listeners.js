@@ -15,7 +15,18 @@ canvas.addEventListener('mousemove', (e) => {
         return;
     }
     if (showMainMenu) {
-        return;
+        if (mouse.x >= canvas.width - canvas.width / 2.5 && 
+            mouse.y >= canvas.height - canvas.height / 4 && 
+            mouse.x <= canvas.width - canvas.width / 2.5 + canvas.width / 12 &&
+            mouse.y <= canvas.height - canvas.height / 4 + canvas.height / 15) {
+                startSelected = true
+            } else if (
+            mouse.x >= canvas.width - canvas.width / 4 && 
+            mouse.y >= canvas.height - canvas.height / 4 && 
+            mouse.x <= canvas.width - canvas.width / 4 + canvas.width / 12 &&
+            mouse.y <= canvas.height - canvas.height / 4 + canvas.height / 15) {
+                startSelected = false
+            }
     }
     mouse.x = e.clientX
     mouse.y = e.clientY
@@ -48,9 +59,21 @@ canvas.addEventListener('click', (e) => { // Left Click (Torpedo)
         return;
     }
     if (showMainMenu) {
-        return;
+        if (mouse.x >= canvas.width - canvas.width / 2.5 && 
+            mouse.y >= canvas.height - canvas.height / 4 && 
+            mouse.x <= canvas.width - canvas.width / 2.5 + canvas.width / 12 &&
+            mouse.y <= canvas.height - canvas.height / 4 + canvas.height / 15) {
+                showMainMenu = false
+            } else if (
+            mouse.x >= canvas.width - canvas.width / 4 && 
+            mouse.y >= canvas.height - canvas.height / 4 && 
+            mouse.x <= canvas.width - canvas.width / 4 + canvas.width / 12 &&
+            mouse.y <= canvas.height - canvas.height / 4 + canvas.height / 15) {
+                showAboutMenu = !showAboutMenu
+            }
+    } else {
+        fireTorpedoes()
     }
-    fireTorpedoes()
 })
 canvas.addEventListener('wheel', (e) => {
     if (ship.exploding) {
@@ -138,8 +161,8 @@ function keyDown(e) {
                     ship.redAlert = !ship.redAlert
                     shieldExpand = 0
                 } else {
+                    fxRedAlert.play()
                     shieldsUpAnim();
-                    ship.scanning = true
                     shieldExpand = 0
                 }
                 break;

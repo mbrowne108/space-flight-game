@@ -4,9 +4,9 @@ let scannerExpand = 0
 let shieldExpand = 0
 
 function drawOverlay() {
-        ctx.fillStyle = "red";
-        ctx.font = "15px serif";
-        ctx.fillText(`Thrust: ${ship.thrust.x}`, window.innerWidth / 2 + 100, 15);
+        // ctx.fillStyle = "red";
+        // ctx.font = "15px serif";
+        // ctx.fillText(`Thrust: ${ship.thrust.x}`, window.innerWidth / 2 + 100, 15);
         // ctx.fillText(`Mars: ${mars.passengers}`, window.innerWidth / 2 + 100, 30);
 
     textRatio = window.innerWidth / 1920
@@ -79,6 +79,7 @@ function drawOverlay() {
 
     // Scanner
     if (ship.scanning) {
+        planetScanMode ? fxPlanetScanning.play() : fxKlingonScanning.play()
         ctx.setLineDash([])
         grd = ctx.createLinearGradient(window.innerWidth / 6, 0, 0, 0)
         grd.addColorStop(0, 'rgba(108, 122, 137, 0.3)');
@@ -102,6 +103,7 @@ function drawOverlay() {
             ctx.fillText('Press R to deselect target', window.innerWidth / 12, window.innerHeight / 20 + 56)
             ctx.fillText('Press Tab to exit scanner', window.innerWidth / 12, window.innerHeight / 20 + 74)
             if (planetScanMode) {
+                fxPlanetScanning.stop()
                 planets.map((planet, i) => {
                     ctx.fillStyle = 'rgb(0, 155, 255, 0.5)'
                     grd = ctx.createLinearGradient(0, window.innerHeight / 10 + ((i + 1) * 45) + 250, 0, 0)
@@ -127,6 +129,7 @@ function drawOverlay() {
                     ctx.fillText(`${distConvert} million km away`, window.innerWidth / 9, window.innerHeight / 10 + ((i + 1) * 45 + 20))
                 })
             } else {
+                fxKlingonScanning.stop()
                 klingons.map((klingon, i) => {
                     ctx.fillStyle = 'rgb(255, 0, 0, 0.5)'
                     grd = ctx.createLinearGradient(0, window.innerHeight / 10 + ((i + 1) * 45) + 250, 0, 0)
