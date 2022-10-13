@@ -5,20 +5,6 @@ const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.
 createAsteroids();
 spawnInitialKlingons();
 
-function Music(src) {
-    this.piece = new Audio(src);
-    this.play = function() {
-        if (soundOn) {
-            this.piece.play()
-        } else {
-            this.piece.pause()
-        }
-    }
-    this.stop = function() {
-        this.piece.pause();
-    }
-}
-
 // Music
 const musicMainMenu = new Music("sounds/music/title-screen.mp3", 1)
 const musicMercury = new Music(planets[0].music)
@@ -44,6 +30,20 @@ const fxPlanetScanning = new Sound('sounds/fx/planet-scanner.mp3', 1, 1)
 const fxRedAlert = new Sound('sounds/fx/red-alert.mp3', 1, 0.7)
 const fxThrust = new Sound('sounds/fx/thrust.mp3', 1, 0.4)
 const fxTransporter = new Sound('sounds/fx/transporter.mp3', 1, 0.5)
+
+function Music(src) {
+    this.piece = new Audio(src);
+    this.play = function() {
+        if (soundOn) {
+            this.piece.play()
+        } else {
+            this.piece.pause()
+        }
+    }
+    this.stop = function() {
+        this.piece.pause();
+    }
+}
 
 function Sound(src, maxStreams = 1, vol = 1.0) {
     this.streamNum = 0;
@@ -92,12 +92,11 @@ function loop() {
         drawSun();
         planets.forEach(drawPlanet);
         drawAsteroids();
+        drawKlingons();
+        drawShip();
     ctx.restore();
 
-    drawShip();
-    drawKlingons();
     drawOverlay();
-
     playMusic();
 
     if (earth.passengers === totalPassengers) {

@@ -326,6 +326,7 @@ function lockedOnPlanetView(planet) {
         ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
         ctx.lineTo(planet.x + cameraOffset.x + planet.width / 2, planet.y + cameraOffset.y + planet.height / 2);
         ctx.stroke();
+        ctx.setLineDash([])
     } else {
         ctx.strokeStyle = "rgb(0, 155, 255)";
         ctx.lineWidth = 1 / scale
@@ -372,7 +373,6 @@ function drawPlanet(planet) {
 
     // Moon orbit and movement
     planet.moons.map((moon) => {
-        ctx.setLineDash([])
         ctx.strokeStyle = 'rgba(100,100,100,0.5)'
         ctx.lineWidth = 1 / scale
         ctx.beginPath()

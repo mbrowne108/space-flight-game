@@ -6,7 +6,7 @@ let shieldExpand = 0
 function drawOverlay() {
         ctx.fillStyle = "red";
         ctx.font = "15px serif";
-        ctx.fillText(`Thrust: ${ship.thrust.x}`, window.innerWidth / 2 + 300, 15);
+        ctx.fillText(`Scale: ${scale}`, window.innerWidth / 2 + 300, 15);
         // ctx.fillText(`Mars: ${mars.passengers}`, window.innerWidth / 2 + 100, 30);
 
     textRatio = window.innerWidth / 1920
@@ -43,7 +43,6 @@ function drawOverlay() {
     ctx.fillRect(window.innerWidth - (window.innerWidth / 30), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -(window.innerHeight / 3 * ship.phaserCharge / maxPhaserCharge))
 
     // Outlines
-    ctx.setLineDash([])
     ctx.strokeStyle = 'rgb(171, 183, 183)'
     ctx.lineWidth = 1
     ctx.strokeRect(window.innerWidth - (window.innerWidth / 15), window.innerHeight - window.innerHeight / 3, window.innerWidth / 50, -window.innerHeight / 3)
@@ -80,7 +79,6 @@ function drawOverlay() {
     // Scanner
     if (ship.scanning) {
         planetScanMode ? fxPlanetScanning.play() : fxKlingonScanning.play()
-        ctx.setLineDash([])
         grd = ctx.createLinearGradient(window.innerWidth / 6, 0, 0, 0)
         grd.addColorStop(0, 'rgba(108, 122, 137, 0.3)');
         grd.addColorStop(1, 'rgb(171, 183, 183, 0.3)');

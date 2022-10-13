@@ -84,6 +84,7 @@ function lockedOnKlingonView(klingon) {
         ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y);
         ctx.lineTo(klingon.x + cameraOffset.x, klingon.y + cameraOffset.y);
         ctx.stroke()
+        ctx.setLineDash([])
     } else {
         ctx.strokeStyle = "rgb(255, 0, 0)";
         ctx.lineWidth = 1

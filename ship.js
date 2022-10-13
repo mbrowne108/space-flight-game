@@ -111,27 +111,23 @@ function drawShipExplosion() {
 
 // Fire phasers
 
-function firePhasers() {
-
-}
-
-function drawPhasers() {
+function drawPhasers(klingon) {
     ctx.lineWidth = 1
     ctx.shadowColor = 'rgb(200, 0, 0)'
     ctx.shadowBlur = 10
     ctx.strokeStyle = 'rgb(235, 119, 52)'
     ctx.beginPath();
     ctx.moveTo(ship.x + cameraOffset.x, ship.y + cameraOffset.y)
-    if (klingons[lockId].shields === 0) {
-        ctx.lineTo(klingons[lockId].x + cameraOffset.x + Math.random() * 2, klingons[lockId].y + cameraOffset.y + Math.random() * 2);
-    } else if (ship.x > klingons[lockId].x && ship.y > klingons[lockId].y) {
-        ctx.lineTo(klingons[lockId].x + klingons[lockId].width / 2 + cameraOffset.x + Math.random() * 2, klingons[lockId].y + klingons[lockId].height / 2 + cameraOffset.y + Math.random() * 2);
-    } else if (ship.x > klingons[lockId].x && ship.y < klingons[lockId].y) {
-        ctx.lineTo(klingons[lockId].x + klingons[lockId].width / 2 + cameraOffset.x + Math.random() * 2, klingons[lockId].y - klingons[lockId].height / 2 + cameraOffset.y + Math.random() * 2);
-    } else if (ship.x < klingons[lockId].x && ship.y < klingons[lockId].y) {
-        ctx.lineTo(klingons[lockId].x - klingons[lockId].width / 2 + cameraOffset.x + Math.random() * 2, klingons[lockId].y - klingons[lockId].height / 2 + cameraOffset.y + Math.random() * 2);
-    } else if (ship.x < klingons[lockId].x && ship.y > klingons[lockId].y) {
-        ctx.lineTo(klingons[lockId].x - klingons[lockId].width / 2 + cameraOffset.x + Math.random() * 2, klingons[lockId].y + klingons[lockId].height / 2 + cameraOffset.y + Math.random() * 2);
+    if (klingon.shields === 0) {
+        ctx.lineTo(klingon.x + cameraOffset.x + Math.random() * 2, klingon.y + cameraOffset.y + Math.random() * 2);
+    } else if (ship.x > klingon.x && ship.y > klingon.y) {
+        ctx.lineTo(klingon.x + klingon.width / 2 + cameraOffset.x + Math.random() * 2, klingon.y + klingon.height / 2 + cameraOffset.y + Math.random() * 2);
+    } else if (ship.x > klingon.x && ship.y < klingon.y) {
+        ctx.lineTo(klingon.x + klingon.width / 2 + cameraOffset.x + Math.random() * 2, klingon.y - klingon.height / 2 + cameraOffset.y + Math.random() * 2);
+    } else if (ship.x < klingon.x && ship.y < klingon.y) {
+        ctx.lineTo(klingon.x - klingon.width / 2 + cameraOffset.x + Math.random() * 2, klingon.y - klingon.height / 2 + cameraOffset.y + Math.random() * 2);
+    } else if (ship.x < klingon.x && ship.y > klingon.y) {
+        ctx.lineTo(klingon.x - klingon.width / 2 + cameraOffset.x + Math.random() * 2, klingon.y + klingon.height / 2 + cameraOffset.y + Math.random() * 2);
     }
     ctx.stroke()
     ctx.shadowBlur = 0
@@ -282,37 +278,37 @@ function shieldsUpAnim() {
     setTimeout(() => {
         ctx.strokeStyle = `rgb(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.1)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 2), (ship.height / 1.5), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 2) * scale, (ship.height / 1.5) * scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 0)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.2)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.9), (ship.height / 1.4), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.9) * scale, (ship.height / 1.4) * scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 100)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.3)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.8), (ship.height / 1.3), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.8) * scale, (ship.height / 1.3) * scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 200)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.5)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.7), (ship.height / 1.2), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.7) * scale, (ship.height / 1.2) * scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 300)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 0.7)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.6), (ship.height / 1.1), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.6) * scale, (ship.height / 1.1) * scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 400)
     setTimeout(() => {
         ctx.strokeStyle = `rgba(${255 - ship.shields / 4}, 0, ${ship.shields / 4}, 1)`;
         ctx.beginPath();
-        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.5), (ship.height / 1), -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
+        ctx.ellipse(ship.x + cameraOffset.x - ship.thrust.x, ship.y + cameraOffset.y - ship.thrust.y, (ship.height / 1.5) * scale, (ship.height / 1) * scale, -ship.a + 90 / 180 * Math.PI, 0, 2 * Math.PI)
         ctx.stroke();
     }, 500)
     
@@ -445,7 +441,7 @@ function drawShip() {
             if (ship.phaserCharge > 0) {
                 fxPhasers.play();
                 ship.phaserCharge -= 1
-                drawPhasers();
+                drawPhasers(klingons[lockId]);
                 if (klingons[lockId].shields > 0) {
                     klingons[lockId].shields -= 3
                 } else if (klingons[lockId].shields <= 0 && klingons[lockId].hull > 0) {
