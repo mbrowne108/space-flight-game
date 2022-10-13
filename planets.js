@@ -12,7 +12,7 @@ const sun = {
 
 const mercury = {
     el: document.getElementById("mercury"),
-    music: '',
+    music: 'sounds/music/mercury.mp3',
     name: 'Mercury',
     height: 3.8 * 2,
     width: 3.8 * (4/3) * 2,

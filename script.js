@@ -20,6 +20,7 @@ function Music(src) {
 }
 
 const musicMainMenu = new Music("sounds/music/title-screen.mp3", 1)
+const musicMercury = new Music(planets[0].music)
 const musicVenus = new Music(planets[1].music)
 const musicEarth = new Music(planets[2].music)
 const musicMars = new Music(planets[3].music)
@@ -86,6 +87,10 @@ function loop() {
 
     if (earth.passengers === totalPassengers) {
         win = true
+    }
+
+    if (ship.passengers === totalPassengers) {
+        alert('YOU HAVE BEAMED UP ALL PASSENGERS, GO TO EARTH TO DROP THEM OFF')
     }
 
     if (!showPauseMenu && !dead && !showMainMenu && !win) {
