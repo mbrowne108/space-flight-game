@@ -110,6 +110,11 @@ function drawShipExplosion() {
 }
 
 // Fire phasers
+
+function firePhasers() {
+
+}
+
 function drawPhasers() {
     ctx.lineWidth = 1
     ctx.shadowColor = 'rgb(200, 0, 0)'
@@ -461,7 +466,8 @@ function drawShip() {
                             increment: 1
                         })
                     }
-                    setTimeout(() => {klingons.splice(lockId, 1)}, 3000)
+                    let j = lockId
+                    setTimeout(() => {klingons.splice(j, 1)}, 3000)
                 }
             } else {
                 ship.firing = false
@@ -497,11 +503,9 @@ function drawShip() {
 
     // Move ship
     if (ship.thrusting && ship.thrust.x <= maxThrust && ship.thrust.x >= -maxThrust && ship.thrust.y <= maxThrust && ship.thrust.y >= -maxThrust) {
-        fxThrust.play()
         ship.thrust.x += shipThrust * Math.cos(ship.a) / FPS;
         ship.thrust.y -= shipThrust * Math.sin(ship.a) / FPS;
     } else {
-        fxThrust.stop()
         ship.thrust.x -= friction * ship.thrust.x / FPS;
         ship.thrust.y -= friction * ship.thrust.y / FPS;
     }
@@ -518,15 +522,12 @@ function drawShip() {
         if (ship.shields > 0 && ship.redAlert) {
             drawShipShields()
         } else {
-            ship.redAlert = false
             ship.shields === 0
         }    
     }
 
     storeLastShipPosition(ship.x, ship.y)
 
-    if (ship.redAlert) {
-        if (ship.shields < maxShields) ship.shields += 1
-    }
+    if (ship.shields < maxShields) ship.shields += 1
     
 }

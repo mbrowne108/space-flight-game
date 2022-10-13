@@ -32,10 +32,10 @@ let colorIncr = 0
 let colorRise = true
 
 const menuStars = []
-for (let i = 0; i < 500; i++) {
+for (let i = 0; i < 1000; i++) {
     let star = {
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
+        x: Math.random() * 3840,
+        y: Math.random() * 2160,
         size: Math.random() + 1
     }
     menuStars.push(star)
@@ -49,9 +49,6 @@ function drawMenuStars() {
 }
 
 function menuLoop() {
-
-    console.log(mouse.x, mouse.y)
-
     if (startAudio) musicMainMenu.play() 
     
     textRatio = window.innerWidth / 1920
@@ -59,7 +56,7 @@ function menuLoop() {
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
 
-    incr += 2
+    incr += 1
     if (incr >= 2590) incr = -canvas.height
 
     colorRise ? colorIncr += 1 : colorIncr -= 1

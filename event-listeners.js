@@ -71,6 +71,8 @@ canvas.addEventListener('click', (e) => { // Left Click (Torpedo)
             mouse.y <= canvas.height - canvas.height / 4 + canvas.height / 15) {
                 showAboutMenu = !showAboutMenu
             }
+    } else if (showPauseMenu) {
+        null
     } else {
         fireTorpedoes()
     }
@@ -110,6 +112,7 @@ function keyDown(e) {
         switch(e.code) {
             case "KeyW": // W Thrust
                 ship.thrusting = true;
+                fxThrust.play()
                 break;
             case "KeyS": // S Brake
                 ship.braking = true;
@@ -256,7 +259,6 @@ function keyDown(e) {
                 break;
         }
     }
-    
 }
 
 function keyUp(e) {
@@ -267,6 +269,7 @@ function keyUp(e) {
     switch(e.code) {
         case "KeyW": // W
             ship.thrusting = false;
+            fxThrust.stop()
             break;
         case "KeyS": // S
             ship.braking = false;
