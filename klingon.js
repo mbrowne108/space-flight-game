@@ -6,7 +6,7 @@ const maxKlingonShields = 1020
 
 function spawnInitialKlingons() {
     let x, y;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 1; i++) {
         x = (Math.random() * 2800) + 3000;
         y = (Math.random() * 2800) + 3000;
         klingons.push(newKlingon(x, y));
@@ -220,7 +220,7 @@ function fireWeapons(klingon) {
         } else if (random >= 800 && random < 805) {
             fireKlingonTorpedoes(klingon)
         }
-    }
+    } 
 }
 
 function drawDisruptors(klingon) {
@@ -307,13 +307,17 @@ function drawKlingons() {
     if (klingons.length < 9) spawnNewKlingon()
 
     for (let i = 0; i < klingons.length; i++) {
-        distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) > 3000 ? klingons[i].attacking = false : klingons[i].attacking = true
+        distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) > 5000 ? klingons[i].attacking = false : klingons[i].attacking = true
+        klingons[i].shields < 350 ? klingons[i].attacking = false : klingons[i].attacking = true;
+        klingons[i].hull < 100 && klingons[i].shields < 350 ? klingons[i].attacking = true : null
+        
         if (!klingons[i].exploding) {
             if ((klingons[i].thrust.x > 0.1 || klingons[i].thrust.x < -0.1) || (klingons[i].thrust.y > 0.1 || klingons[i].thrust.y < -0.1)) {
                 drawKlingonTrail(klingons[i])
-            }    
-            klingons[i].attacking ? fireWeapons(klingons[i]) : null;
-            if (!ship.exploding) {
+            }
+            if (!ship.exploding && klingons[i].attacking) {
+                console.log(klingons[i].attacking)
+                fireWeapons(klingons[i])
                 drawDisruptors(klingons[i]);
                 drawKlingonTorpedoes(klingons[i]);
             }
@@ -322,16 +326,11 @@ function drawKlingons() {
             drawKlingonExplosion(klingons[i])
         }
 
-        klingons[i].shields < 350 ? klingons[i].attacking = false : klingons[i].attacking = true;
-
-        klingons[i].hull < 100 && klingons[i].shields < 350 ? klingons[i].attacking = true : null
-
         ctx.save();
         if (klingons[i].attacking) {
             klingons[i].a = Math.atan2(-(ship.y + cameraOffset.y - (klingons[i].y + cameraOffset.y)), (ship.x + cameraOffset.x - (klingons[i].x + cameraOffset.x))) + (Math.PI / 2) / FPS // Point towards ship
         } else {
             let random = Math.floor(Math.random() * 500)
-            console.log(klingons[i].a)
             if (random === 0) {
                 klingons[i].a = Math.atan2((ship.y + cameraOffset.y - (klingons[i].y + cameraOffset.y)), -(ship.x + cameraOffset.x - (klingons[i].x + cameraOffset.x))) + (Math.PI / 2) + 1/ FPS
             } else if (random === 1) {

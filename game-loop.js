@@ -30,6 +30,7 @@ const fxPlanetScanning = new Sound('sounds/fx/planet-scanner.mp3', 1, 1)
 const fxRedAlert = new Sound('sounds/fx/red-alert.mp3', 1, 0.7)
 const fxThrust = new Sound('sounds/fx/thrust.mp3', 1, 0.4)
 const fxTransporter = new Sound('sounds/fx/transporter.mp3', 1, 0.5)
+const fxSelect = new Sound('sounds/fx/select.mp3', 1, 0.5)
 
 function Music(src) {
     this.piece = new Audio(src);

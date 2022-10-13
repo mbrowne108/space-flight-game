@@ -4,9 +4,9 @@ let scannerExpand = 0
 let shieldExpand = 0
 
 function drawOverlay() {
-        ctx.fillStyle = "red";
-        ctx.font = "15px serif";
-        ctx.fillText(`Scale: ${scale}`, window.innerWidth / 2 + 300, 15);
+        // ctx.fillStyle = "red";
+        // ctx.font = "15px serif";
+        // ctx.fillText(`Scale: ${scale}`, window.innerWidth / 2 + 300, 15);
         // ctx.fillText(`Mars: ${mars.passengers}`, window.innerWidth / 2 + 100, 30);
 
     textRatio = window.innerWidth / 1920

@@ -315,8 +315,8 @@ function menuLoop() {
     ctx.fillStyle = "rgb(171, 183, 183)"
     ctx.fillText('Press Esc for Controls', canvas.width - canvas.width / 16, canvas.height / 32)
     ctx.fillText(soundOn ? 'Press M to Mute Audio' : 'Press M to Unmute Audio', canvas.width - canvas.width / 16, canvas.height / 18)
-    ctx.font = `${22 * textRatio}pt trebuchet ms`
-    ctx.fillText(startAudio ? '' : 'Press Space to Start Audio', canvas.width / 2, canvas.height / 12)
+    ctx.font = `${26 * textRatio}pt trebuchet ms`
+    ctx.fillText(startAudio ? '' : 'Press Space to Start Audio', canvas.width / 2, canvas.height / 6)
     
     if (showPauseMenu) drawPauseMenu();
     if (showAboutMenu) drawAboutMenu();

@@ -63,6 +63,7 @@ canvas.addEventListener('click', (e) => { // Left Click (Torpedo)
             mouse.y >= canvas.height - canvas.height / 4 && 
             mouse.x <= canvas.width - canvas.width / 2.5 + canvas.width / 12 &&
             mouse.y <= canvas.height - canvas.height / 4 + canvas.height / 15) {
+                fxSelect.play()
                 showMainMenu = false
             } else if (
             mouse.x >= canvas.width - canvas.width / 4 && 
@@ -70,6 +71,7 @@ canvas.addEventListener('click', (e) => { // Left Click (Torpedo)
             mouse.x <= canvas.width - canvas.width / 4 + canvas.width / 12 &&
             mouse.y <= canvas.height - canvas.height / 4 + canvas.height / 15) {
                 showAboutMenu = !showAboutMenu
+                fxSelect.play()
             }
     } else if (showPauseMenu) {
         null
@@ -222,6 +224,7 @@ function keyDown(e) {
                 break;
             case "Escape": // ESC (Pause Menu)
                 if (!showPauseMenu) {
+                    fxSelect.play()
                     showPauseMenu = true
                 } else {
                     showPauseMenu = false
@@ -233,16 +236,20 @@ function keyDown(e) {
         switch(e.code) {
             case "Escape": // ESC (Pause Menu)
                     if (!showPauseMenu) {
+                        fxSelect.play()
                         showPauseMenu = true
                     } else {
+                        fxSelect.play()
                         showPauseMenu = false
                     }
                     break;
             case "Enter": // Enter (Start Game)
                 if (showMainMenu) {
                     if (startSelected) {
+                        fxSelect.play()
                         showMainMenu = false
                     } else {
+                        fxSelect.play()
                         showAboutMenu = !showAboutMenu
                     }
                 } 
