@@ -104,10 +104,6 @@ function loop() {
         win = true
     }
 
-    if (ship.passengers === totalPassengers) {
-        alert('YOU HAVE BEAMED UP ALL PASSENGERS, GO TO EARTH TO DROP THEM OFF')
-    }
-
     if (!showPauseMenu && !dead && !showMainMenu && !win) {
         setTimeout(() => {
             requestAnimationFrame(loop)

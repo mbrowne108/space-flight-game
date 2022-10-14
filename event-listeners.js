@@ -87,7 +87,7 @@ canvas.addEventListener('wheel', (e) => {
         return;
     }
     if (e.wheelDelta >= 0 ) {
-        if (scale < 2) {
+        if (scale < 4) {
             scale += 0.1 * scale
         }
     } else {

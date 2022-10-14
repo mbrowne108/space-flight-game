@@ -13,8 +13,8 @@ const ship = {
     trail: document.getElementById("ship-trail"),
     x: 2300,
     y: 2300,
-    height: 75 * (4/3),
-    width: 75,
+    height: 15 * (4/3) * sizeScale,
+    width: 15 * sizeScale,
     a: 90 / 180 * Math.PI,
     phaserCharge: maxPhaserCharge,
     torpLoaded: true,
@@ -154,7 +154,6 @@ function fireTorpedoes() {
     }
 }
 
-
 function drawTorpedoes() {
     for (let i = 0; i < ship.torpedoes.length; i++) {
         ctx.shadowColor = torpedo.shadow
@@ -201,6 +200,8 @@ function drawTorpedoes() {
                             })
                         }
                         setTimeout(() => {klingons.splice(i, 1)}, 3000)
+                        klingons.forEach((kl) => kl.locked = false)
+                        findClosestTarget()
                     } else {
                         klingons[i].hull -= 260
                     }
@@ -363,8 +364,8 @@ function beamUpPassengers(planet) {
         if (planet.name === "Earth") {
             alert('TRANSPORTING PASSENGERS TO EARTH...')
             if (ship.passengers > 0) {
-                ship.passengers -= 1
-                planet.passengers += 1
+                ship.passengers -= 5
+                planet.passengers += 5
             } else {
                 ship.transporting = !ship.transporting
                 alert('ALL PASSENGERS SAFE ON EARTH')
@@ -382,6 +383,9 @@ function beamUpPassengers(planet) {
             }
         } else {
             null
+        }
+        if (ship.passengers === totalPassengers) {
+            alert('YOU HAVE BEAMED UP ALL PASSENGERS, GO TO EARTH TO DROP THEM OFF')
         }
     } else if (ship.transporting && ship.redAlert && ship.orbiting) {
         fxTransporter.stop()
@@ -464,6 +468,8 @@ function drawShip() {
                     }
                     let j = lockId
                     setTimeout(() => {klingons.splice(j, 1)}, 3000)
+                    klingons.forEach((kl) => kl.locked = false)
+                    findClosestTarget()
                 }
             } else {
                 ship.firing = false
@@ -483,7 +489,7 @@ function drawShip() {
             explodeShip()
         } else if (ship.shields > 0 && !ship.exploding) {
             ship.shields -= 1 / distBetweenPoints(ship.x, ship.y, sun.x, sun.y) * 1000
-            shieldsUpAnim()
+            // shieldsUpAnim()
             alert("ALERT: SUN IS HOT")
         }
     }

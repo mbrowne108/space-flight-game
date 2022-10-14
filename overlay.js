@@ -67,7 +67,7 @@ function drawOverlay() {
     ctx.fillStyle = 'rgb(171, 183, 183)'
     ctx.font = `${16 * textRatio}px trebuchet ms`
     ctx.fillText('Klingons Destroyed', window.innerWidth / 2 - window.innerWidth / 15, window.innerHeight / 50);
-    ctx.fillText('Passengers Rescued', window.innerWidth / 2 + window.innerWidth / 15, window.innerHeight / 50);
+    ctx.fillText('Passengers Onboard', window.innerWidth / 2 + window.innerWidth / 15, window.innerHeight / 50);
     ctx.font = `${28 * textRatio}px trebuchet ms`
     ctx.fillStyle = 'rgb(200, 0, 0)'
     ctx.fillText(klingonsDestroyed, window.innerWidth / 2 - window.innerWidth / 15, window.innerHeight / 20);

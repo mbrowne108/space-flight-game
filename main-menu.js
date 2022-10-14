@@ -1,5 +1,6 @@
 const FPS = 60
 let scale = 1
+const sizeScale = 4
 
 let startAudio = false
 let soundOn = true

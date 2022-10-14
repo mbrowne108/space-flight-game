@@ -6,7 +6,7 @@ const maxKlingonShields = 1020
 
 function spawnInitialKlingons() {
     let x, y;
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 3; i++) {
         x = (Math.random() * 2800) + 3000;
         y = (Math.random() * 2800) + 3000;
         klingons.push(newKlingon(x, y));
@@ -310,21 +310,21 @@ function drawKlingons() {
         distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) > 5000 ? klingons[i].attacking = false : klingons[i].attacking = true
         klingons[i].shields < 350 ? klingons[i].attacking = false : klingons[i].attacking = true;
         klingons[i].hull < 100 && klingons[i].shields < 350 ? klingons[i].attacking = true : null
-        
+
         if (!klingons[i].exploding) {
             if ((klingons[i].thrust.x > 0.1 || klingons[i].thrust.x < -0.1) || (klingons[i].thrust.y > 0.1 || klingons[i].thrust.y < -0.1)) {
                 drawKlingonTrail(klingons[i])
             }
             if (!ship.exploding && klingons[i].attacking) {
-                console.log(klingons[i].attacking)
                 fireWeapons(klingons[i])
-                drawDisruptors(klingons[i]);
-                drawKlingonTorpedoes(klingons[i]);
             }
         } else {
             klingons[i].locked = false
             drawKlingonExplosion(klingons[i])
         }
+
+        drawDisruptors(klingons[i]);
+        drawKlingonTorpedoes(klingons[i]);
 
         ctx.save();
         if (klingons[i].attacking) {
@@ -351,14 +351,15 @@ function drawKlingons() {
         !klingons[i].exploding ? ctx.drawImage(klingons[i].thrusting ? klingons[i].elThrust : klingons[i].el, klingons[i].x - (klingons[i].width / 2) + cameraOffset.x, klingons[i].y - (klingons[i].height / 2) + cameraOffset.y, klingons[i].width, klingons[i].height) : null
         ctx.restore()
 
+        // Thursting and Braking
         if (klingons[i].attacking) {
-            if (distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) >= 100) {
+            if (distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) >= 500) {
                 klingons[i].thrusting = true
                 klingons[i].braking = false
-            } else if (distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) < 100 && distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) >= 50){
+            } else if (distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) < 500 && distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) >= 150) {
                 klingons[i].thrusting = false
                 klingons[i].braking = false
-            } else if (distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) < 50) {
+            } else if (distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) < 150) {
                 klingons[i].thrusting = false
                 klingons[i].braking = true
             }
@@ -387,8 +388,8 @@ function drawKlingons() {
             klingons[i].thrust.x -= 3 * friction * klingons[i].thrust.x / FPS;
             klingons[i].thrust.y -= 3 * friction * klingons[i].thrust.y / FPS;
         }
-        klingons[i].x += klingons[i].thrust.x
-        klingons[i].y += klingons[i].thrust.y
+        // klingons[i].x += klingons[i].thrust.x
+        // klingons[i].y += klingons[i].thrust.y
         
         // Locked on
         if (klingons[i].locked && ship.scanning) {
