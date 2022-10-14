@@ -11,6 +11,7 @@ let dead = false
 let win = false
 let showMainMenu = true
 let textRatio
+let firstMessageSent = false
 
 const wrapper = document.getElementById("wrapper");
 const canvas = document.getElementById("canvas");
@@ -23,8 +24,9 @@ function distBetweenPoints(x1, y1, x2, y2) {
 }
 
 function alert(text) {
+    firstMessageSent = true
     alertMsg = text
-    setTimeout(() => {alertMsg = '' }, 3000)
+    setTimeout(() => {alertMsg = ''}, 3000)
 }
 
 let startSelected = true

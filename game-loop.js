@@ -84,6 +84,8 @@ function loop() {
     cameraOffset.x = canvas.width / 2 - ship.x
     cameraOffset.y = canvas.height / 2 - ship.y
 
+    firstMessageSent ? null : alert("SHIELDS ARE DOWN. PRESS SPACE TO GO TO RED ALERT.")
+
     drawStars();
     
     ctx.save()

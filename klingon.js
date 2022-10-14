@@ -20,7 +20,7 @@ function spawnNewKlingon() {
         let x = (Math.random() * 2800) + 3000;
         let y = (Math.random() * 2800) + 3000;
         klingons.push(newKlingon(x, y));
-        alert('NEW KLINGON UNCLOAKED')
+        alert('NEW KLINGON SHIP UNCLOAKED')
     }
 }
 
@@ -388,8 +388,8 @@ function drawKlingons() {
             klingons[i].thrust.x -= 3 * friction * klingons[i].thrust.x / FPS;
             klingons[i].thrust.y -= 3 * friction * klingons[i].thrust.y / FPS;
         }
-        // klingons[i].x += klingons[i].thrust.x
-        // klingons[i].y += klingons[i].thrust.y
+        klingons[i].x += klingons[i].thrust.x
+        klingons[i].y += klingons[i].thrust.y
         
         // Locked on
         if (klingons[i].locked && ship.scanning) {

@@ -4,6 +4,7 @@ let scannerExpand = 0
 let shieldExpand = 0
 
 function drawOverlay() {
+    // Debugging overlay
         // ctx.fillStyle = "red";
         // ctx.font = "15px serif";
         // ctx.fillText(`Scale: ${scale}`, window.innerWidth / 2 + 300, 15);
@@ -203,7 +204,7 @@ function drawOverlay() {
 
     if (ship.scanning) {
         if (!ship.orbiting && distBetweenPoints(ship.x, ship.y, planets[planetLockId].x + planets[planetLockId].width / 2, planets[planetLockId].y + planets[planetLockId].height / 2) < planets[planetLockId].width + 100) {
-            alert(`WITHIN RANGE TO ORBIT ${planets[planetLockId].name.toUpperCase()}`)
+            alert(`WITHIN RANGE OF ${planets[planetLockId].name.toUpperCase()}. PRESS F TO ORBIT.`)
         }
     }
 
