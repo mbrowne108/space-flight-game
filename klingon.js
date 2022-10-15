@@ -400,5 +400,7 @@ function drawKlingons() {
             klingons[i].shields > 0 ? klingonShields(klingons[i]) : klingons[i].shields === 0
         }
         storeLastKlingonPosition(klingons[i])
+
+        if (klingons[i].shields < maxKlingonShields) klingons[i].shields += 0.5
     }
 }

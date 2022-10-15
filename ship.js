@@ -530,6 +530,6 @@ function drawShip() {
 
     storeLastShipPosition(ship.x, ship.y)
 
-    if (ship.shields < maxShields) ship.shields += 1
+    if (ship.shields < maxShields) ship.shields += 2
     
 }
