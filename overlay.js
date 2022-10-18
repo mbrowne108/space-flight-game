@@ -7,7 +7,7 @@ function drawOverlay() {
     // Debugging overlay
         // ctx.fillStyle = "red";
         // ctx.font = "15px serif";
-        // ctx.fillText(`Scale: ${scale}`, window.innerWidth / 2 + 300, 15);
+        // ctx.fillText(`Offset: ${cameraOffset.x}, ${cameraOffset.y}`, window.innerWidth / 2 + 300, 15);
         // ctx.fillText(`Mars: ${mars.passengers}`, window.innerWidth / 2 + 100, 30);
 
     textRatio = window.innerWidth / 1920

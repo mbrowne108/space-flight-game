@@ -229,7 +229,7 @@ function drawDisruptors(klingon) {
         ctx.translate(klingon.disruptors[i].x + cameraOffset.x, klingon.disruptors[i].y + cameraOffset.y);
         ctx.rotate(-klingon.a - 90 * Math.PI / 180)
         ctx.translate(-(klingon.disruptors[i].x + cameraOffset.x), -(klingon.disruptors[i].y + cameraOffset.y));
-        ctx.drawImage(disruptor.el, klingon.disruptors[i].x + cameraOffset.x - (disruptor.width / 2), klingon.disruptors[i].y + cameraOffset.y - (disruptor.height / 2), klingon.width / 1.95 / 4, klingon.height / 4)
+        ctx.drawImage(disruptor.el, klingon.disruptors[i].x + cameraOffset.x, klingon.disruptors[i].y + cameraOffset.y, klingon.width / 1.95 / 4, klingon.height / 4)
         ctx.restore()
     }
 
@@ -257,7 +257,6 @@ function drawDisruptors(klingon) {
             }
         }
     }
-    
 }
 
 function fireKlingonTorpedoes(klingon) {
@@ -265,8 +264,8 @@ function fireKlingonTorpedoes(klingon) {
     klingon.torpCount -= 1
     if (klingon.torpCount > 0) {
         klingon.torpedoes.push({
-            x: klingon.x + 4/3 * klingon.height / 1.7 * Math.cos(ship.a),
-            y: klingon.y - 4/3 * klingon.height / 1.7 * Math.sin(ship.a),
+            x: klingon.x + 4/3 * klingon.height / 1.7 * Math.cos(klingon.a),
+            y: klingon.y - 4/3 * klingon.height / 1.7 * Math.sin(klingon.a),
             xv: torpSpeed * Math.cos(klingon.a) / FPS,
             yv: -torpSpeed * Math.sin(klingon.a) / FPS
         })
@@ -277,7 +276,7 @@ function drawKlingonTorpedoes(klingon) {
     for (let i = 0; i < klingon.torpedoes.length; i++) {
         ctx.shadowColor = klingon.torpedoes[i].shadow
         ctx.shadowBlur = klingon.torpedoes[i].height * 3
-        ctx.drawImage(klingonTorpedo.el, klingon.torpedoes[i].x + cameraOffset.x - (klingonTorpedo.width / 2), klingon.torpedoes[i].y + cameraOffset.y - (klingonTorpedo.height / 2), klingon.width / 2, klingon.height / 2)
+        ctx.drawImage(klingonTorpedo.el, klingon.torpedoes[i].x + cameraOffset.x, klingon.torpedoes[i].y + cameraOffset.y, klingon.width / 2, klingon.height / 2)
         ctx.shadowBlur = 0
 
         klingon.torpedoes[i].x += klingon.torpedoes[i].xv + klingon.thrust.x;

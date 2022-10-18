@@ -158,7 +158,11 @@ function drawTorpedoes() {
     for (let i = 0; i < ship.torpedoes.length; i++) {
         ctx.shadowColor = torpedo.shadow
         ctx.shadowBlur = torpedo.height * 3
-        ctx.drawImage(torpedo.el, ship.torpedoes[i].x + cameraOffset.x - (torpedo.width / 2), ship.torpedoes[i].y + cameraOffset.y - (torpedo.height / 2), ship.width / 2, ship.height / 2)
+        ctx.drawImage(torpedo.el, 
+                      ship.torpedoes[i].x + cameraOffset.x - (torpedo.width / 2), 
+                      ship.torpedoes[i].y + cameraOffset.y - (torpedo.height / 2), 
+                      ship.width / 2, 
+                      ship.height / 2)
         ctx.shadowBlur = 0
 
         ship.torpedoes[i].x += ship.torpedoes[i].xv + ship.thrust.x;
