@@ -3,7 +3,7 @@ const camera = {x: ship.x - (canvas.width / 2), y: ship.y - (canvas.height / 2)}
 const cameraOffset = {x: canvas.width / 2 - ship.x, y: canvas.height / 2 - ship.y}
 
 createAsteroids();
-spawnInitialKlingons();
+// spawnInitialKlingons();
 
 // Music
 const musicMainMenu = new Music("sounds/music/title-screen.mp3", 1)

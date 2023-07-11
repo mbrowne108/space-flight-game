@@ -303,7 +303,8 @@ function drawKlingonTorpedoes(klingon) {
 }
 
 function drawKlingons() {
-    if (klingons.length < 9) spawnNewKlingon()
+    // if (klingons.length < 9) spawnNewKlingon()
+    if (klingons.length < 3) spawnNewKlingon()
 
     for (let i = 0; i < klingons.length; i++) {
         distBetweenPoints(ship.x, ship.y, klingons[i].x, klingons[i].y) > 5000 ? klingons[i].attacking = false : klingons[i].attacking = true
